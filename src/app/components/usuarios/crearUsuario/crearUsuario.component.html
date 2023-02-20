@@ -1,0 +1,72 @@
+<div class="grid">
+	<div class="col-12">
+		<div class="card p-fluid">
+			<h5>Crear Usuario</h5>
+			<div class="p-formgrid grid">
+				<div class="field col">
+					<label htmlFor="nombres">Nombres</label>
+					<input pInputText id="nombres" type="text" />
+				</div>
+				<div class="field col">
+					<label htmlFor="apellidos">Apellidos</label>
+					<input pInputText id="apellidos" type="text" />
+				</div>
+			</div>
+			<div class="p-formgrid grid">	
+				<div class="field col">
+					<label htmlFor="email">Correo electrónico</label>
+					<input pInputText id="email" type="text" />
+				</div>
+				<div class="field col">
+					<label htmlFor="fecha">Fecha de Nacimiento</label>
+					<p-calendar [(ngModel)]="fechaNacimiento" dateFormat="yy-mm-dd" inputId="dateformat"></p-calendar>
+				</div>
+			</div>
+			
+			<div class="p-formgrid grid">	
+				<div class="field col">
+					<label htmlFor="direccion">Direccion</label>
+					<input pInputText id="direccion" type="text" />
+				</div>
+				<div class="field col">
+					<label htmlFor="dpi">Numero de DPI</label>
+					<input pInputText id="dpi" type="text" />
+				</div>
+			</div>
+			<div class="p-formgrid grid">
+				<div class="field col">
+					<label htmlFor="telefono">Numero de Telefono</label>
+					<input pInputText id="telefono" type="text" />
+				</div>
+				<div class="field col">
+					<label htmlFor="tipo">Rol de Usuario</label>
+					<p-dropdown [options]="roles" [(ngModel)]="rolSeleccionado" [editable]="true" optionLabel="titulo"></p-dropdown>
+				</div>
+			</div>
+			<div class="p-formgrid grid">
+				<div class="field col">
+					<label htmlFor="fecha">Carreras</label>
+					<p-multiSelect inputId="multiselect" [options]="carreras" [(ngModel)]="carreraSeleccionada" optionLabel="titulo" [filter]="false"></p-multiSelect>
+				</div>
+				<div class="field col">
+					<label htmlFor="registro">Registro Academico</label>
+					<input pInputText id="registro" type="text" />
+				</div>
+				<div class="field col">
+					<label htmlFor="colegiado">Numero de Colegiado</label>
+					<input pInputText id="colegiado" type="text" />
+				</div>
+			</div>
+			<div class="p-formgrid grid">
+				<div class="field col">
+					<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle"
+                             [style]="{width: '350px'}" acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+					<button (click)="confirm()" pButton icon="pi pi-check" label="Crear Proyecto"></button>	
+				</div>
+				<div class="field col">
+					<button (click)="cancelar()" pButton icon="pi pi-times" class="p-button-danger" label="Cancelar"></button>	
+				</div>	
+			</div>		
+		</div>
+	</div>
+</div>

@@ -1,0 +1,69 @@
+<div class="grid">
+	<div class="col-12">
+		<p-toast key="tst"></p-toast>
+		<div class="card p-fluid">
+			<h5>Crear nuevo proyecto</h5>
+			<div class="field">
+				<label class="{{campos[0].class}}" htmlFor="titulo">Titulo del Proyecto</label>
+				<textarea [(ngModel)]="campos[0].valor" required="required" id="titulo" rows="2" cols="30" pInputTextarea></textarea>
+			</div>
+			<div class="p-formgrid grid">
+				<div class="field col">
+					<label class="{{campos[1].class}}" htmlFor="inscripcion">Cargar constancia de inscripcion</label>
+					<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadConstancia($event)" (onRemove)="onRemoveConstancia()"
+							[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
+					</p-fileUpload>
+				</div>
+			</div>
+			<div class="p-formgrid grid">
+				<div class="field col">
+					<label class="{{campos[2].class}}" htmlFor="propedeutico">Cargar constancia de propedeutico</label>
+					<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadPropedeutico($event)" (onRemove)="onRemovePropedeutico()"
+							[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
+					</p-fileUpload>
+				</div>
+			</div>
+			<div class="p-formgrid grid">
+				<div class="field col">
+					<label class="{{campos[3].class}}" htmlFor="nacimiento">Cargar certificado de nacimiento</label>
+					<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onUpload)="onUploadCertificado($event)" (onRemove)="onRemoveCertificado()"
+							[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
+					</p-fileUpload>
+				</div>
+			</div>
+			<div class="p-formgrid grid">
+				<div class="field col">
+					<label class="{{campos[4].class}}" htmlFor="anteproyecto">Cargar Anteproyecto</label>
+					<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onUpload)="onUploadAnteproyecto($event)" (onRemove)="onRemoveAnteproyecto()"
+							[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
+					</p-fileUpload>
+				</div>
+			</div>
+			<div class="p-formgrid grid">
+				<div class="field col">
+					<label class="{{campos[5].class}}" htmlFor="coordenadas">Coordenadas de la institucion del proyecto</label>
+					<input [(ngModel)]="campos[5].valor" pInputText id="coordenadas" type="text" />
+				</div>
+				<div class="field col">
+					<label class="{{campos[6].class}}" htmlFor="carrera">Seleccionar Carrera</label>
+					<p-dropdown [options]="carreras" [(ngModel)]="campos[6].valor" [editable]="true" optionLabel="name"></p-dropdown>
+				</div>
+			</div>
+			<div class="p-formgrid grid">
+				<div class="field col">
+			<p-messages (value)="errorLabel" [enableService]="false"></p-messages>
+				</div>
+			</div>	
+			<div class="p-formgrid grid">
+				<div class="field col">
+					<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle"
+                             [style]="{width: '350px'}" acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+					<button (click)="confirm()" pButton icon="pi pi-check" label="Crear Proyecto"></button>	
+				</div>
+				<div class="field col">
+					<button (click)="cancelar()" pButton icon="pi pi-times" class="p-button-danger" label="Cancelar"></button>	
+				</div>	
+			</div>	
+		</div>
+	</div>
+</div>
