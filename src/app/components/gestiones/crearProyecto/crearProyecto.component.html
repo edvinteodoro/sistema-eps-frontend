@@ -26,7 +26,7 @@
 			<div class="p-formgrid grid">
 				<div class="field col">
 					<label class="{{campos[3].class}}" htmlFor="nacimiento">Cargar certificado de nacimiento</label>
-					<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onUpload)="onUploadCertificado($event)" (onRemove)="onRemoveCertificado()"
+					<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadCertificado($event)" (onRemove)="onRemoveCertificado()"
 							[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
 					</p-fileUpload>
 				</div>
@@ -34,24 +34,27 @@
 			<div class="p-formgrid grid">
 				<div class="field col">
 					<label class="{{campos[4].class}}" htmlFor="anteproyecto">Cargar Anteproyecto</label>
-					<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onUpload)="onUploadAnteproyecto($event)" (onRemove)="onRemoveAnteproyecto()"
+					<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadAnteproyecto($event)" (onRemove)="onRemoveAnteproyecto()"
+							[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true" >
+					</p-fileUpload>
+				</div>
+			</div>
+			<div class="p-formgrid grid">
+				<div class="field col">
+					<label class="{{campos[5].class}}" htmlFor="cartaAsesor">Cargar Carta de Asesor</label>
+					<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadCartaAsesor($event)" (onRemove)="onRemoveCartaAsesor()"
 							[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
 					</p-fileUpload>
 				</div>
 			</div>
 			<div class="p-formgrid grid">
 				<div class="field col">
-					<label class="{{campos[5].class}}" htmlFor="coordenadas">Coordenadas de la institucion del proyecto</label>
-					<input [(ngModel)]="campos[5].valor" pInputText id="coordenadas" type="text" />
+					<label class="{{campos[6].class}}" htmlFor="coordenadas">Coordenadas de la institucion del proyecto</label>
+					<input [(ngModel)]="campos[6].valor" pInputText id="coordenadas" type="text" />
 				</div>
 				<div class="field col">
-					<label class="{{campos[6].class}}" htmlFor="carrera">Seleccionar Carrera</label>
-					<p-dropdown [options]="carreras" [(ngModel)]="campos[6].valor" [editable]="true" optionLabel="name"></p-dropdown>
-				</div>
-			</div>
-			<div class="p-formgrid grid">
-				<div class="field col">
-			<p-messages (value)="errorLabel" [enableService]="false"></p-messages>
+					<label class="{{campos[7].class}}" htmlFor="carrera">Seleccionar Carrera</label>
+					<p-dropdown [options]="carreras" [(ngModel)]="campos[7].valor" [editable]="true" optionLabel="titulo"></p-dropdown>
 				</div>
 			</div>	
 			<div class="p-formgrid grid">

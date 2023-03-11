@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CrearUsuarioComponent } from './crearUsuario.component';
-import { CrearUsuarioRoutingModule } from './crearUsuario-routing.module';
+import { ActualizarComponent } from './actualizar.component';
+import { ActualizarRoutingModule } from './actualizar-routing.module';
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { CalendarModule } from "primeng/calendar";
 import { ChipsModule } from "primeng/chips";
@@ -20,7 +20,7 @@ import { ToastModule } from 'primeng/toast';
 	imports: [
 		CommonModule,
 		FormsModule,
-		CrearUsuarioRoutingModule,
+		ActualizarRoutingModule,
 		AutoCompleteModule,
 		CalendarModule,
 		ChipsModule,
@@ -34,6 +34,6 @@ import { ToastModule } from 'primeng/toast';
 		ConfirmDialogModule,
 		ToastModule
 	],
-	declarations: [CrearUsuarioComponent]
+	declarations: [ActualizarComponent]
 })
-export class CrearUsuarioModule { }
+export class ActualizarModule { }

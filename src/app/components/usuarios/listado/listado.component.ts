@@ -5,6 +5,7 @@ import { Table } from 'primeng/table';
 import { ProductService } from 'src/app/demo/service/product.service';
 import { Usuario } from 'src/app/model/Usuario';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './listado.component.html',
@@ -37,7 +38,8 @@ export class ListadoComponent implements OnInit {
 
     rowsPerPageOptions = [5, 10, 20];
 
-    constructor(private productService: ProductService, private usuarioService:UsuarioService,private messageService: MessageService) { }
+    constructor(private productService: ProductService, private usuarioService:UsuarioService,private messageService: MessageService,
+        private router: Router) { }
 
     ngOnInit() {
         this.usuarioService.getUsuarios().subscribe((usuarios: Usuario[]) => { //observable to array
@@ -51,12 +53,15 @@ export class ListadoComponent implements OnInit {
                   fechaNacimiento: usuario.fechaNacimiento,
                   telefono: usuario.telefono,
                   dpi:usuario.dpi,
-                  estado:usuario.estado,
+                  estado:usuario.estadoCuenta,
                   rol:usuario.rol
                 };
               });   
           });
-        this.productService.getProducts().then(data => {this.products = data; console.log('productos',this.products); });
+        this.productService.getProducts().then(data => {
+            this.products = data; 
+            console.log('productos',this.products); 
+        });
 
         this.cols = [
             { field: 'nombres', header: 'Nombres' },
@@ -83,9 +88,9 @@ export class ListadoComponent implements OnInit {
         this.deleteProductsDialog = true;
     }
 
-    editProduct(product: Product) {
-        this.product = { ...product };
-        this.productDialog = true;
+    editUsuario(usuario: Usuario) {
+        console.log('edit');
+        this.router.navigate(['usuarios/actualizar'], { state: { data: usuario } });
     }
 
     deleteProduct(product: Product) {

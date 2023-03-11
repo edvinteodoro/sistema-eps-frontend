@@ -16,18 +16,6 @@ export class CarreraService {
   }
 
   getCarreras():Observable<Carrera[]>{
-    return this.http.get<any[]>('http://localhost:8080/api/carreras').pipe(
-      map(response => {
-        return response.map(carrera => {
-          const mappedRol: Carrera = {
-            idCarrera: carrera.idCarrera,
-            titulo: carrera.titulo
-          };
-          return mappedRol;
-        });
-      })
-    );
+    return this.http.get<any[]>('http://localhost:8080/api/carreras');
   }
-
-  
 }

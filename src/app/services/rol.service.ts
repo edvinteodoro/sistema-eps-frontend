@@ -13,16 +13,6 @@ export class RolService {
   constructor(private http: HttpClient) { }
 
   getRoles():Observable<Rol[]>{
-    return this.http.get<any[]>('http://localhost:8080/api/roles').pipe(
-      map(response => {
-        return response.map(rol => {
-          const mappedRol: Rol = {
-            idRol: rol.idRol,
-            titulo: rol.titulo
-          };
-          return mappedRol;
-        });
-      })
-    );
+    return this.http.get<any[]>('http://localhost:8080/api/roles');
   }
 }

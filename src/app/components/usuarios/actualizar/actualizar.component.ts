@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Carrera } from 'src/app/model/Carrera';
 import { Rol } from 'src/app/model/Rol';
@@ -13,11 +15,12 @@ interface Campo {
 }
 
 @Component({
-    templateUrl: './crearUsuario.component.html',
+    templateUrl: './actualizar.component.html',
     providers: [ConfirmationService, MessageService]
 })
 
-export class CrearUsuarioComponent implements OnInit {
+export class ActualizarComponent implements OnInit {
+    usuarioSeleccionado:Usuario={};
     campos: Campo[] = [
         { class: '', valor: undefined },
         { class: '', valor: undefined },
@@ -36,11 +39,14 @@ export class CrearUsuarioComponent implements OnInit {
     carreraSeleccionada: any = { class: '', mostrar: false, valor: undefined };
 
     constructor(private confirmationService: ConfirmationService, private rolService: RolService,
-        private carreraService: CarreraService, private messageService: MessageService, private usuarioService: UsuarioService) {
+        private carreraService: CarreraService, private messageService: MessageService, private usuarioService: UsuarioService,
+        private router: Router,private location:Location,private activatedroute:ActivatedRoute) {
     }
 
     ngOnInit() {
-
+        this.usuarioSeleccionado = (this.location.getState() as { data: Usuario }).data;
+        //console.log('data',this.location.getState().data);
+        console.log('data',this.usuarioSeleccionado);
         this.rolService.getRoles().subscribe(roles => this.roles=roles);
         this.carreraService.getCarreras().subscribe(carreras => this.carreras=carreras);
     }
@@ -113,6 +119,7 @@ export class CrearUsuarioComponent implements OnInit {
             icon: 'pi pi-times-circle',
             accept: () => {
                 this.limpiarCampos();
+                this.router.navigate(['usuarios/listado']);
             }
         });
     }
@@ -184,7 +191,5 @@ export class CrearUsuarioComponent implements OnInit {
         }
         return false;    
     }
-
-
 
 }

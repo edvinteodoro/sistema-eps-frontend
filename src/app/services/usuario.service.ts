@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Usuario } from '../model/Usuario';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { Carrera } from '../model/Carrera';
 
 @Injectable({
   providedIn: 'root'
@@ -12,25 +13,15 @@ export class UsuarioService {
   constructor(private http: HttpClient) { }
 
   getUsuarios():Observable<Usuario[]>{
-    return this.http.get<any[]>('http://localhost:8080/api/usuarios').pipe(
-      map(response => {
-        return response.map(usuario => {
-          const mappedRol: Usuario = {
-            idUsuario: usuario.idUsuario,
-            nombres: usuario.nombres,
-            apellidos: usuario.apellidos,
-            correo:usuario.correo,
-            fechaNacimiento:usuario.fechaNacimiento,
-            dirreccion:usuario.dirreccion,
-            telefono:usuario.telefono,
-            dpi:usuario.dpi,
-            estado:usuario.estado,
-            rol:usuario.rol
-          };
-          return mappedRol;
-        });
-      })
-    );
+    return this.http.get<any[]>('http://localhost:8080/api/usuarios');
+  }
+
+  crearUsuario(usuario:any):Observable<Usuario>{
+    return this.http.post<any>('http://localhost:8080/api/usuarios',usuario);  
+  }
+
+  getUsuarioCarreras():Observable<Carrera[]>{
+    return this.http.get<any[]>('http://localhost:8080/api/usuarios/actual/carreras');
   }
 /*
   getUsuarios() {
