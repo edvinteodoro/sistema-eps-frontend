@@ -1,0 +1,39 @@
+.comment-phase {
+    align-items: flex-start;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.comment-phase::before {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 20px;
+    width: 2px;
+    height: calc(100% - 20px);
+    background-color: #ccc;
+}
+
+.phase-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.phase-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.phase-icon {
+    margin-right: 10px;
+}
+
+.phase-name {
+    font-weight: bold;
+    color: #333;
+}
+
+.comments {
+    margin-left: 30px;
+}

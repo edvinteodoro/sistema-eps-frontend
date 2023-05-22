@@ -2,71 +2,180 @@
 	<div class="col-12">
 		<p-toast key="tst"></p-toast>
 		<div class="card p-fluid">
-			<h5>Crear nuevo proyecto</h5>
-			<div class="field">
-				<label class="{{campos[0].class}}" htmlFor="titulo">Titulo del Proyecto</label>
-				<textarea [(ngModel)]="campos[0].valor" required="required" id="titulo" rows="2" cols="30" pInputTextarea></textarea>
-			</div>
-			<div class="p-formgrid grid">
-				<div class="field col">
-					<label class="{{campos[1].class}}" htmlFor="inscripcion">Cargar constancia de inscripcion</label>
-					<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadConstancia($event)" (onRemove)="onRemoveConstancia()"
-							[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
-					</p-fileUpload>
+			<p-panel header="Crear Proyecto Nuevo">
+				<div class="card">
+					<p-steps [model]="items" [(activeIndex)]="activeIndex"></p-steps>
 				</div>
-			</div>
-			<div class="p-formgrid grid">
-				<div class="field col">
-					<label class="{{campos[2].class}}" htmlFor="propedeutico">Cargar constancia de propedeutico</label>
-					<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadPropedeutico($event)" (onRemove)="onRemovePropedeutico()"
-							[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
-					</p-fileUpload>
-				</div>
-			</div>
-			<div class="p-formgrid grid">
-				<div class="field col">
-					<label class="{{campos[3].class}}" htmlFor="nacimiento">Cargar certificado de nacimiento</label>
-					<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadCertificado($event)" (onRemove)="onRemoveCertificado()"
-							[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
-					</p-fileUpload>
-				</div>
-			</div>
-			<div class="p-formgrid grid">
-				<div class="field col">
-					<label class="{{campos[4].class}}" htmlFor="anteproyecto">Cargar Anteproyecto</label>
-					<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadAnteproyecto($event)" (onRemove)="onRemoveAnteproyecto()"
-							[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true" >
-					</p-fileUpload>
-				</div>
-			</div>
-			<div class="p-formgrid grid">
-				<div class="field col">
-					<label class="{{campos[5].class}}" htmlFor="cartaAsesor">Cargar Carta de Asesor</label>
-					<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadCartaAsesor($event)" (onRemove)="onRemoveCartaAsesor()"
-							[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
-					</p-fileUpload>
-				</div>
-			</div>
-			<div class="p-formgrid grid">
-				<div class="field col">
-					<label class="{{campos[6].class}}" htmlFor="coordenadas">Coordenadas de la institucion del proyecto</label>
-					<input [(ngModel)]="campos[6].valor" pInputText id="coordenadas" type="text" />
-				</div>
-				<div class="field col">
-					<label class="{{campos[7].class}}" htmlFor="carrera">Seleccionar Carrera</label>
-					<p-dropdown [options]="carreras" [(ngModel)]="campos[7].valor" [editable]="true" optionLabel="titulo"></p-dropdown>
-				</div>
-			</div>	
-			<div class="p-formgrid grid">
-				<div class="field col">
-					<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle"
-                             [style]="{width: '350px'}" acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
-					<button (click)="confirm()" pButton icon="pi pi-check" label="Crear Proyecto"></button>	
-				</div>
-				<div class="field col">
-					<button (click)="cancelar()" pButton icon="pi pi-times" class="p-button-danger" label="Cancelar"></button>	
-				</div>	
-			</div>	
+				<ng-container *ngIf="activeIndex === 0">
+					<div>
+						<div class="field">
+							<label class="{{campos[0].class}}" htmlFor="titulo">Titulo del Proyecto</label>
+							<textarea [(ngModel)]="campos[0].valor" required="required" id="titulo" rows="2" cols="30"
+								pInputTextarea></textarea>
+						</div>
+						<div class="p-formgrid grid">
+							<div class="field col">
+								<label class="{{campos[6].class}}" htmlFor="coordenadas">Coordenadas de la
+									institucion
+									del
+									proyecto</label>
+								<input [(ngModel)]="campos[6].valor" pInputText id="coordenadas" type="text" />
+								<div class="map-container">
+									<div class="map-frame">
+										<div id="map"></div>
+									</div>
+								</div>
+							</div>
+							<div class="field col">
+								<label class="{{campos[7].class}}" htmlFor="carrera">Seleccionar Carrera</label>
+								<p-dropdown [options]="carreras" [(ngModel)]="campos[7].valor" [editable]="true"
+									optionLabel="titulo"></p-dropdown>
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="p-formgrid grid">
+							<div class="field col">
+								<label class="{{campos[1].class}}" htmlFor="inscripcion">Cargar constancia de
+									inscripcion</label>
+								<p-fileUpload chooseLabel="Seleccionar" name="demo[]"
+									(onSelect)="onUploadConstancia($event)" (onRemove)="onRemoveConstancia()"
+									[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
+								</p-fileUpload>
+							</div>
+						</div>
+						<div class="p-formgrid grid">
+							<div class="field col">
+								<label class="{{campos[2].class}}" htmlFor="propedeutico">Cargar constancia de
+									propedeutico</label>
+								<p-fileUpload chooseLabel="Seleccionar" name="demo[]"
+									(onSelect)="onUploadPropedeutico($event)" (onRemove)="onRemovePropedeutico()"
+									[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
+								</p-fileUpload>
+							</div>
+						</div>
+						<div class="p-formgrid grid">
+							<div class="field col">
+								<label class="{{campos[3].class}}" htmlFor="nacimiento">Cargar certificado de
+									nacimiento</label>
+								<p-fileUpload chooseLabel="Seleccionar" name="demo[]"
+									(onSelect)="onUploadCertificado($event)" (onRemove)="onRemoveCertificado()"
+									[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
+								</p-fileUpload>
+							</div>
+						</div>
+						<div class="p-formgrid grid">
+							<div class="field col">
+								<label class="{{campos[4].class}}" htmlFor="anteproyecto">Cargar
+									Anteproyecto</label>
+								<p-fileUpload chooseLabel="Seleccionar" name="demo[]"
+									(onSelect)="onUploadAnteproyecto($event)" (onRemove)="onRemoveAnteproyecto()"
+									[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
+								</p-fileUpload>
+							</div>
+						</div>
+						<div class="p-formgrid grid">
+							<div class="field col">
+								<label class="{{campos[5].class}}" htmlFor="cartaAsesor">Cargar Carta de
+									Asesor</label>
+								<p-fileUpload chooseLabel="Seleccionar" name="demo[]"
+									(onSelect)="onUploadCartaAsesor($event)" (onRemove)="onRemoveCartaAsesor()"
+									[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
+								</p-fileUpload>
+							</div>
+						</div>
+						<div class="p-formgrid grid">
+							<div class="field col">
+								<label class="{{campos[5].class}}" htmlFor="cartaAsesor">Finiquito
+									(Opcional)</label>
+								<p-fileUpload chooseLabel="Seleccionar" name="demo[]"
+									(onSelect)="onUploadCartaAsesor($event)" (onRemove)="onRemoveCartaAsesor()"
+									[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
+								</p-fileUpload>
+							</div>
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<div class="card">
+								<p-button (click)="cancelar()" icon="pi pi-times"
+									styleClass="p-button-outlined p-button-secondary" label="Cancelar"></p-button>
+							</div>
+						</div>
+						<div class="field col">
+							<div class="card">
+								<p-button (click)="siguiente()" icon="pi pi-chevron-right"
+									styleClass="p-button-outlined" label="Siguiente"></p-button>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+				<ng-container *ngIf="activeIndex === 1">
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label class="" htmlFor="nombres">Nombres</label>
+							<input [(ngModel)]="asesor.nombres" pInputText type="text" />
+						</div>
+						<div class="field col">
+							<label class="" htmlFor="apellidos">Apellidos</label>
+							<input [(ngModel)]="asesor.apellidos" pInputText id="apellidos" type="text" />
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label class="" htmlFor="email">Correo electrónico</label>
+							<input [(ngModel)]="asesor.correo" pInputText type="text" />
+						</div>
+						<div class="field col">
+							<label class="" htmlFor="fecha">Fecha de Nacimiento</label>
+							<p-calendar [(ngModel)]="asesor.fechaNacimiento" dateFormat="yy-mm-dd"
+								inputId="dateformat"></p-calendar>
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label class="" htmlFor="direccion">Direccion</label>
+							<input [(ngModel)]="asesor.direccion" pInputText id="direccion" type="text" />
+						</div>
+						<div class="field col">
+							<label class="" htmlFor="dpi">Numero de DPI</label>
+							<input [(ngModel)]="asesor.dpi" pInputText id="dpi" type="text" />
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label class="" htmlFor="telefono">Numero de Telefono</label>
+							<input [(ngModel)]="asesor.telefono" pInputText id="telefono" type="text" />
+						</div>
+						<div class="field col">
+							<label class="" htmlFor="colegiado">Numero de Colegiado</label>
+							<input [(ngModel)]="asesor.numeroColegiado" pInputText id="colegiado" type="text" />
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label class="" htmlFor="registro">Registro Academico (Opcional)</label>
+							<input [(ngModel)]="asesor.registroAcademico" pInputText id="registro" type="text" />
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<div class="card">
+								<p-button (click)="regresar()" icon="pi pi-chevron-left"
+									styleClass="p-button-outlined p-button-secondary" label="Regresar"></p-button>
+							</div>
+						</div>
+						<div class="field col">
+							<div class="card">
+								<p-button (click)="confirm()" [loading]="loading" icon="pi pi-check"
+									styleClass="p-button-outlined" label="Crear Proyecto"></p-button>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+			</p-panel>
 		</div>
 	</div>
 </div>
+<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle" [style]="{width: '350px'}"
+	acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>

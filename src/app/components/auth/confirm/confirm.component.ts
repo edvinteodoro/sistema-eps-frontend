@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { LayoutService } from 'src/app/layout/service/app.layout.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ActivarUsuario } from 'src/app/model/ActivarUsuario';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
     selector: 'app-login',
-    templateUrl: './login.component.html',
+    templateUrl: './confirm.component.html',
     styles: [`
         :host ::ng-deep .pi-eye,
         :host ::ng-deep .pi-eye-slash {
@@ -15,28 +15,28 @@ import { AuthService } from 'src/app/services/auth.service';
         }
     `]
 })
-export class LoginComponent {
-
-    valCheck: string[] = ['remember'];
+export class ConfirmComponent {
     errorLabel: string = "";
+    activarUsuario:ActivarUsuario={
+        usuario:"",
+        token:"",
+        password1:"",
+        password2:""
+    };
+    token!:String;
+    usuario!: string; 
 
-    password!: string;
-    user!: string;
-
-    loginObj: any = {
-        username:this.user,        
-        password:this.password
+    constructor(private router: Router,private route: ActivatedRoute,private authService: AuthService) {  
     }
 
-    constructor(public layoutService: LayoutService, private authService: AuthService,private router: Router) {  
-        if(!!localStorage.getItem('token')){//is logged in
-            this.router.navigate(['']);
-        }
-    }
+    ngOnInit() {
+        this.route.queryParams.subscribe(params => {
+          this.activarUsuario.token = params['token'];
+        });
+      }
+
     onLogin(){
-        this.loginObj.username=this.user;
-        this.loginObj.password=this.password;
-        this.authService.onLogin(this.loginObj).subscribe((res: any) => {
+        this.authService.activarUsuario(this.activarUsuario).subscribe((res: any) => {
             this.router.navigate(['']);
         },(error)=>{
             if(error.status==401){

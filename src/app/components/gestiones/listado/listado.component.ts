@@ -4,6 +4,8 @@ import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { ProductService } from 'src/app/demo/service/product.service';
 import { Proyecto } from 'src/app/model/Proyecto';
+import { ProyectoService } from 'src/app/services/proyecto.service';
+import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './listado.component.html',
@@ -33,24 +35,11 @@ export class ListadoComponent implements OnInit {
 
     rowsPerPageOptions = [5, 10, 20];
 
-    constructor(private productService: ProductService, private messageService: MessageService) { }
+    constructor(private proyectoService: ProyectoService, private messageService: MessageService,
+        private router: Router) { }
 
     ngOnInit() {
-        this.productService.getProducts().then(data => this.products = data);
-        
-        this.cols = [
-            { field: 'product', header: 'Product' },
-            { field: 'price', header: 'Price' },
-            { field: 'category', header: 'Category' },
-            { field: 'rating', header: 'Reviews' },
-            { field: 'inventoryStatus', header: 'Status' }
-        ];
-
-        this.statuses = [
-            { label: 'INSTOCK', value: 'instock' },
-            { label: 'LOWSTOCK', value: 'lowstock' },
-            { label: 'OUTOFSTOCK', value: 'outofstock' }
-        ];
+        this.proyectoService.getProyectos().subscribe(proyectos => this.proyectos = proyectos);
     }
 
     openNew() {
@@ -127,6 +116,10 @@ export class ListadoComponent implements OnInit {
         }
 
         return index;
+    }
+
+    revisarProyecto(proyecto:Proyecto){
+        this.router.navigate(['gestiones/proyecto'], { state: { data: proyecto } });
     }
 
     createId(): string {

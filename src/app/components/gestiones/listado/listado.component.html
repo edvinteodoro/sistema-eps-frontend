@@ -3,7 +3,7 @@
         <div class="card px-6 py-6">
             <p-toast></p-toast>
 
-            <p-table #dt [value]="proyectos" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['name','country.name','representative.name','status']" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedProducts" selectionMode="multiple" [rowHover]="true" dataKey="id">
+            <p-table #dt [value]="proyectos" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['name','country.name','representative.name','status']" [rows]="10" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedProducts" selectionMode="multiple" [rowHover]="true" dataKey="id">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
                         <h5 class="m-0">Proyectos</h5>
@@ -16,8 +16,10 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th pSortableColumn="email">Titulo</th>
+                        <th pSortableColumn="estudiante">Estudiante</th>
+                        <th pSortableColumn="registro">Registro Academico</th>
                         <th pSortableColumn="Carrera">Carrera</th>
-                        <th pSortableColumn="Coordenadas">Coordenadas</th>
+                        <th pSortableColumn="Coordenadas">Estado</th>
                         <th></th>
                     </tr>
                 </ng-template>
@@ -26,18 +28,23 @@
                         <td style="width:14%; min-width:10rem;"><span class="p-column-title">Titulo</span>
                             {{proyecto.titulo}}
                         </td>
+                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Estudiante</span>
+                            {{proyecto.usuario.nombres+' '+proyecto.usuario.apellidos}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Registro Academico</span>
+                            {{proyecto.usuario.registroAcademico}}
+                        </td>
                         <td style="width:14%; min-width:10rem;">
                             <span class="p-column-title">Carrera</span>
                             {{proyecto.carrera.titulo}}
                         </td>
                         <td style="width:14%; min-width:8rem;">
-                            <span class="p-column-title">Coordenadas</span>
+                            <span class="p-column-title">Estado</span>
                             {{proyecto.coordenadas}}
                         </td>
                         <td>
                             <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProduct(product)"></button>
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product)"></button>
+                                <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-success mr-2" (click)="revisarProyecto(proyecto)"></button>
                             </div>
                         </td>
                     </tr>

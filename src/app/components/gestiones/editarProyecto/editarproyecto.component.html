@@ -1,0 +1,103 @@
+<div class="grid">
+	<div class="col-12">
+		<p-toast key="tst"></p-toast>
+		<div class="card p-fluid">
+			<p-panel header="Proyecto EPS">
+				<div class="card">
+					<p-steps [model]="items" [readonly]="false" [activeIndex]="activeIndex"
+						(activeIndexChange)="onActiveIndexChange($event)"></p-steps>
+				</div>
+				<ng-container *ngIf="activeIndex === 0">
+					<div class="field">
+						<label htmlFor="titulo">Titulo del Proyecto</label>
+						<textarea [(ngModel)]="proyecto.titulo" disabled="true" required="required" id="titulo" rows="2"
+							cols="30" pInputTextarea></textarea>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label htmlFor="inscripcion">Descargar constancia de inscripcion</label>
+							<p-button label="Descarcar" icon="pi pi-download"
+								(onClick)="descargar(proyecto?.requisitos?.[0])"></p-button>
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label htmlFor="propedeutico">Descargar constancia de propedeutico</label>
+							<p-button label="Descarcar" icon="pi pi-download"
+								(onClick)="descargar(proyecto?.requisitos?.[1])"></p-button>
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label htmlFor="nacimiento">Descargar certificado de nacimiento</label>
+							<p-button label="Descarcar" icon="pi pi-download"
+								(onClick)="descargar(proyecto?.requisitos?.[2])"></p-button>
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label htmlFor="anteproyecto">Descargar Anteproyecto</label>
+							<p-button label="Descarcar" icon="pi pi-download"
+								(onClick)="descargar(proyecto?.requisitos?.[3])"></p-button>
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label htmlFor="cartaAsesor">Cargar Carta de Asesor</label>
+							<p-button label="Descarcar" icon="pi pi-download"
+								(onClick)="descargar(proyecto?.requisitos?.[4])"></p-button>
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label htmlFor="coordenadas">Coordenadas del proyecto</label>
+							<input type="text" disabled="true" [(ngModel)]="proyecto.coordenadas" pInputText>
+						</div>
+						<div class="field col">
+							<label htmlFor="carrera">Carrera</label>
+							<input type="text" disabled="true" [(ngModel)]="proyecto.carrera.titulo" pInputText>
+						</div>
+					</div>
+				</ng-container>
+				<p-divider></p-divider>
+				<div class="p-formgrid grid" *ngIf="mostrarBotones()">
+					<div class="field col">
+						<div class="card">
+							<p-button icon="pi pi-comment" (click)="showDialog()" 
+								styleClass="p-button-outlined p-button-secondary"
+								label="Solicitar Cambios"></p-button>
+						</div>
+					</div>
+					<div class="field col">
+						<div class="card">
+							<p-button icon="pi pi-check" styleClass="p-button-outlined" (click)="confirm()"
+								label="Aceptar"></p-button>
+						</div>
+					</div>
+				</div>
+			</p-panel>
+		</div>
+	</div>
+</div>
+<p-dialog header="Header" [(visible)]="visible" [style]="{ width: '50vw' }" (onHide)="resetEditor()">
+    <ng-template pTemplate="header">
+        <span class="text-xl font-bold">Solicitar Cambios</span>
+    </ng-template>
+    <editor #editor [(ngModel)]="text" apiKey="93afxat2vc9lyzupvxajjema7oakd4axpy6twnhw0cbdc6eb" [init]="{
+	height: 300,
+    menubar: false,
+    plugins: [
+      'advlist autolink lists link image charmap print preview anchor',
+      'searchreplace visualblocks code fullscreen',
+      'insertdatetime media table paste code help wordcount'
+    ],
+    toolbar:
+      'undo redo | formatselect | bold italic backcolor | \
+      alignleft aligncenter alignright alignjustify | \
+      bullist numlist outdent indent | removeformat | help'}"></editor>
+    <ng-template pTemplate="footer">
+        <p-button icon="pi pi-check" (click)="visible = false" label="Aceptar" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>
+<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle" [style]="{width: '350px'}"
+	acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>

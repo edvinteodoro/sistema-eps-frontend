@@ -1,0 +1,36 @@
+<div class="surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden">
+    <div class="flex flex-column align-items-center justify-content-center"><div style="border-radius:56px; padding:0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%);">
+            <div class="w-full surface-card py-8 px-5 sm:px-8" style="border-radius:53px">
+                <div class="text-center mb-5">
+                    <img src="assets/demo/images/login/usac_logo.png" alt="Image" height="100" class="mb-3">
+                    <div class="text-900 text-3xl font-medium mb-3">Activar Usuario</div>
+                    <span class="text-600 font-medium">Ingrese los campos para activar su usuario</span>
+                </div>
+
+                <div>
+                    <label for="email1" class="block text-900 mb-2">Registro academico o colegiado</label>
+                    <input required="required" id="email1" [(ngModel)]="activarUsuario.usuario" type="text" placeholder="correo electrónico" pInputText class="w-full md:w-30rem mb-5" style="padding:1rem"/>
+
+                    <label for="password1" class="block text-900 mb-2">Contraseña</label>
+                    <p-password required="required" id="password1" [(ngModel)]="activarUsuario.password1" placeholder="contraseña" [toggleMask]="true" [feedback]="true" 
+                    weakLabel="Debil" mediumLabel="Medio" strongLabel="Fuerte"styleClass="mb-5" inputStyleClass="w-full p-3 md:w-30rem"></p-password>
+
+                    <label for="password2" class="block text-900 mb-2">Confirmar Contraseña</label>
+                    <p-password required="required" id="password2" [(ngModel)]="activarUsuario.password2" placeholder="contraseña" [toggleMask]="true" [feedback]="false" styleClass="mb-5" inputStyleClass="w-full p-3 md:w-30rem"></p-password>
+
+                    <div class="flex align-items-center justify-content-between mb-5 gap-5">
+                        <label for="errorMsg" class="p-error block">{{errorLabel}}</label>
+                    <!--     <div class="flex align-items-center">
+                            <p-checkbox id="rememberme1" [binary]="true" styleClass="mr-2"></p-checkbox>
+                            <label for="rememberme1">Remember me</label>
+                        </div>
+                        <a class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">Forgot password?</a>
+                    -->
+                    </div>
+                    
+                    <button pButton pRipple label="Iniciar Sesión" class="w-full p-3 text-xl" (click)="onLogin()"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

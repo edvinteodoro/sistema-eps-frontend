@@ -1,0 +1,220 @@
+<div class="grid">
+	<div class="col-12">
+		<p-toast key="tst"></p-toast>
+		<div class="card p-fluid">
+			<p-panel header="Proyecto EPS">
+				<div class="card">
+					<p-steps [model]="items" [readonly]="false" [activeIndex]="activeIndex"
+						(activeIndexChange)="onActiveIndexChange($event)"></p-steps>
+				</div>
+				<ng-container *ngIf="activeIndex === 0">
+					<div class="field">
+						<label htmlFor="titulo">Titulo del Proyecto</label>
+						<textarea [(ngModel)]="proyecto.titulo" [disabled]="bloquedo" required="required" id="titulo" rows="2"
+							cols="30" pInputTextarea></textarea>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label htmlFor="coordenadas">Coordenadas del proyecto</label>
+							<input type="text" disabled="true" [disabled]="bloquedo" [(ngModel)]="proyecto.coordenadas" pInputText>
+						</div>
+						<div class="field col">
+							<label htmlFor="carrera">Carrera</label>
+							<input type="text" disabled="true" [(ngModel)]="proyecto.carrera.titulo" pInputText>
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label htmlFor="inscripcion">Descargar constancia de inscripcion</label>
+							<p-button *ngIf="!cambiarInscripcion" label="Descarcar" icon="pi pi-download"
+								(onClick)="descargar(proyecto?.requisitos?.[0])"></p-button>
+								
+							<p-fileUpload *ngIf="cambiarInscripcion" mode="basic" name="demo[]" accept=".pdf" [maxFileSize]="1000000"  chooseLabel="Browse" ></p-fileUpload>
+
+								<p-button class="child"
+								label="Cambiar constancia de inscripcion" *ngIf="!cambiarInscripcion  && !bloquedo"
+								styleClass="p-button-link" (onClick)="cambiarDocInscripcion(true)"></p-button>
+								<p-button class="child" label="Cancelar" *ngIf="cambiarInscripcion"
+								styleClass="p-button-link" (onClick)="cambiarDocInscripcion(false)"></p-button>
+								
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label htmlFor="propedeutico">Descargar constancia de propedeutico</label>
+							<p-button label="Descarcar" icon="pi pi-download"
+								(onClick)="descargar(proyecto?.requisitos?.[1])"></p-button>
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label htmlFor="nacimiento">Descargar certificado de nacimiento</label>
+							<p-button label="Descarcar" icon="pi pi-download"
+								(onClick)="descargar(proyecto?.requisitos?.[2])"></p-button>
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label htmlFor="anteproyecto">Descargar Anteproyecto</label>
+							<p-button label="Descarcar" icon="pi pi-download"
+								(onClick)="descargar(proyecto?.requisitos?.[3])"></p-button>
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label htmlFor="cartaAsesor">Cargar Carta de Asesor</label>
+							<p-button label="Descarcar" icon="pi pi-download"
+								(onClick)="descargar(proyecto?.requisitos?.[4])"></p-button>
+						</div>
+					</div>
+				</ng-container>
+				<ng-container *ngIf="activeIndex === 1">
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label class="" htmlFor="nombres">Nombres</label>
+							<input [(ngModel)]="proyecto.asesor!.nombres" [disabled]="bloquedo" pInputText type="text" />
+						</div>
+						<div class="field col">
+							<label class="" htmlFor="apellidos">Apellidos</label>
+							<input [(ngModel)]="proyecto.asesor!.apellidos" [disabled]="bloquedo" pInputText id="apellidos"
+								type="text" />
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label class="" htmlFor="email">Correo electrónico</label>
+							<input [(ngModel)]="proyecto.asesor!.correo" [disabled]="bloquedo" pInputText type="text" />
+						</div>
+						<div class="field col">
+							<label class="" htmlFor="fecha">Fecha de Nacimiento</label>
+							<p-calendar [(ngModel)]="proyecto.asesor!.fechaNacimiento" [disabled]="bloquedo"
+								dateFormat="yy-mm-dd" inputId="dateformat"></p-calendar>
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label class="" htmlFor="direccion">Direccion</label>
+							<input [(ngModel)]="proyecto.asesor!.direccion" [disabled]="bloquedo" pInputText id="direccion" type="text"/>
+						</div>
+						<div class="field col">
+							<label class="" htmlFor="dpi">Numero de DPI</label>
+							<input [(ngModel)]="proyecto.asesor!.dpi" pInputText id="dpi" [disabled]="bloquedo" type="text"/>
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label class="" htmlFor="telefono">Numero de Telefono</label>
+							<input [(ngModel)]="proyecto.asesor!.telefono" pInputText id="telefono" [disabled]="bloquedo" type="text"/>
+						</div>
+						<div class="field col">
+							<label class="" htmlFor="colegiado">Numero de Colegiado</label>
+							<input [(ngModel)]="proyecto.asesor!.numeroColegiado" pInputText id="colegiado" [disabled]="bloquedo" type="text"/>
+						</div>
+					</div>
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label class="" htmlFor="registro">Registro Academico (Opcional)</label>
+							<input [(ngModel)]="proyecto.asesor!.registroAcademico" pInputText id="registro" [disabled]="bloquedo" type="text"/>
+						</div>
+					</div>
+				</ng-container>
+				<div class="p-formgrid grid" >
+					<div class="field col" *ngIf="boton1.mostrar">
+						<div class="card">
+							<p-button [icon]="boton1.icono" (click)="boton1.accion()"
+								styleClass="p-button-outlined p-button-secondary"
+								[label]="boton1.titulo"></p-button>
+						</div>
+					</div>
+					<div class="field col" *ngIf="boton2.mostrar">
+						<div class="card">
+							<p-button [icon]="boton2.icono" styleClass="p-button-outlined" (click)="boton2.accion()"
+								[label]="boton2.titulo"></p-button>
+						</div>
+					</div>
+				</div>
+				<p-divider></p-divider>
+				<div class="field col">
+					<div class="comment-box">
+						<h3>Comentarios</h3>
+						<div class="comment-form">
+							<textarea [(ngModel)]="text" class="comment-input"
+								placeholder="Escribe tu comentario"></textarea>
+							<button type="submit" class="comment-button" (click)="comentar()">Comentar</button>
+						</div>
+						<br>
+						<br>
+						<div class="comment-list">
+							<app-phase *ngFor="let etapa of etapas" [name]="etapa.nombre" [icon]="etapa.icono">
+								<ng-container *ngFor="let comentario of etapa.comentarios">
+									<app-comment [comment]="comentario"></app-comment>
+								</ng-container>
+								<p-button *ngIf="!etapa.activo" label="ver comentarios" styleClass="p-button-link"
+									(click)="cargarComentario(etapa)"></p-button>
+							</app-phase>
+							<app-phase name="Creacion de Proyecto" icon="pi pi-flag"></app-phase>
+						</div>
+					</div>
+				</div>
+			</p-panel>
+		</div>
+	</div>
+</div>
+<p-dialog header="Header" [(visible)]="visible" [style]="{ width: '50vw' }" (onHide)="resetEditor()">
+	<ng-template pTemplate="header">
+		<span class="text-xl font-bold">Solicitar Cambios</span>
+	</ng-template>
+	<editor #editor [(ngModel)]="text" apiKey="93afxat2vc9lyzupvxajjema7oakd4axpy6twnhw0cbdc6eb" [init]="{
+	height: 300,
+    menubar: false,
+    plugins: [
+      'advlist autolink lists link image charmap print preview anchor',
+      'searchreplace visualblocks code fullscreen',
+      'insertdatetime media table paste code help wordcount'
+    ],
+    toolbar:
+      'undo redo | formatselect | bold italic backcolor | \
+      alignleft aligncenter alignright alignjustify | \
+      bullist numlist outdent indent | removeformat | help'}"></editor>
+	<ng-template pTemplate="footer">
+		<p-button icon="pi pi-check" (click)="visible = false" label="Aceptar" styleClass="p-button-text"></p-button>
+	</ng-template>
+</p-dialog>
+<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle" [style]="{width: '350px'}"
+	acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+
+<style>
+	h3 {
+		font-size: 20px;
+		font-weight: bold;
+		margin-bottom: 20px;
+	}
+
+	.comment-form {
+		margin-top: 20px;
+	}
+
+	.comment-input {
+		width: 100%;
+		height: 100px;
+		padding: 5px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+	}
+
+	.comment-button {
+		display: block;
+		margin-top: 10px;
+		padding: 5px 10px;
+		background-color: #778899;
+		color: #fff;
+		border: none;
+		border-radius: 3px;
+		cursor: pointer;
+	}
+
+	.comment-button:hover {
+		background-color: #696969;
+	}
+	
+</style>

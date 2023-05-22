@@ -1,0 +1,108 @@
+<div class="grid">
+	<div class="col-12">
+		<p-toast key="tst"></p-toast>
+		<div class="card p-fluid">
+			<p-panel header="Definir fecha de evaluacion">
+				<app-phase name="Informacion del proyecto" icon="pi pi-book">
+					<div class="card">
+						<div class="p-formgrid grid">
+							<div class="field col">
+								<label>Titulo de proyecto:</label>
+								<textarea [(ngModel)]="proyecto.titulo" class="title" disabled="true" required="required" id="titulo" rows="2"
+									cols="30" pInputTextarea></textarea>
+							</div>
+						</div>
+						<div class="p-formgrid grid">
+							<div class="field col">
+								<label>Nombre estudiante:</label>
+								<input pInputText id="estudiante" type="text" [(ngModel)]="proyecto.usuario!.nombres"/>
+							</div>
+							<div class="field col">
+								<label>Registro academico:</label>
+								<input pInputText id="registro" type="text" [(ngModel)]="proyecto.usuario!.registroAcademico" />
+							</div>
+						</div>
+						<div class="p-formgrid grid">
+							<div class="field col">
+								<label>Carne:</label>
+								<input pInputText id="carne" type="text" [(ngModel)]="proyecto.usuario!.dpi"/>
+							</div>
+							<div class="field col">
+								<label>Carrera:</label>
+								<input pInputText id="carrera" type="text" [(ngModel)]="proyecto.carrera!.titulo"/>
+							</div>
+						</div>
+					</div>
+				</app-phase>
+				<app-phase name="Comision de EPS" icon="pi pi-users">
+					<div class="card">
+						<div class="p-formgrid grid">
+							<div class="field col">
+								<label>Coordinador:</label>
+								<input pInputText id="coordinador" type="text" [(ngModel)]="proyecto.supervisor!.nombres+' '+proyecto.supervisor!.apellidos"/>
+							</div>
+						</div>
+						<div class="p-formgrid grid">
+							<div class="field col">
+								<label>Supervisor:</label>
+								<input pInputText id="supervisor" type="text" [(ngModel)]="proyecto.supervisor!.nombres+' '+proyecto.supervisor!.apellidos"/>
+							</div>
+						</div>
+						<div class="p-formgrid grid">
+							<div class="field col">
+								<label>Asesor:</label>
+								<input pInputText id="supervisor" type="text" [(ngModel)]="proyecto.asesor!.nombres+' '+proyecto.asesor!.apellidos"/>
+							</div>
+						</div>
+						<div class="p-formgrid grid">
+							<div class="field col">
+								<label>Representante coordinador:</label>
+								<div *ngIf="!mostrarRepresentante">
+									<p-button icon="pi pi-plus" class="child"
+										label="Agregar representante de coordinador"
+										styleClass="p-button-link" (click)="mostrarRepresentante=true"></p-button>
+								</div>
+								<input *ngIf="mostrarRepresentante" pInputText id="representante" type="text" [(ngModel)]="representante"/>
+								<div *ngIf="mostrarRepresentante">
+									<p-button icon="pi pi-minus" class="child"
+										label="Remover representante de coordinador"
+										styleClass="p-button-link p-button-danger p-button-text" (click)="mostrarRepresentante=false"></p-button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</app-phase>
+				<app-phase name="Definir fecha" icon="pi pi-calendar-times">
+					<div class="p-formgrid grid">
+						<div class="field col">
+							<label htmlFor="fecha">Seleccione fecha y hora de la evaluacion: </label>
+							<p-calendar dateFormat="dd-mm-yy" [showTime]="true" inputId="dateformat" [(ngModel)]="fecha"></p-calendar>
+						</div>
+					</div>
+				</app-phase>
+				<div class="p-formgrid grid">
+					<div class="field col">
+						<div class="card">
+							<p-button icon="pi pi-angle-left" styleClass="p-button-outlined p-button-secondary" label="Regresar" (click)="regresar()"></p-button>
+						</div>
+					</div>
+					<div class="field col">
+						<div class="card">
+							<p-button icon="pi pi-check" styleClass="p-button-outlined" label="Aceptar" (click)="aceptar()"></p-button>
+						</div>
+					</div>
+				</div>
+			</p-panel>
+		</div>
+	</div>
+</div>
+<style>
+	.title {
+		color: black;
+	}
+
+	.child {
+		position: absolute;
+		left: 45px;
+	}
+</style>
