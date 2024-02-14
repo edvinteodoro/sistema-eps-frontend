@@ -8,20 +8,22 @@ import { AuthGuard } from './shared/auth.guard';
 @NgModule({
     imports: [
         RouterModule.forRoot([
-            {path: 'auth/login', component: LoginComponent},
+            { path: 'auth/login', component: LoginComponent },
             {
                 path: '', component: AppLayoutComponent,
                 children: [
-                    { path: '', loadChildren: () => import('./components/principal/principal.module').then(m => m.PrincipalModule) },
+                    { path: '', redirectTo:'gestiones/listado', pathMatch:'full' },
                     { path: 'usuarios', loadChildren: () => import('./components/usuarios/usuarios.module').then(m => m.UsuariosModule) },
                     { path: 'gestiones', loadChildren: () => import('./components/gestiones/gestiones.module').then(m => m.GestionesModule) },
+                    { path: 'bitacoras', loadChildren: () => import('./components/bitacoras/bitacoras.module').then(m => m.BitacorasModule) },
+                    { path: 'actas', loadChildren: () => import('./components/actas/actas.module').then(m => m.ActasModule) },
+                    { path: 'documentos', loadChildren: () => import('./components/documentos/documentos.module').then(m => m.DocumentosModule) }
                 ],
-                canActivate:[AuthGuard]
+                canActivate: [AuthGuard]
             },
             { path: 'auth', loadChildren: () => import('./components/auth/auth.module').then(m => m.AuthModule) },
             { path: 'landing', loadChildren: () => import('./components/landing/landing.module').then(m => m.LandingModule) },
-            { path: 'notfound', component: NotfoundComponent },
-            { path: '**', redirectTo: '/notfound' },
+            { path: '**', component: NotfoundComponent },
         ], { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', onSameUrlNavigation: 'reload' })
     ],
     exports: [RouterModule]

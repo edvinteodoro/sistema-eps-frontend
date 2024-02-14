@@ -1,75 +1,93 @@
-<div class="grid">
-	<div class="col-12">
-		<p-toast key="tst"></p-toast>
-		<div class="card p-fluid">
-			<h5>Crear Usuario</h5>
-			<div class="p-formgrid grid">
-				<div class="field col">
-					<label class="{{campos[0].class}}" htmlFor="nombres">Nombres</label>
-					<input [(ngModel)]="campos[0].valor" pInputText id="nombres" type="text" />
-				</div>
-				<div class="field col">
-					<label class="{{campos[1].class}}" htmlFor="apellidos">Apellidos</label>
-					<input [(ngModel)]="campos[1].valor" pInputText id="apellidos" type="text" />
-				</div>
-			</div>
-			<div class="p-formgrid grid">	
-				<div class="field col">
-					<label class="{{campos[2].class}}" htmlFor="email">Correo electrónico</label>
-					<input [(ngModel)]="campos[2].valor" pInputText id="email" type="text" />
-				</div>
-				<div class="field col">
-					<label class="{{campos[3].class}}" htmlFor="fecha">Fecha de Nacimiento</label>
-					<p-calendar [(ngModel)]="campos[3].valor" dateFormat="yy-mm-dd" inputId="dateformat"></p-calendar>
-				</div>
-			</div>
-			
-			<div class="p-formgrid grid">	
-				<div class="field col">
-					<label class="{{campos[4].class}}" htmlFor="direccion">Direccion</label>
-					<input [(ngModel)]="campos[4].valor" pInputText id="direccion" type="text" />
-				</div>
-				<div class="field col">
-					<label class="{{campos[5].class}}" htmlFor="dpi">Numero de DPI</label>
-					<input [(ngModel)]="campos[5].valor" pInputText id="dpi" type="text" />
-				</div>
-			</div>
-			<div class="p-formgrid grid">
-				<div class="field col">
-					<label class="{{campos[6].class}}" htmlFor="telefono">Numero de Telefono</label>
-					<input [(ngModel)]="campos[6].valor" pInputText id="telefono" type="text" />
-				</div>
-				<div class="field col">
-					<label class="{{campos[7].class}}" htmlFor="tipo">Rol de Usuario</label>
-					<p-dropdown [(ngModel)]="campos[7].valor"  [options]="roles" [editable]="true" optionLabel="titulo" (onChange)="onChange($event)"></p-dropdown>
-				</div>
-			</div>
-			<div class="p-formgrid grid">
-				<div *ngIf="carreraSeleccionada.mostrar" class="field col">
-					<label class="{{carreraSeleccionada.class}}" htmlFor="carreras">Carreras</label>
-					<p-multiSelect [(ngModel)]="carreraSeleccionada.valor" inputId="multiselect" [options]="carreras" optionLabel="titulo" [filter]="false"></p-multiSelect>
-				</div>
-				<div *ngIf="registro.mostrar" class="field col">
-					<label class="{{registro.class}}" htmlFor="registro">Registro Academico</label>
-					<input [(ngModel)]="registro.valor" pInputText id="registro" type="text" />
-				</div>
-				<div *ngIf="colegiado.mostrar" class="field col">
-					<label class="{{colegiado.class}}" htmlFor="colegiado">Numero de Colegiado</label>
-					<input [(ngModel)]="colegiado.valor" pInputText id="colegiado" type="text" />
-				</div>
-			</div><br>
-			<div class="p-formgrid grid">
-				<div class="field col">
-					<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle"
-                             [style]="{width: '350px'}" acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
-					<p-confirmDialog header="Confirmacion" key="confirm2" icon="pi pi-exclamation-triangle"
-                             [style]="{width: '350px'}" acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
-					<button (click)="confirm()" pButton icon="pi pi-check" label="Actualizar Usuario"></button>	
-				</div>
-				<div class="field col">
-					<button (click)="cancelar()" pButton icon="pi pi-times" class="p-button-danger" label="Cancelar"></button>	
-				</div>	
-			</div>		
+<div class="card">
+	<p-toast key="tst"></p-toast>
+	<div class="flex md:flex-row justify-content-between align-items-center">
+		<div class="flex md:flex-row">
+			<span class="icon-atras block">
+				<p-button icon="pi pi-chevron-left" (click)="goBack()"
+					styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+			</span>
+			<h5 class="titulo">Usuario</h5>
+		</div>
+		<p-menu #menu [popup]="true" [model]="menuItems"></p-menu>
+		<span class="block mt-2 p-input-icon-left">
+			<p-button icon="pi pi-ellipsis-v" (click)="menu.toggle($event)"
+				styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+		</span>
+	</div>
+	<div class="grid p-fluid mt-3">
+		<div class="field col-12 md:col-6">
+			<label>Nombre Completo</label>
+			<input [(ngModel)]="usuario.nombreCompleto" pInputText type="text" [disabled]="bloqueado"
+				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.nombreCompleto)}" />
+		</div>
+		<div class="field col-12 md:col-6">
+			<label>Correo electrónico</label>
+			<input [(ngModel)]="usuario.correo" pInputText type="text" [disabled]="bloqueado"
+				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.correo)}" />
+		</div>
+		<div class="field col-12 md:col-6">
+			<label>Direccion</label>
+			<input [(ngModel)]="usuario.direccion" pInputText type="text" [disabled]="bloqueado"
+				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.direccion)}" />
+		</div>
+		<div class="field col-12 md:col-6">
+			<label>Numero de DPI</label>
+			<input [(ngModel)]="usuario.dpi" pInputText type="text" [disabled]="bloqueado"
+				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.dpi)}" />
+		</div>
+		<div class="field col-12 md:col-6">
+			<label>Numero de Telefono</label>
+			<input [(ngModel)]="usuario.telefono" pInputText type="text" [disabled]="bloqueado"
+				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.telefono)}" />
+		</div>
+		<div class="field col-12 md:col-6">
+			<label [ngClass]="{'p-error block': isFieldInvalid(usuario.rol)}">Rol de Usuario</label>
+			<p-dropdown #rolDropdown [(ngModel)]="usuario.rol" [options]="roles" [disabled]="bloqueado"
+				optionLabel="titulo"></p-dropdown>
+		</div>
+		<div *ngIf="usuario.rol && usuario.rol.idRol!=1" class="field col-12 md:col-6">
+			<label htmlFor="tipo" [ngClass]="{'p-error block': isFieldInvalid(usuario.titulo)}">Titulo de Usuario</label>
+			<p-dropdown #rolDropdown [(ngModel)]="usuario.titulo" [options]="titulos" [editable]="true" [disabled]="bloqueado"
+				optionLabel="nombre"></p-dropdown>
+		</div>
+		<div *ngIf="usuario.rol && usuario.rol.contieneCarrera" class="field col-12 md:col-6">
+			<label htmlFor="carreras" [ngClass]="{'p-error block': isFieldInvalid(usuario.carreras)}">Carreras</label>
+			<p-multiSelect [(ngModel)]="usuario.carreras" inputId="multiselect" [options]="carreras" [disabled]="bloqueado" 
+				optionLabel="nombre" [filter]="false"></p-multiSelect>
+		</div>
+		<div *ngIf="usuario.rol && usuario.rol.contieneRegistro" class="field col-12 md:col-6">
+			<label htmlFor="registro">Registro Academico</label>
+			<input [(ngModel)]="usuario.registroAcademico" pInputText id="registro" type="text" [disabled]="bloqueado"
+			[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.registroAcademico)}"/>
+		</div>
+		<div *ngIf="usuario.rol && usuario.rol.contieneColegiado" class="field col-12 md:col-6">
+			<label htmlFor="colegiado">Numero de Colegiado</label>
+			<input [(ngModel)]="usuario.numeroColegiado" pInputText id="colegiado" type="text" [disabled]="bloqueado"
+			[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.numeroColegiado)}"/>
+		</div>
+	</div>
+	<div class="grid p-fluid mt-3">
+		<div class="field col-12 md:col-6">
+			<p-button *ngIf="!bloqueado" icon="pi pi-undo" styleClass="p-button-outlined" label="Cancelar"
+				(click)="cancelarEdicion()"></p-button>
+		</div>
+		<div class="field col-12 md:col-6">
+			<p-button *ngIf="!bloqueado" icon="pi pi-undo" styleClass="p-button-outlined" label="Guardar Cambios"
+				(click)="cancelarEdicion()"></p-button>
+		</div>
+		<div class="field col-12 md:col-12">
+			<p-button *ngIf="bloqueado" icon="pi pi-user-edit" styleClass="p-button-outlined" label="Editar usuario"
+				(click)="editar()"></p-button>
 		</div>
 	</div>
 </div>
+<style>
+	.titulo {
+		color: #00274e;
+		font-weight: bold;
+	}
+
+	.icon-atras {
+		margin-top: 10px;
+	}
+</style>

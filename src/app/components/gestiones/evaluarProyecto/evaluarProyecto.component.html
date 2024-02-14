@@ -1,0 +1,148 @@
+<div class="card">
+	<p-toast key="tst"></p-toast>
+	<div class="flex md:flex-row justify-content-between align-items-center">
+		<div class="flex md:flex-row">
+			<span class="icon-atras block">
+				<p-button icon="pi pi-chevron-left" (click)="regresar()"
+					styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+			</span>
+			<h5 class="titulo">Fecha de evaluacion</h5>
+		</div>
+	</div><br><br>
+	<app-phase name="Informacion del proyecto" icon="pi pi-book">
+		<div class="grid p-fluid mt-3">
+			<div class="field col-12 md:col-12 pb-0">
+				<label>Titulo de proyecto:</label>
+				<textarea [(ngModel)]="elementoTitulo.informacion" class="title" disabled="true" required="required"
+					id="titulo" rows="4" cols="30" pInputTextarea></textarea>
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label>Nombre estudiante:</label>
+				<input pInputText id="estudiante" type="text" disabled="true" class="title"
+					[(ngModel)]="proyecto.usuario!.nombreCompleto" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label>Registro academico:</label>
+				<input pInputText id="registro" type="text" disabled="true" class="title"
+					[(ngModel)]="proyecto.usuario!.registroAcademico" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label>Carne:</label>
+				<input pInputText id="carne" type="text" disabled="true" class="title"
+					[(ngModel)]="proyecto.usuario!.dpi" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label>Carrera:</label>
+				<input pInputText id="carrera" type="text" disabled="true" class="title"
+					[(ngModel)]="proyecto.carrera!.nombre" />
+			</div>
+		</div>
+	</app-phase>
+	<!--<app-phase name="Coordinador de EPS" icon="pi pi-users">
+		<div class="grid p-fluid mt-3">
+			<div class="field col-12 md:col-6 pb-0">
+				<label>Coordinador de EPS:</label>
+				<input pInputText id="coordinador" type="text" disabled="true" class="title"
+					[(ngModel)]="coordinadorEps.nombreCompleto" />
+			</div>
+		</div>
+	</app-phase>
+	<app-phase name="Comision de EPS" icon="pi pi-users">
+		<div class="grid p-fluid mt-3">
+			<div class="field col-12 md:col-6 pb-0">
+				<label>Coordinador de Carrera:</label>
+				<input *ngIf="coordinadorCarrera!=undefined" pInputText id="coordinador" type="text" disabled="true"
+					class="title" [(ngModel)]="coordinadorCarrera.nombreCompleto" />
+				<input *ngIf="coordinadorCarrera==undefined" pInputText id="coordinador" type="text" disabled="true"
+					class="title" placeholder="No se encontro usuario Coordinador Carrera" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label>Supervisor:</label>
+				<input pInputText id="supervisor" type="text" disabled="true" class="title"
+					[(ngModel)]="supervisor.nombreCompleto" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label>Asesor:</label>
+				<input pInputText disabled="true" class="title" type="text" [(ngModel)]="asesor.nombreCompleto" />
+			</div>
+		</div>
+	</app-phase>-->
+	<app-phase name="Datos de convocatoria" icon="pi pi-calendar-times">
+		<div class="grid p-fluid mt-3">
+			<div class="field col-12 md:col-6 pb-0">
+				<label>Fecha de evaluacion:</label>
+				<input pInputText class="title" type="text" [(ngModel)]="convocatoriaGenerada.fechaEvaluacionFormat"
+					disabled="true" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label>Hora de Inicio de Evaluacion:</label>
+				<input pInputText id="coordinador" type="text" class="title"
+					[(ngModel)]="convocatoriaGenerada.horaEvaluacion" disabled="true" />
+			</div>
+			<div class="field col-12 md:col-12 pb-0">
+				<label htmlFor="salon">Salon: </label>
+				<input pInputText id="salon" type="text" class="title" [(ngModel)]="convocatoriaGenerada.salon"
+					disabled="true" />
+			</div>
+		</div>
+	</app-phase>
+	<app-phase name="Datos del Acta" icon="pi pi-calendar-times">
+		<div class="grid p-fluid mt-3">
+			<div class="field col-12 md:col-12 pb-0">
+				<label htmlFor="fecha">Resultado: </label>
+				<p-dropdown [options]="resuldados" [(ngModel)]="acta.resultado" [autofocus]="true"></p-dropdown>
+			</div>
+			<div class="field col-12 md:col-12 pb-0">
+				<label htmlFor="fecha">Nota: </label>
+				<p-inputNumber [(ngModel)]="acta.nota" [showButtons]="true" inputId="minmax-buttons" [min]="0"
+					[max]="100"></p-inputNumber>
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label htmlFor="fecha">Hora de inicio de evaluacion: </label>
+				<input pInputText [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(acta.horaInicioEvaluacion)}"
+					[(ngModel)]="acta.horaInicioEvaluacion" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label htmlFor="fecha">Hora de finalizacion de evaluacion: </label>
+				<input pInputText [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(acta.horaFinEvaluacion)}"
+					[(ngModel)]="acta.horaFinEvaluacion"/>
+			</div>
+			<div class="field col-12 md:col-12 pb-0">
+				<label htmlFor="fecha">Comentario: </label>
+				<textarea [(ngModel)]="acta.comentario" rows="4"
+					placeholder="Indicar los cambios solicitados al estudiante" pInputTextarea></textarea>
+			</div>
+		</div>
+	</app-phase>
+	<div class="grid p-fluid mt-3">
+		<div class="field col-12 md:col-6">
+			<p-button icon="pi pi-angle-left" styleClass="p-button-outlined p-button-secondary" label="Regresar"
+				(click)="regresar()"></p-button>
+		</div>
+		<div class="field col-12 md:col-6">
+			<p-button icon="pi pi-check" styleClass="p-button-outlined" label="Aceptar" (click)="aceptar()"></p-button>
+		</div>
+	</div>
+</div>
+<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle" [style]="{width: '350px'}"
+	acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+
+<style>
+	.title {
+		color: black;
+	}
+
+	.child {
+		position: absolute;
+		left: 45px;
+	}
+
+	.titulo {
+		color: #00274e;
+		font-weight: bold;
+	}
+
+	.icon-atras {
+		margin-top: 10px;
+	}
+</style>

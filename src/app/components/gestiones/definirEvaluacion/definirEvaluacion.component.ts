@@ -5,12 +5,17 @@ import { Proyecto } from 'src/app/model/Proyecto';
 import { DocumentosService } from 'src/app/services/documentos.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
-import { Role } from 'src/app/model/Role';
 import { ProyectoService } from 'src/app/services/proyecto.service';
-import { EditorComponent } from '@tinymce/tinymce-angular';
-import { Phase } from 'src/app/shared/models/phase.model';
+import { Usuario } from 'src/app/model/Usuario';
+import { UsuarioService } from 'src/app/services/usuario.service';
 import { Etapa } from 'src/app/model/Comentario';
-import { Evaluacion } from 'src/app/model/Evaluacion';
+import { ElementoUtils, EtapaUtils } from 'src/app/model/Utils';
+import { DatePipe, Time } from '@angular/common';
+import { ElementoProyecto } from 'src/app/model/ElementoProyecto';
+import { Titulo } from 'src/app/model/Titulo';
+import { TituloService } from 'src/app/services/titulo.service';
+import { Convocatoria } from 'src/app/model/Convocatoria';
+
 
 @Component({
     templateUrl: './definirEvaluacion.component.html',
@@ -18,53 +23,204 @@ import { Evaluacion } from 'src/app/model/Evaluacion';
 })
 
 export class DefinirEvaluacionComponent implements OnInit {
+    idProyecto!: number;
     proyecto!: Proyecto;
-    mostrarRepresentante: boolean = false;
-    fecha!: Date;
-    representante!: String;
 
-    constructor(private confirmationService: ConfirmationService, private messageService: MessageService, private location: Location,
-        private documentosService: DocumentosService, private router: Router, private authService: AuthService, private proyectoService: ProyectoService, private route: ActivatedRoute) { }
+    elementoTitulo!: ElementoProyecto;
+    coordinadorEps!: Usuario;
+    coordinadorCarrera!: Usuario;
+    supervisor!: Usuario;
+    asesor!: Usuario;
+    titulos!: Titulo[];
+    formatedFecha: string = '';
+
+    mostrarRepresentante: boolean = false;
+    mostrarFecha: boolean = false;
+    validar: boolean = false;
+    justificacion: any = '';
+    fecha!: Date;
+    hora!: Date;
+    fechaDefinida!: String;
+    convocatoriaGenerada!: Convocatoria;
+    convocatoria: Convocatoria = {
+        fechaEvaluacion: undefined,
+        salon: '',
+        horaEvaluacion: '',
+        representante: '',
+        tituloRepresentante: undefined
+    };
+    representante!: String;
+    etapaActiva!: Etapa;
+
+    constructor(private confirmationService: ConfirmationService,
+        private messageService: MessageService, private location: Location,
+        private documentosService: DocumentosService, private router: Router,
+        private authService: AuthService, private proyectoService: ProyectoService,
+        private usuarioService: UsuarioService, private route: ActivatedRoute,
+        private datePipe: DatePipe, private tituloService: TituloService) { }
 
     ngOnInit() {
-        this.proyecto = (this.location.getState() as { data: Proyecto }).data;
-        if (this.proyecto == undefined) {
-            const storedProyecto = sessionStorage.getItem('proyectoData');
-            this.proyecto = storedProyecto ? JSON.parse(storedProyecto) : null;
-        } else {
-            sessionStorage.setItem('proyectoData', JSON.stringify(this.proyecto));
+        this.getIdProyecto();
+        this.getTituloProyecto();
+        this.getCoordinadorEps();
+        this.getAsesor();
+        this.getTitulos();
+        this.getSupervisor();
+        this.getCoordinadorCarrera();
+        this.getEtapaActiva();
+        this.proyectoService.getProyectoPorId(this.idProyecto).subscribe(proyecto => {
+            this.proyecto = proyecto;
+        });
+    }
+
+    getTitulos() {
+        this.tituloService.getTitulos().subscribe(titulos => this.titulos = titulos);
+    }
+
+    getCoordinadorEps() {
+        this.usuarioService.getCoordinadorEps().subscribe(coordinadorEps => this.coordinadorEps = coordinadorEps);
+    }
+
+    getCoordinadorCarrera() {
+        this.proyectoService.getCoordinadorCarrera(this.idProyecto).subscribe(coordinadorCarrera => this.coordinadorCarrera = coordinadorCarrera);
+    }
+
+    getAsesor() {
+        this.proyectoService.getUsuarioAsesor(this.idProyecto).subscribe(asesor => {
+            this.asesor = asesor;
+        })
+    }
+
+    getSupervisor() {
+        this.proyectoService.getSupervisor(this.idProyecto).subscribe(supervisor => this.supervisor = supervisor);
+    }
+
+    getEtapaActiva() {
+        this.proyectoService.getEtapaActiva(this.idProyecto).subscribe(etapaActiva => {
+            this.etapaActiva = etapaActiva.etapa;
+            if (this.etapaActiva.idEtapa == EtapaUtils.CARGA_CONVOCATORIA
+                || this.etapaActiva.idEtapa == EtapaUtils.SUBIR_NOTA) {
+                this.proyectoService.getConvocatoriaAnteproyecto(this.idProyecto).subscribe(convocatoria => {
+                    this.convocatoriaGenerada = convocatoria;
+                    this.mostrarFecha = true;
+                    this.fechaDefinida = this.datePipe.transform(convocatoria.fechaEvaluacion, 'dd-MM-yyyy')!;
+                });
+            }
+        });
+    }
+
+    getIdProyecto() {
+        this.idProyecto = (this.location.getState() as { data: number }).data;
+        console.log('idProyecto', this.idProyecto)
+        if (this.idProyecto == undefined) {
+            const storedIdProyecto = sessionStorage.getItem('idProyecto');
+            this.idProyecto = storedIdProyecto ? JSON.parse(storedIdProyecto) : undefined;
         }
+        if (this.idProyecto == undefined) {
+            this.router.navigate(['gestiones/proyectos']);
+        }
+    }
+
+    getTituloProyecto() {
+        this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_TITULO).subscribe(elementoProyecto => {
+            this.elementoTitulo = elementoProyecto;
+        });
+    }
+
+    removerRepresentante() {
+        this.mostrarRepresentante = false;
+        this.convocatoria.representante = undefined;
+        this.convocatoria.tituloRepresentante = undefined;
     }
 
     aceptar() {
-        const evaluacion: Evaluacion = {
-            fecha: this.fecha,
-            representante: undefined
-        };
-        if (this.mostrarRepresentante) {
-            evaluacion.representante = this.representante;
+        if (this.etapaActiva.idEtapa == EtapaUtils.DEFINIR_FECHA_EVALUACION
+        ||this.etapaActiva.idEtapa == EtapaUtils.CONVOCATORIA_EXAMEN_GENERAL) {
+            this.definirEvaluacion();
+        } else {
+            console.log('put')
+            this.modificarEvaluacion();
         }
-        this.proyectoService.definirEvaluacion(this.proyecto.idProyecto, evaluacion).subscribe(
-            () => {
-                // Request was successful, redirect the user
-                this.router.navigate(['gestiones/proyecto'], { state: { data: this.proyecto } });
-            },
-            (error) => {
-                // Request encountered an error, show error message
-                console.error(error);
-                // Handle the error and display an appropriate error message to the user
-            }
-        );
+    }
+
+    definirEvaluacion() {
+        this.convocatoria.horaEvaluacion = this.datePipe.transform(this.hora, 'HH:mm')!;
+        if ((this.validarCampos(this.convocatoria, ['representante', 'tituloRepresentante']) && !this.mostrarRepresentante) ||
+            (this.validarCampos(this.convocatoria, []) && this.mostrarRepresentante)) {
+            this.confirmationService.confirm({
+                key: 'confirm1',
+                message: '¿Estas seguro de definir la fecha de evaluacion?',
+                acceptLabel: "Si",
+                icon: 'pi pi-check-circle',
+                accept: () => {
+                    this.proyectoService.crearConvocatoriaAnteproyecto(this.idProyecto, this.convocatoria).subscribe({
+                        next: () => {
+                            this.messageService.add({ key: 'tst', severity: 'success', summary: 'Evaluacion Definida', detail: 'Se ha definido la fecha de evaluacion exitosamente' });
+                            setTimeout(() => {
+                                this.regresar();
+                            }, 2000);
+                        },
+                        error: (error) => {
+                            console.log(error);
+                        }
+                    });
+                }
+            });
+        } else {
+            this.validar = true;
+        }
+    }
+
+    modificarEvaluacion() {
+        this.convocatoria.horaEvaluacion = this.datePipe.transform(this.hora, 'HH:mm')!;
+        if ((this.validarCampos(this.convocatoria, ['representante', 'tituloRepresentante']) && !this.mostrarRepresentante) ||
+            (this.validarCampos(this.convocatoria, []) && this.mostrarRepresentante)) {
+            this.confirmationService.confirm({
+                key: 'confirm1',
+                message: '¿Estas seguro de definir la fecha de evaluacion?',
+                acceptLabel: "Si",
+                icon: 'pi pi-check-circle',
+                accept: () => {
+                    this.proyectoService.actualizarConvocatoriaAnteproyecto(this.idProyecto, this.convocatoria).subscribe({
+                        next: () => {
+                            this.messageService.add({ key: 'tst', severity: 'success', summary: 'Evaluacion Definida', detail: 'Se ha definido la fecha de evaluacion exitosamente' });
+                            setTimeout(() => {
+                                this.regresar();
+                            }, 2000);
+                        },
+                        error: (error) => {
+                            console.log(error);
+                        }
+                    });
+                }
+            });
+        } else {
+            this.validar = true;
+        }
     }
 
     regresar() {
-        this.router.navigate(['gestiones/proyecto'], { state: { data: this.proyecto } });
+        this.router.navigate(['gestiones/proyecto']);
     }
 
-    getCoordinador() {
-        if (this.proyecto.coordinador != undefined) {
-            return this.proyecto.coordinador!.nombres + ' ' + this.proyecto.coordinador!.apellidos;
+    validarCampos(obj: any, excludeFields: string[]): boolean {
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key) && !excludeFields.includes(key)) {
+                const value = obj[key];
+                if (value === undefined || (typeof value === 'string' && value.trim() === '')) {
+                    return false;
+                }
+            }
         }
-        return '';
+        return true;
+    }
+
+    isFieldInvalid(field: any): boolean {
+        if (field == undefined && this.validar) {
+            return true;
+        } else if (typeof field === 'string') {
+            return this.validar && field.trim() === '';
+        }
+        return false;
     }
 }

@@ -1,18 +1,19 @@
 import { Carrera } from "./Carrera";
 import { Rol } from "./Rol";
+import { Titulo } from "./Titulo";
 
 export interface Usuario{
     idUsuario?:String;
-    nombres?:String;
-    apellidos?:String;
+    nombreCompleto?:String;
     correo?:String;
-    fechaNacimiento?:Date;
     direccion?:String;
     dpi?:String;
     telefono?:String;
-    estadoCuenta?:String;
+    activo?:Boolean;
     rol?:Rol;
+    //roles?:Rol[];
     carreras?:Carrera[];
+    titulo?:Titulo;
     registroAcademico?:String;
     numeroColegiado?:String;
 }

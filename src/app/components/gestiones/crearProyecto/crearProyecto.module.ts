@@ -20,6 +20,7 @@ import {FileUploadModule} from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { PanelModule } from 'primeng/panel';
 import { PhaseModule } from 'src/app/phase/phase.module';
+import { DividerModule } from 'primeng/divider';
 
 @NgModule({
 	imports: [
@@ -42,7 +43,8 @@ import { PhaseModule } from 'src/app/phase/phase.module';
 		ToastModule,
 		StepsModule,
 		PanelModule,
-		PhaseModule
+		PhaseModule,
+		DividerModule
 	],
 	declarations: [CrearProyectoComponent]
 })

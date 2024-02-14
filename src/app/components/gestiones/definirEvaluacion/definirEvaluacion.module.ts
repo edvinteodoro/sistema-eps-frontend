@@ -24,6 +24,7 @@ import { DialogModule } from 'primeng/dialog';
 import { DividerModule } from 'primeng/divider';
 import { PhaseModule } from 'src/app/phase/phase.module';
 import { CommentModule } from 'src/app/comment/comment.module';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
 	imports: [
@@ -50,8 +51,9 @@ import { CommentModule } from 'src/app/comment/comment.module';
 		DialogModule,
 		DividerModule,
 		PhaseModule,
-		CommentModule
+		CommentModule,
 	],
-	declarations: [DefinirEvaluacionComponent]
+	declarations: [DefinirEvaluacionComponent],
+	providers:[DatePipe]
 })
 export class DefinirEvaluacionModule { }

@@ -1,0 +1,132 @@
+<div *ngIf="!loading" class="card">
+	<p-toast key="tst"></p-toast>
+	<div class="flex md:flex-row justify-content-between align-items-center">
+		<div class="flex md:flex-row">
+			<span class="icon-atras block">
+				<p-button icon="pi pi-chevron-left" (click)="regresar()"
+					styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+			</span>
+			<h5 *ngIf="opcion==1" class="titulo">Asignar Asesor</h5>
+			<h5 *ngIf="opcion==2" class="titulo">Asignar Contraparte Institucional</h5>
+		</div>
+	</div>
+	<div class="card grid p-fluid mt-3">
+		<div class="field col-12 md:col-12 pb-0">
+			<label class="negrita">Datos Proyecto:</label>
+		</div>
+		<div class="field col-12 md:col-12 pb-0">
+			<label>Titulo de proyecto:</label>
+			<textarea [(ngModel)]="elementoTitulo.informacion" class="text" disabled="true" required="required"
+				id="titulo" rows="4" cols="30" pInputTextarea></textarea>
+		</div>
+		<!--
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Nombre estudiante:</label>
+			<input pInputText id="estudiante" class="text" disabled="true"
+				[(ngModel)]="proyecto.usuario!.nombreCompleto" />
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Registro academico:</label>
+			<input pInputText id="registro" class="text" disabled="true"
+				[(ngModel)]="proyecto.usuario!.registroAcademico" />
+		</div>
+		-->
+		<div *ngIf="opcion==1" class="field col-12 md:col-12 pb-0">
+			<label class="negrita">Asesor registrado:</label>
+		</div>
+		<div *ngIf="opcion==2" class="field col-12 md:col-12 pb-0">
+			<label class="negrita">Contraparte registrado:</label>
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Nombrle completo:</label>
+			<input pInputText class="text" disabled="true" [(ngModel)]="persona.nombreCompleto" />
+		</div>
+		<div *ngIf="opcion==1" class="field col-12 md:col-6 pb-0">
+			<label>Colegiado:</label>
+			<input pInputText class="text" disabled="true" [(ngModel)]="persona.numeroColegiado" />
+		</div>
+		<div *ngIf="opcion==2" class="field col-12 md:col-6 pb-0">
+			<label>Dpi:</label>
+			<input pInputText class="text" disabled="true" [(ngModel)]="persona.dpi" />
+		</div>
+	</div>
+	<ng-container>
+		<div class="grid p-fluid mt-3">
+			<div class="field col-12 md:col-12 pb-0">
+				<label *ngIf="opcion==1">Seleccione asesor:</label>
+				<label *ngIf="opcion==2">Seleccione Contraparte:</label>
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<input pInputText placeholder="Nombres" [(ngModel)]="nombresFiltro" />
+			</div>
+			<div *ngIf="opcion==1" class="field col-12 md:col-5 pb-0">
+				<input pInputText placeholder="Colegiado" [(ngModel)]="colegiadoFiltro" />
+			</div>
+			<div *ngIf="opcion==2" class="field col-12 md:col-5 pb-0">
+				<input pInputText placeholder="Dpi" [(ngModel)]="dpiFiltro" />
+			</div>
+			<div class="field col-12 md:col-1 pb-0">
+				<p-button icon="pi pi-search" styleClass="p-button-rounded p-button-secondary p-button-outlined"
+					(click)="buscar()"></p-button>
+			</div>
+		</div>
+		<p-table [value]="usuariosLista" [(selection)]="usuarioSeleccionado" dataKey="idUsuario">
+			<ng-template pTemplate="header">
+				<tr>
+					<th style="width: 4rem">
+					</th>
+					<th>Nombre</th>
+					<th>Colegiado</th>
+					<th>Dpi</th>
+					<th>Estado</th>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="body" let-usuarioLista>
+				<tr>
+					<td>
+						<p-tableRadioButton [value]="usuarioLista"></p-tableRadioButton>
+					</td>
+					<td>{{usuarioLista.nombreCompleto}}</td>
+					<td>{{usuarioLista.numeroColegiado}}</td>
+					<td>{{usuarioLista.dpi}}</td>
+					<td style="width:14%; min-width: 10rem;"><span class="p-column-title">Estado</span>
+						<p-tag *ngIf="usuarioLista.activo" severity="success" value="ACTIVO"></p-tag>
+						<p-tag *ngIf="!usuarioLista.activo" severity="danger" value="INACTIVO"></p-tag>
+					</td>
+				</tr>
+			</ng-template>
+		</p-table>
+	</ng-container>
+
+	<br><br>
+	<div class="grid p-fluid mt-3">
+		<div class="field col-12 md:col-6 pb-0">
+			<p-button *ngIf="usuariosLista.length==0" icon="pi pi-plus" label="Crear usuario" styleClass="p-button-outlined p-button-secondary"
+			(click)="crearUsuario()"></p-button>
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<p-button *ngIf="opcion==1" icon="pi pi-check" styleClass="p-button-outlined" label="Asignar Asesor"
+				(click)="asignarAsesor()" [disabled]="usuarioSeleccionado==undefined"></p-button>
+			<p-button *ngIf="opcion==2" icon="pi pi-check" styleClass="p-button-outlined" label="Asignar Contraparte"
+			(click)="asignarContraparte()" [disabled]="usuarioSeleccionado==undefined"></p-button>
+		</div>
+	</div>
+</div>
+
+<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle" [style]="{width: '350px'}"
+	acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+
+<style>
+	.titulo {
+		color: #00274e;
+		font-weight: bold;
+	}
+
+	.negrita {
+		font-weight: bold;
+	}
+
+	.icon-atras {
+		margin-top: 10px;
+	}
+</style>

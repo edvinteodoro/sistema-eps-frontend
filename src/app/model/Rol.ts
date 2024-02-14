@@ -1,5 +1,5 @@
 export interface Rol {
-    idRol: string;
+    idRol: number;
     titulo: string;
     contieneCarrera: boolean;
     contieneRegistro: boolean;

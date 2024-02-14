@@ -4,6 +4,11 @@ import { Observable } from 'rxjs';
 import { ActivarUsuario } from '../model/ActivarUsuario';
 import { tap } from 'rxjs/operators';
 import jwt_decode from 'jwt-decode';
+import { StorageService } from './storage.service';
+
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
 
 @Injectable({
   providedIn: 'root'
@@ -11,50 +16,51 @@ import jwt_decode from 'jwt-decode';
 export class AuthService {
   private readonly JWT_TOKEN = 'jwt';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private storageService:StorageService) { }
 
-  onLogin(obj:any):Observable<any> {
+  login(obj:any):Observable<any> {
     return this.http.post('http://localhost:8080/api/auth/login',obj).pipe(
       tap((authResult:any)=>{
-        console.log('jwt: ',authResult.jwt);
-        localStorage.setItem(this.JWT_TOKEN, authResult.jwt);
+        this.storageService.saveUser(authResult);
       })
     );   
   }
 
   getUserRole(): string{
-    const token =localStorage.getItem('jwt');
+    const token =this.storageService.getUser().accessToken;
     if(token){
-      const decodedToken = jwt_decode<{ authorities: { authority: string }[] }>(token);
-      const userRole = decodedToken.authorities[0].authority;
+      const decodedToken = jwt_decode<{ authorities: string[] }>(token);
+      const userRole = decodedToken.authorities[0];
       return userRole;
     }
     return "No";
   }
 
+  getUserId():number{
+    const userId =this.storageService.getUser().idUsuario;
+    return userId;
+  }
+
+  hasRole(role:string):boolean{
+    const token = this.storageService.getUser().accessToken;
+    if (token) {
+      const decodedToken = jwt_decode<{ authorities: string[] }>(token);
+      return decodedToken.authorities.includes(role);
+    }
+    return false;
+  }
+
   activarUsuario(activarUsuario:ActivarUsuario):Observable<any>{
-    return this.http.post('http://localhost:8080/api/auth/activar',activarUsuario);
-  }
-
-  getAuthToken(){
-    return localStorage.getItem('jwt');
-  }
-
-  isLoggedIn(): boolean {
-    const token = localStorage.getItem('jwt');
-    return !!token;
-  }
-
-  logout(): void {
-    localStorage.removeItem(this.JWT_TOKEN);
+    return this.http.post('http://localhost:8080/api/auth/activar-cuenta',activarUsuario);
   }
 
   refreshToken() {
-    // Send a request to refresh the JWT
-    return this.http.get('/api/refreshToken').pipe(
+    const authToken = {refreshToken:this.storageService.getUser().refreshToken,
+    };
+    return this.http.post('http://localhost:8080/api/auth/refresh-token',authToken,httpOptions).pipe(
       tap((authResult: any) => {
-        // Update the JWT in localStorage
-        localStorage.setItem(this.JWT_TOKEN, authResult.jwt);
+        this.storageService.saveUser(authResult);
       })
     );
   }

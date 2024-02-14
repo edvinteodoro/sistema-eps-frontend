@@ -1,0 +1,30 @@
+<div class="grid">
+	<div class="col-12">
+		<p-toast key="tst"></p-toast>
+		<div class="card p-fluid">
+			<p-table [value]="documentos"
+			[resizableColumns]="true"
+				[tableStyle]="{'min-width': '50rem'}">
+				<ng-template pTemplate="header">
+					<tr>
+						<th>Nombre</th>
+						<th>Descargar</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-documento>
+					<tr>
+						<td style="width:20%; min-width:8rem;">{{documento.nombre}}</td>
+						<td>
+							<p-button icon="pi pi-download"
+							styleClass="p-button-rounded p-button-success p-button-outlined"
+							(click)="descargar(documento)"></p-button>	
+						</td>
+					</tr>
+				</ng-template>
+			</p-table>
+		</div>
+	</div>
+</div>
+
+<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle" [style]="{width: '350px'}"
+	acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>

@@ -1,0 +1,75 @@
+<div class="card">
+	<p-toast></p-toast>
+	<div class="flex md:flex-row justify-content-between align-items-center">
+		<div class="flex md:flex-row">
+			<h5 class="titulo">Bitacoras</h5>
+		</div>
+		<span class="block mt-2 p-input-icon-left">
+			<p-button icon="pi pi-ellipsis-v" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+		</span>
+	</div>
+	<div class="grid p-fluid mt-3">
+		<div class="field col-12 md:col-5 pb-0">
+			<label>Nombres:</label>
+		</div>
+		<div class="field col-12 md:col-5 pb-0">
+			<label>Registro academico:</label>
+		</div>
+		<div class="field col-12 md:col-2 pb-0">
+			<p-button icon="pi pi-search" styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
+		</div>
+	</div>
+	<p-table [value]="bitacoras" [paginator]="true" [rows]="10" [lazy]="true" (onLazyLoad)="loadBitacoras($event)"
+		[totalRecords]="totalRecords">
+		<ng-template pTemplate="header">
+			<tr>
+				<th pSortableColumn="estudiante">Estudiante</th>
+				<th pSortableColumn="registroAcademico">Registro academico</th>
+				<th pSortableColumn="fechaReporte">Fecha de reporte</th>
+				<th pSortableColumn="progreso">Progreso</th>
+				<th pSortableColumn="informeMensual">Informe</th>
+				<th pSortableColumn="revision">Revision</th>
+				<th></th>
+			</tr>
+		</ng-template>
+		<ng-template pTemplate="body" let-bitacora>
+			<tr>
+				<td style="width:30%"><span class="p-column-title">Estudiante</span>
+					{{bitacora.usuario!.nombreCompleto}}
+				</td>
+				<td style="width:15%;"><span class="p-column-title">Registro academico</span>
+					{{bitacora.usuario!.registroAcademico}}
+				</td>
+				<td style="width:10%;min-width: 8rem;"><span class="p-column-title">Fecha de Reporte</span>
+					{{bitacora?.fechaReporte}}
+				</td>
+				<td style="width: 5%"><span class="p-column-title">Progreso</span>
+					{{bitacora.avance}}
+				</td>
+				<td style="width:5%"><span class="p-column-title">Informe</span>
+					<i *ngIf="bitacora.contieneInforme" class="text-green-500 pi pi-check"></i>
+					<i *ngIf="!bitacora.contieneInforme" class="pi pi-times"></i>
+				</td>
+				<td style="width:10%"><span class="p-column-title">Revision</span>
+					<p-tag
+						*ngIf="bitacora.revisionAsesor && bitacora.revisionSupervisor && bitacora.revisionContraparte"
+						severity="success" value="Finalizado"></p-tag>
+					<p-tag *ngIf="!(bitacora.revisionAsesor && bitacora.revisionSupervisor && bitacora.revisionContraparte)" severity="danger" value="Pendiente"></p-tag>
+				</td>
+				<td>
+					<div class="flex">
+						<p-button icon="pi pi-eye" styleClass="p-button-rounded p-button-success p-button-outlined"
+							(click)="revisarBitacora(bitacora)"></p-button>
+					</div>
+				</td>
+			</tr>
+		</ng-template>
+	</p-table>
+</div>
+
+<style>
+	.titulo {
+		color: #00274e;
+		font-weight: bold;
+	}
+</style>

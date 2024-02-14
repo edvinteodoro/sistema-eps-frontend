@@ -1,0 +1,112 @@
+<div class="card">
+	<p-toast key="tst"></p-toast>
+	<div class="flex md:flex-row justify-content-between align-items-center">
+		<div class="flex md:flex-row">
+			<span class="icon-atras block">
+				<p-button icon="pi pi-chevron-left" (click)="listaActas()"
+					styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+			</span>
+			<h5 class="titulo">Acta</h5>
+		</div>
+	</div>
+	<div class="card grid p-fluid mt-3">
+		<div class="field col-12 md:col-12 pb-0">
+			<label class="sub-title">Datos del proyecto:</label>
+		</div>
+		<div class="field col-12 md:col-12 pb-0">
+			<label>Titulo de proyecto:</label>
+			<textarea [(ngModel)]="tituloProyecto.informacion" [disabled]="true" class="text" rows="4"
+				pInputTextarea></textarea>
+		</div>
+		<div class="field col-12 md:col-12 pb-0">
+			<label>Carrera:</label>
+			<input [(ngModel)]="acta.proyecto!.carrera.nombre" [disabled]="true" pInputText class="text" />
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Nombre Estudiante: </label>
+			<input [(ngModel)]="acta.proyecto!.usuario!.nombreCompleto" [disabled]="true" pInputText class="text" />
+		</div>
+
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Registro Academico: </label>
+			<input [(ngModel)]="acta.proyecto!.usuario!.registroAcademico!" [disabled]="true" pInputText class="text" />
+		</div>
+
+	</div>
+	<div class="card grid p-fluid mt-3">
+		<div class="field col-12 md:col-12 pb-0">
+			<label class="sub-title">Datos de acta:</label>
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Resultado</label>
+			<input [disabled]="true" [(ngModel)]="acta.resultado" pInputText class="text" />
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Nota</label>
+			<input [disabled]="true" [(ngModel)]="acta.nota" pInputText class="text" />
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Salon</label>
+			<input [disabled]="true" [(ngModel)]="acta.salon" pInputText class="text" />
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Fecha de Evaluacion</label>
+			<input [disabled]="true" [(ngModel)]="acta.fechaEvaluacion" pInputText class="text" />
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Hora de Evaluacion</label>
+			<input [(ngModel)]="acta.horaInicioEvaluacion" pInputText class="text" />
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Hora fin de Evaluacion</label>
+			<input [(ngModel)]="acta.horaFinEvaluacion" pInputText class="text" />
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<p-button *ngIf="acta.actaGenerada" (onClick)="descargarActa()" label="Descargar Acta"></p-button>
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<p-button *ngIf="!acta.actaGenerada" label="Generar Acta" (onClick)="generarActa()"></p-button>
+			<p-button *ngIf="acta.actaGenerada" label="Volver a generar Acta" (onClick)="generarActa()"></p-button>
+		</div>
+	</div>
+</div>
+<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle" [style]="{width: '350px'}"
+	acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<style>
+	.titulo {
+		color: #00274e;
+		font-weight: bold;
+	}
+
+	.icon-atras {
+		margin-top: 10px;
+	}
+
+	.text {
+		color: black;
+	}
+
+	.sub-title {
+		font-weight: bold;
+	}
+
+	.file {
+		margin-left: 10px;
+	}
+
+	.file i {
+		margin-right: 5px;
+	}
+
+	.file-container {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 5px;
+	}
+
+	.button-center {
+		margin-left: auto;
+		/* Push the button to the right (center vertically) */
+	}
+</style>

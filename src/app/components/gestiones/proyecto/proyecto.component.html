@@ -1,189 +1,704 @@
-<div class="grid">
-	<div class="col-12">
-		<p-toast key="tst"></p-toast>
-		<div class="card p-fluid">
-			<p-panel header="Proyecto EPS">
-				<div class="card">
-					<p-steps [model]="items" [readonly]="false" [activeIndex]="activeIndex"
-						(activeIndexChange)="onActiveIndexChange($event)"></p-steps>
+<div *ngIf="loading" class="card">
+	<div class="container">
+		<p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8" fill="var(--surface-ground)"
+			animationDuration=".5s"></p-progressSpinner>
+	</div>
+</div>
+<div *ngIf="!loading" class="card">
+	<p-toast key="tst"></p-toast>
+	<div class="flex md:flex-row justify-content-between align-items-center">
+		<div class="flex md:flex-row">
+			<!--<span class="icon-atras block">
+				<p-button icon="pi pi-chevron-left" (click)="listaProyectos()"
+					styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+			</span>-->
+			<h5 class="titulo">Proyecto Eps</h5>
+		</div>
+		<p-menu #menu [popup]="true" [model]="opciones"></p-menu>
+		<span class="block mt-2 p-input-icon-left">
+			<p-button icon="pi pi-ellipsis-v" (click)="menu.toggle($event)"
+				styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+		</span>
+	</div>
+	<!--<div class="info">
+		<p-tag icon="pi pi-info-circle" [style]="{'background-color': '#5c5c5c'}" severity="info"
+			[value]="'El proyecto esta en la etapa: '+etapaProyectoActiva.etapa.nombre"></p-tag>
+	</div>-->
+	<p-steps [model]="items" styleClass="mt-5" [readonly]="false" [activeIndex]="activeIndex"
+		(activeIndexChange)="onActiveIndexChange($event)"></p-steps>
+	<br><br><br>
+	<ng-container *ngIf="activeIndex === 0">
+		<div class="grid p-fluid mt-3">
+			<div class="field col-12 md:col-12 pb-0">
+				<label htmlFor="titulo">Titulo del Proyecto</label>
+				<div class="input-container">
+					<textarea [(ngModel)]="elementoTitulo.informacion" [disabled]="!modoEdicion || tituloBloqueado"
+						class="text" rows="4" pInputTextarea></textarea>
+					<p-button *ngIf="modoEdicion && tituloBloqueado" icon="pi pi-pencil"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="modificarElementoTitulo()"></p-button>
+					<p-button *ngIf="modoEdicion && !tituloBloqueado" icon="pi pi-times"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="cancelarElementoTitulo()"></p-button>
+					<p-button *ngIf="modoEdicion && !tituloBloqueado" icon="pi pi-save"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="guardarElementoTitulo()"></p-button>
 				</div>
-				<ng-container *ngIf="activeIndex === 0">
-					<div class="field">
-						<label htmlFor="titulo">Titulo del Proyecto</label>
-						<textarea [(ngModel)]="proyecto.titulo" [disabled]="bloquedo" required="required" id="titulo" rows="2"
-							cols="30" pInputTextarea></textarea>
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label>Carrera</label>
+				<input type="text" disabled="true" class="text" [(ngModel)]="proyecto.carrera.nombre" pInputText>
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label>Semestre</label>
+				<div class="input-container">
+					<p-dropdown class="file-uploader" [options]="semestres" [(ngModel)]="proyecto.semestre"
+						[disabled]="!modoEdicion || semestreBloqueado"></p-dropdown>
+					<p-button icon="pi pi-pencil" *ngIf="modoEdicion && semestreBloqueado"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="modificarSemestreProyecto()"></p-button>
+					<p-button icon="pi pi-times" *ngIf="modoEdicion && !semestreBloqueado"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="cancelarSemestreProyecto()"></p-button>
+					<p-button icon="pi pi-save" *ngIf="modoEdicion && !semestreBloqueado"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="guardarSemestreProyecto()"></p-button>
+				</div>
+			</div>
+			<div class="field col-12 md:col-12 pb-0">
+				<label>Anteproyecto</label>
+				<div class="input-container">
+					<label *ngIf="!elementoAnteproyecto && anteproyectoBloqueado"> -- Sin elemento --</label>
+					<p-button *ngIf="elementoAnteproyecto && anteproyectoBloqueado" label="Descargar documento"
+						class="button" (onClick)="descargar(elementoAnteproyecto)"></p-button>
+					<p-fileUpload class="file-uploader" *ngIf="modoEdicion && !anteproyectoBloqueado"
+						(onSelect)="cargarElementoProyecto($event,elementoAnteproyecto!)" chooseLabel="Cargar Documento"
+						mode="basic" [multiple]="false" accept=".pdf" [maxFileSize]="1000000">
+					</p-fileUpload>
+					<p-button icon="pi pi-pencil" *ngIf="modoEdicion && anteproyectoBloqueado"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="modificarElementoAnteproyecto()"></p-button>
+					<p-button *ngIf="modoEdicion && !anteproyectoBloqueado" icon="pi pi-times"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="cancelarElementoAnteproyecto()"></p-button>
+					<p-button *ngIf="modoEdicion && !anteproyectoBloqueado && elementoAnteproyecto!.file!=undefined"
+						icon="pi pi-save" styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="guardarElementoAnteproyecto()"></p-button>
+				</div>
+			</div>
+			<div *ngIf="idEtapaActiva<=3" class="field col-12 md:col-12 pb-0">
+				<label>Constancia de Inscripcion</label>
+				<div class="input-container">
+					<label *ngIf="!elementoInscripcion && inscripcionBloqueado"> -- Sin elemento --</label>
+					<p-button *ngIf="elementoInscripcion && inscripcionBloqueado" label="Descargar documento"
+						class="button" (onClick)="descargar(elementoInscripcion)"></p-button>
+					<p-fileUpload class="file-uploader" *ngIf="modoEdicion && !inscripcionBloqueado"
+						(onSelect)="cargarElementoProyecto($event,elementoInscripcion!)" chooseLabel="Cargar Documento"
+						mode="basic" [multiple]="false" accept=".pdf" [maxFileSize]="1000000">
+					</p-fileUpload>
+					<p-button icon="pi pi-pencil" *ngIf="modoEdicion && inscripcionBloqueado"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="modificarElementoInscripcion()"></p-button>
+					<p-button *ngIf="modoEdicion && !inscripcionBloqueado" icon="pi pi-times"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="cancelarElementoInscripcion()"></p-button>
+					<p-button *ngIf="modoEdicion && !inscripcionBloqueado && elementoInscripcion!.file!=undefined"
+						icon="pi pi-save" styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="guardarElementoInscripcion()"></p-button>
+				</div>
+			</div>
+			<div *ngIf="idEtapaActiva<=3" class="field col-12 md:col-12 pb-0">
+				<label>Constancia de Propedeutico</label>
+				<div class="input-container">
+					<label *ngIf="!elementoPropedeutico && propedeuticoBloqueado"> -- Sin elemento --</label>
+					<p-button *ngIf="elementoPropedeutico && propedeuticoBloqueado" label="Descargar documento"
+						class="button" (onClick)="descargar(elementoPropedeutico)"></p-button>
+					<p-fileUpload class="file-uploader" *ngIf="modoEdicion && !propedeuticoBloqueado"
+						(onSelect)="cargarElementoProyecto($event,elementoPropedeutico!)" chooseLabel="Cargar Documento"
+						mode="basic" [multiple]="false" accept=".pdf" [maxFileSize]="1000000">
+					</p-fileUpload>
+					<p-button icon="pi pi-pencil" *ngIf="modoEdicion && propedeuticoBloqueado"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="modificarElementoPropedeutico()"></p-button>
+					<p-button *ngIf="modoEdicion && !propedeuticoBloqueado" icon="pi pi-times"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="cancelarElementoPropedeutico()"></p-button>
+					<p-button *ngIf="modoEdicion && !propedeuticoBloqueado && elementoPropedeutico!.file!=undefined"
+						icon="pi pi-save" styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="guardarElementoPropedeutico()"></p-button>
+				</div>
+			</div>
+			<div *ngIf="idEtapaActiva<=3" class="field col-12 md:col-12 pb-0">
+				<label>Certificado de Nacimiento</label>
+				<div class="input-container">
+					<label *ngIf="!elementoNacimiento && nacimientoBloqueado"> -- Sin elemento --</label>
+					<p-button *ngIf="elementoNacimiento && nacimientoBloqueado" label="Descargar documento"
+						class="button" (onClick)="descargar(elementoNacimiento)"></p-button>
+					<p-fileUpload class="file-uploader" *ngIf="modoEdicion && !nacimientoBloqueado"
+						(onSelect)="cargarElementoProyecto($event,elementoNacimiento!)" chooseLabel="Cargar Documento"
+						mode="basic" [multiple]="false" accept=".pdf" [maxFileSize]="1000000">
+					</p-fileUpload>
+					<p-button icon="pi pi-pencil" *ngIf="modoEdicion && nacimientoBloqueado"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="modificarElementoNacimiento()"></p-button>
+					<p-button *ngIf="modoEdicion && !nacimientoBloqueado" icon="pi pi-times"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="cancelarElementoNacimiento()"></p-button>
+					<p-button *ngIf="modoEdicion && !nacimientoBloqueado && elementoNacimiento!.file!=undefined"
+						icon="pi pi-save" styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="guardarElementoNacimiento()"></p-button>
+				</div>
+			</div>
+			<div *ngIf="idEtapaActiva<=3" class="field col-12 md:col-12 pb-0">
+				<label>Carta de asesor</label>
+				<div class="input-container">
+					<label *ngIf="!elementoCarta && cartaBloqueado"> -- Sin elemento --</label>
+					<p-button *ngIf="elementoCarta && cartaBloqueado" label="Descargar documento" class="button"
+						(onClick)="descargar(elementoCarta)"></p-button>
+					<p-fileUpload class="file-uploader" *ngIf="modoEdicion && !cartaBloqueado"
+						(onSelect)="cargarElementoProyecto($event,elementoCarta!)" chooseLabel="Cargar Documento"
+						mode="basic" [multiple]="false" accept=".pdf" [maxFileSize]="1000000">
+					</p-fileUpload>
+					<p-button icon="pi pi-pencil" *ngIf="modoEdicion && cartaBloqueado"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="modificarElementoCarta()"></p-button>
+					<p-button *ngIf="modoEdicion && !cartaBloqueado" icon="pi pi-times"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="cancelarElementoCarta()"></p-button>
+					<p-button *ngIf="modoEdicion && !cartaBloqueado && elementoCarta!.file!=undefined" icon="pi pi-save"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="guardarElementoCarta()"></p-button>
+				</div>
+			</div>
+			<div *ngIf="idEtapaActiva<=3" class="field col-12 md:col-12 pb-0">
+				<label>Finiquito AEIO</label>
+				<div class="input-container">
+					<label *ngIf="!elementoFiniquito && finiquitoBloqueado"> -- Sin elemento --</label>
+					<p-button *ngIf="elementoFiniquito && finiquitoBloqueado" label="Descargar documento" class="button"
+						(onClick)="descargar(elementoFiniquito)"></p-button>
+					<p-fileUpload class="file-uploader" *ngIf="modoEdicion && !finiquitoBloqueado"
+						(onSelect)="cargarElementoProyecto($event,elementoFiniquito!)" chooseLabel="Cargar Documento"
+						mode="basic" [multiple]="false" accept=".pdf" [maxFileSize]="1000000">
+					</p-fileUpload>
+					<p-button icon="pi pi-pencil" *ngIf="modoEdicion && finiquitoBloqueado"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="modificarElementoFiniquito()"></p-button>
+					<p-button icon="pi pi-trash"
+						*ngIf="finiquitoBloqueado && modoEdicion && elementoFiniquito!=undefined"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="eliminarFiniquito()"></p-button>
+					<p-button *ngIf="modoEdicion && !finiquitoBloqueado" icon="pi pi-times"
+						styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="cancelarElementoFiniquito()"></p-button>
+					<p-button *ngIf="modoEdicion && !finiquitoBloqueado && elementoFiniquito!.file!=undefined"
+						icon="pi pi-save" styleClass="p-button-rounded p-button-text p-button-raised"
+						(onClick)="guardarElementoFiniquito()"></p-button>
+				</div>
+			</div>
+			<div *ngIf="idEtapaActiva==6 && rolUsuario!='Estudiante'" class="field col-12 md:col-12 pb-0">
+				<label>Convocatoria Anteproyecto Firmada:</label>
+				<p-button label="Descargar documento" class="button"
+					(onClick)="descargar(elementoConvocatoriaAnteproyectoFirmada!)"></p-button>
+			</div>
+			<div *ngIf="idEtapaActiva==7" class="field col-12 md:col-12 pb-0">
+				<label>Evaluacion Anteproyecto:</label>
+				<div class="grid p-fluid mt-3 bordered-div">
+					<div class="field col-12 md:col-6 pb-0">
+						<label>Resultado: </label>
+						<input pInputText class="text" [disabled]="true" [(ngModel)]="actaGenerada.resultado" />
 					</div>
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<label htmlFor="coordenadas">Coordenadas del proyecto</label>
-							<input type="text" disabled="true" [disabled]="bloquedo" [(ngModel)]="proyecto.coordenadas" pInputText>
-						</div>
-						<div class="field col">
-							<label htmlFor="carrera">Carrera</label>
-							<input type="text" disabled="true" [(ngModel)]="proyecto.carrera.titulo" pInputText>
-						</div>
+					<div class="field col-12 md:col-6 pb-0">
+						<label>Nota: </label>
+						<input pInputText class="text" [disabled]="true" [(ngModel)]="actaGenerada.nota" />
 					</div>
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<label htmlFor="inscripcion">Descargar constancia de inscripcion</label>
-							<p-button *ngIf="!cambiarInscripcion" label="Descarcar" icon="pi pi-download"
-								(onClick)="descargar(proyecto?.requisitos?.[0])"></p-button>
-								
-							<p-fileUpload *ngIf="cambiarInscripcion" mode="basic" name="demo[]" accept=".pdf" [maxFileSize]="1000000"  chooseLabel="Browse" ></p-fileUpload>
+					<div *ngIf="actaGenerada.comentario" class="field col-12 md:col-12 pb-0">
+						<label>Comentario: </label>
+						<input pInputText class="text" [disabled]="true" [(ngModel)]="actaGenerada.comentario" />
+					</div>
+				</div>
+			</div>
+			<div *ngIf="idEtapaActiva==5 || idEtapaActiva==6" class="field col-12 md:col-12 pb-0">
+				<label>Convocatoria evaluacion anteproyecto:</label>
+				<div class="grid p-fluid mt-3 bordered-div">
+					<div class="field col-12 md:col-6 pb-0">
+						<label>Fecha evaluacion: </label>
+						<input pInputText class="text" [disabled]="true"
+							[(ngModel)]="convocatoriaGenerada.fechaEvaluacionFormat" />
+					</div>
+					<div class="field col-12 md:col-6 pb-0">
+						<label>Hora de evaluacion: </label>
+						<input pInputText class="text" [disabled]="true"
+							[(ngModel)]="convocatoriaGenerada.horaEvaluacion" />
+					</div>
+					<div *ngIf="rolUsuario=='Coordinador EPS'" class="field col-12 md:col-12 pb-0">
+						<label>Convocatoria Generada: </label>
+						<p-button label="Descargar Documento" 
+						(onClick)="descargar(elementoConvocatoriaAnteproyecto!)"></p-button>
+					</div>
+					<div class="field col-12 md:col-12 pb-0">
+						<p-tag icon="pi pi-exclamation-triangle" severity="warning"
+							value="Todavia pueden darse cambios en la fecha programada"></p-tag>
+					</div>
+				</div>
+			</div>
+		</div>
 
-								<p-button class="child"
-								label="Cambiar constancia de inscripcion" *ngIf="!cambiarInscripcion  && !bloquedo"
-								styleClass="p-button-link" (onClick)="cambiarDocInscripcion(true)"></p-button>
-								<p-button class="child" label="Cancelar" *ngIf="cambiarInscripcion"
-								styleClass="p-button-link" (onClick)="cambiarDocInscripcion(false)"></p-button>
-								
-						</div>
+
+		<div *ngIf="(idEtapaActiva==5||idEtapaActiva==11) && rolUsuario=='Coordinador EPS'" class="field col-12 md:col-12 pb-0">
+			<label>Cargar Convocatoria Firmada:</label>
+			<div class="input-container">
+				<p-fileUpload *ngIf="!convocatoriaAnteproyectoFirmadaBloqueado" class="file-uploader" focus="true"
+					(onSelect)="cargarElementoProyecto($event,elementoConvocatoriaAnteproyectoFirmada!)"
+					chooseLabel="Cargar Documento" mode="basic" [multiple]="false" accept=".pdf"
+					[maxFileSize]="1000000">
+				</p-fileUpload>
+				<p-button *ngIf="elementoConvocatoriaAnteproyectoFirmada!.file!=undefined" icon="pi pi-times"
+					styleClass="p-button-rounded p-button-text p-button-raised"
+					(onClick)="cancelarElementoConvocatoriaAnteproyectoFirmada()"></p-button>
+				<p-button *ngIf="elementoConvocatoriaAnteproyectoFirmada!.file!=undefined" icon="pi pi-save"
+					styleClass="p-button-rounded p-button-text p-button-raised"
+					(onClick)="guardarConvocatoria()"></p-button>
+			</div>
+		</div>
+
+		<div *ngIf="idEtapaActiva==7 && rolUsuario=='Estudiante'" class="field col-12 md:col-12 pb-0">
+			<label>Carga Carta Aceptacion de Contraparte:</label>
+			<div class="input-container">
+				<p-fileUpload class="file-uploader" focus="true"
+					(onSelect)="cargarElementoProyecto($event,elementoCartaAceptacionContraparte!)"
+					chooseLabel="Cargar Documento" mode="basic" [multiple]="false" accept=".pdf"
+					[maxFileSize]="1000000">
+				</p-fileUpload>
+				<p-button *ngIf="elementoCartaAceptacionContraparte!.file" icon="pi pi-times"
+					styleClass="p-button-rounded p-button-text p-button-raised"></p-button>
+				<p-button *ngIf="elementoCartaAceptacionContraparte!.file" icon="pi pi-save"
+					styleClass="p-button-rounded p-button-text p-button-raised"
+					(onClick)="guardarCartaAceptacion()"></p-button>
+			</div>
+		</div>
+		<!--<div *ngIf="idEtapaActiva==5 && rolUsuario=='Coordinador EPS'" class="field col-12 md:col-12 pb-0">
+			<label>Cargar Carta Firmada:</label>
+			<div class="input-container">
+				<p-fileUpload *ngIf="!convocatoriaAnteproyectoFirmadaBloqueado" class="file-uploader" focus="true"
+					(onSelect)="cargarElementoProyecto($event,elementoConvocatoriaAnteproyectoFirmada!)"
+					chooseLabel="Cargar Documento" mode="basic" [multiple]="false" accept=".pdf"
+					[maxFileSize]="1000000">
+				</p-fileUpload>
+				<p-button *ngIf="elementoConvocatoriaAnteproyectoFirmada!.file!=undefined" icon="pi pi-times"
+					styleClass="p-button-rounded p-button-text p-button-raised"
+					(onClick)="cancelarElementoConvocatoriaAnteproyectoFirmada()"></p-button>
+				<p-button *ngIf="elementoConvocatoriaAnteproyectoFirmada!.file!=undefined" icon="pi pi-save"
+					styleClass="p-button-rounded p-button-text p-button-raised"
+					(onClick)="guardarConvocatoria()"></p-button>
+			</div>
+		</div>-->
+		<div class="grid p-fluid mt-3">
+			<div class="field col-12 md:col-6 pb-0">
+				<p-button
+					*ngIf="idEtapaActiva==2 && !proyectoEditable && rolUsuario=='Secretaria'"
+					icon="pi pi-comment" styleClass="p-button-outlined" (click)="showDialog()"
+					label="Solicitar Cambios"></p-button>
+				<p-button
+					*ngIf="idEtapaActiva==3 && !proyectoEditable && rolUsuario=='Supervisor'"
+					icon="pi pi-comment" styleClass="p-button-outlined" (click)="showDialog()"
+					label="Solicitar Cambios"></p-button>
+				<p-button *ngIf="(idEtapaActiva==6||idEtapaActiva==12) && rolUsuario=='Supervisor'" icon="pi pi-calendar" focus="true"
+					styleClass="p-button-outlined" (click)="modificarEvaluacion()"
+					label="Modificar Convocatoria"></p-button>
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<p-button *ngIf="idEtapaActiva<=3 && proyectoEditable && rolUsuario=='Estudiante'" icon="pi pi-send"
+					styleClass="p-button-outlined" (click)="solicitarRevision()" label="Solicitar Revision"></p-button>
+				<p-button *ngIf="idEtapaActiva==2 && !proyectoEditable && rolUsuario=='Secretaria'" icon="pi pi-check"
+					styleClass="p-button-outlined" (click)="aprobarCambiosSecretaria()" label="Aprobar"></p-button>
+				<p-button *ngIf="idEtapaActiva==3 && !proyectoEditable && rolUsuario=='Supervisor'" icon="pi pi-check"
+					styleClass="p-button-outlined" (click)="aprobarCambiosSupervisor()" label="Aprobar"></p-button>
+				<p-button *ngIf="(idEtapaActiva==4 || idEtapaActiva==10) && rolUsuario=='Supervisor'" icon="pi pi-calendar" focus="true"
+					styleClass="p-button-outlined" (click)="definirEvaluacion()"
+					label="Generar Convocatoria"></p-button>
+				<p-button *ngIf="(idEtapaActiva==5||idEtapaActiva==11) && rolUsuario=='Supervisor'" icon="pi pi-calendar" focus="true"
+					styleClass="p-button-outlined" (click)="modificarEvaluacion()"
+					label="Modificar Convocatoria"></p-button>
+				<p-button *ngIf="(idEtapaActiva==6 || idEtapaActiva==12) && rolUsuario=='Supervisor'" icon="pi pi-pencil" focus="true"
+					styleClass="p-button-outlined" (click)="crearActaAnteproyecto()" label="Crear Acta"></p-button>
+				<p-button *ngIf="idEtapaActiva==8 && rolUsuario=='Supervisor'" icon="pi pi-check" focus="true"
+				styleClass="p-button-outlined" (click)="habilitarBitacora()" label="Habilitar Bitacora"></p-button>
+				<p-button *ngIf="idEtapaActiva==9 && rolUsuario=='Estudiante'" icon="pi pi-check" focus="true"
+				styleClass="p-button-outlined" (click)="finalizarBitacora()" label="Finalizar Bitacora"></p-button>
+
+			</div>
+		</div>
+	</ng-container>
+	<ng-container *ngIf="activeIndex === 1">
+		<div class="card">
+			<div class="field col-12 md:col-12 pb-0">
+				<label class="negrita">Datos de institucion</label>
+			</div>
+			<div class="grid p-fluid mt-3">
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Nombre</label>
+					<input [(ngModel)]="proyecto.institucion!.nombre" pInputText class="text"
+						[disabled]="!editarInstitucion" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Departamento</label>
+					<p-autoComplete [(ngModel)]="departamentoSeleccionado" [dropdown]="true" class="text"
+						[suggestions]="departamentoFiltrado" (completeMethod)="filtrarDepartamento($event)"
+						field="nombre" [disabled]="!editarInstitucion"
+						(onSelect)="cambiarDepartamento($event)"></p-autoComplete>
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Municipio</label>
+					<p-autoComplete [(ngModel)]="proyecto.institucion!.municipio" [dropdown]="true" class="text"
+						[suggestions]="municipioFiltrado" (completeMethod)="filtrarMunicipio($event)" field="nombre"
+						[disabled]="!editarInstitucion"></p-autoComplete>
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Direccion</label>
+					<input [(ngModel)]="proyecto.institucion!.direccion" pInputText class="text"
+						[disabled]="!editarInstitucion" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Coordenadas</label>
+					<input [(ngModel)]="proyecto.institucion!.coordenadas" pInputText class="text"
+						[disabled]="!editarInstitucion" />
+				</div>
+			</div>
+			<div class="grid p-fluid mt-3">
+				<div class="field col-12 md:col-6 pb-0">
+					<p-button *ngIf="editarInstitucion" label="Cancelar" icon="pi pi-times"
+						(onClick)="cancelarEdicionInstitucion()"
+						styleClass="p-button-outlined p-button-secondary"></p-button>
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<p-button *ngIf="!editarInstitucion && modoEdicion" label="Editar" icon="pi pi-pencil"
+						(onClick)="editarInstitucion=true" styleClass="p-button-outlined p-button-secondary"></p-button>
+					<p-button *ngIf="editarInstitucion" label="Guardar" icon="pi pi-save"
+						styleClass="p-button-outlined p-button-secondary" (onClick)="guardarInstitucion()"></p-button>
+				</div>
+			</div>
+		</div>
+		<div class="card">
+			<div class="grid p-fluid mt-3">
+				<div class="field col-12 md:col-12 pb-0">
+					<label class="negrita">Datos responsable contraparte institucional</label>
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Nombre</label>
+					<input [(ngModel)]="proyecto.contraparte!.nombreCompleto" [disabled]="!editarContraparte" pInputText
+						class="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Correo electrónico</label>
+					<input [(ngModel)]="proyecto.contraparte!.correo" [disabled]="!editarContraparte" pInputText
+						class="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Numero de DPI</label>
+					<input [(ngModel)]="proyecto.contraparte!.dpi" pInputText id="dpi" [disabled]="!editarContraparte"
+						class="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Numero de Telefono</label>
+					<input [(ngModel)]="proyecto.contraparte!.telefono" pInputText id="telefono"
+						[disabled]="!editarContraparte" class="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Titulo</label>
+					<p-dropdown #rolDropdown [(ngModel)]="proyecto.contraparte!.titulo" [options]="titulos"
+						[disabled]="!editarContraparte" optionLabel="nombre" class="text"></p-dropdown>
+				</div>
+				<!-- 
+					<div class="field col-12 md:col-6 pb-0">
+					<label>Titulo</label>
+					<p-dropdown #rolDropdown [(ngModel)]="proyecto.contraparte!.titulo" [options]="titulos" [editable]="true"
+						optionLabel="nombre"></p-dropdown>
+				</div>
+				-->
+			</div>
+			<div class="grid p-fluid mt-3">
+				<div class="field col-12 md:col-6 pb-0">
+					<p-button *ngIf="editarContraparte" label="Cancelar" icon="pi pi-times"
+						(onClick)="cancelarEdicionContraparte()"
+						styleClass="p-button-outlined p-button-secondary"></p-button>
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<p-button *ngIf="!editarContraparte && modoEdicion" label="Editar" icon="pi pi-pencil"
+						(onClick)="editarContraparte=true" styleClass="p-button-outlined p-button-secondary"></p-button>
+					<p-button *ngIf="editarContraparte" label="Guardar" icon="pi pi-save"
+						styleClass="p-button-outlined p-button-secondary" (onClick)="guardarContraparte()"></p-button>
+				</div>
+			</div>
+		</div>
+	</ng-container>
+	<ng-container *ngIf="activeIndex === 2">
+		<div class="card">
+			<label class="negrita">Asesor del proyecto</label>
+			<div class="grid p-fluid mt-3">
+				<div class="field col-12 md:col-6 pb-0">
+					<label htmlFor="nombres">Nombre</label>
+					<input [(ngModel)]="proyecto.asesor!.nombreCompleto" [disabled]="!editarAsesor" pInputText
+						class="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label class="" htmlFor="email">Correo electrónico</label>
+					<input [(ngModel)]="proyecto.asesor!.correo" [disabled]="!editarAsesor" pInputText class="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label class="" htmlFor="direccion">Direccion</label>
+					<input [(ngModel)]="proyecto.asesor!.direccion" [disabled]="!editarAsesor" pInputText id="direccion"
+						class="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label class="" htmlFor="dpi">Numero de DPI</label>
+					<input [(ngModel)]="proyecto.asesor!.dpi" pInputText id="dpi" [disabled]="!editarAsesor"
+						class="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label class="" htmlFor="telefono">Numero de Telefono</label>
+					<input [(ngModel)]="proyecto.asesor!.telefono" pInputText id="telefono" [disabled]="!editarAsesor"
+						class="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label class="" htmlFor="colegiado">Numero de Colegiado</label>
+					<input [(ngModel)]="proyecto.asesor!.numeroColegiado" pInputText id="colegiado"
+						[disabled]="!editarAsesor" class="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Titulo</label>
+					<p-dropdown #rolDropdown [(ngModel)]="proyecto.asesor!.titulo" [options]="titulos"
+						[disabled]="!editarAsesor" optionLabel="nombre" class="text"></p-dropdown>
+				</div>
+				<div class="field col-12 md:col-6">
+					<label class="" htmlFor="registro">Registro Academico (Opcional)</label>
+					<input [(ngModel)]="proyecto.asesor!.registroAcademico" pInputText id="registro"
+						[disabled]="!editarAsesor" class="text" />
+				</div>
+			</div>
+			<div class="grid p-fluid mt-3">
+				<div class="field col-12 md:col-6 pb-0">
+					<p-button *ngIf="editarAsesor" label="Cancelar" icon="pi pi-times"
+						(onClick)="cancelarEdicionAsesor()"
+						styleClass="p-button-outlined p-button-secondary"></p-button>
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<p-button *ngIf="!editarAsesor && modoEdicion" label="Editar" icon="pi pi-pencil"
+						(onClick)="editarAsesor=true" styleClass="p-button-outlined p-button-secondary"></p-button>
+					<p-button *ngIf="editarAsesor" label="Guardar" icon="pi pi-save"
+						(onClick)="guardarAsesor(proyecto.asesor!.idUsuario!)"
+						styleClass="p-button-outlined p-button-secondary"></p-button>
+				</div>
+			</div>
+		</div>
+
+		<ng-container *ngFor="let asesorTecnico of asesoresTecnicosAny">
+			<div class="card">
+				<label class="negrita">Asesor tecnico</label>
+				<div class="grid p-fluid mt-3">
+					<div class="field col-12 md:col-6 pb-0">
+						<label htmlFor="nombres">Nombres</label>
+						<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.asesor.nombreCompleto)}"
+							[disabled]="!asesorTecnico.edicion" [(ngModel)]="asesorTecnico.asesor.nombreCompleto"
+							pInputText class="text" />
 					</div>
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<label htmlFor="propedeutico">Descargar constancia de propedeutico</label>
-							<p-button label="Descarcar" icon="pi pi-download"
-								(onClick)="descargar(proyecto?.requisitos?.[1])"></p-button>
-						</div>
+					<div class="field col-12 md:col-6 pb-0">
+						<label htmlFor="email">Correo electrónico</label>
+						<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.asesor.correo)}"
+							[disabled]="!asesorTecnico.edicion" [(ngModel)]="asesorTecnico.asesor.correo" pInputText
+							class="text" />
 					</div>
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<label htmlFor="nacimiento">Descargar certificado de nacimiento</label>
-							<p-button label="Descarcar" icon="pi pi-download"
-								(onClick)="descargar(proyecto?.requisitos?.[2])"></p-button>
-						</div>
+					<div class="field col-12 md:col-6 pb-0">
+						<label>Direccion</label>
+						<input [(ngModel)]="asesorTecnico.asesor.direccion" pInputText class="text"
+							[disabled]="!asesorTecnico.edicion"
+							[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.asesor.direccion)}" />
 					</div>
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<label htmlFor="anteproyecto">Descargar Anteproyecto</label>
-							<p-button label="Descarcar" icon="pi pi-download"
-								(onClick)="descargar(proyecto?.requisitos?.[3])"></p-button>
-						</div>
+					<div class="field col-12 md:col-6 pb-0">
+						<label>Numero de DPI</label>
+						<input [(ngModel)]="asesorTecnico.asesor.dpi" pInputText id="dpi" class="text"
+							[disabled]="!asesorTecnico.edicion"
+							[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.asesor.dpi)}" />
 					</div>
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<label htmlFor="cartaAsesor">Cargar Carta de Asesor</label>
-							<p-button label="Descarcar" icon="pi pi-download"
-								(onClick)="descargar(proyecto?.requisitos?.[4])"></p-button>
-						</div>
+					<div class="field col-12 md:col-6 pb-0">
+						<label>Numero de Telefono</label>
+						<input [(ngModel)]="asesorTecnico.asesor.telefono" pInputText class="text"
+							[disabled]="!asesorTecnico.edicion"
+							[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.asesor.telefono)}" />
 					</div>
-				</ng-container>
-				<ng-container *ngIf="activeIndex === 1">
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<label class="" htmlFor="nombres">Nombres</label>
-							<input [(ngModel)]="proyecto.asesor!.nombres" [disabled]="bloquedo" pInputText type="text" />
-						</div>
-						<div class="field col">
-							<label class="" htmlFor="apellidos">Apellidos</label>
-							<input [(ngModel)]="proyecto.asesor!.apellidos" [disabled]="bloquedo" pInputText id="apellidos"
-								type="text" />
-						</div>
+					<div class="field col-12 md:col-6 pb-0">
+						<label>Numero de Colegiado</label>
+						<input [(ngModel)]="asesorTecnico.asesor.numeroColegiado" pInputText class="text"
+							[disabled]="!asesorTecnico.edicion"
+							[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.asesor.numeroColegiado)}" />
 					</div>
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<label class="" htmlFor="email">Correo electrónico</label>
-							<input [(ngModel)]="proyecto.asesor!.correo" [disabled]="bloquedo" pInputText type="text" />
-						</div>
-						<div class="field col">
-							<label class="" htmlFor="fecha">Fecha de Nacimiento</label>
-							<p-calendar [(ngModel)]="proyecto.asesor!.fechaNacimiento" [disabled]="bloquedo"
-								dateFormat="yy-mm-dd" inputId="dateformat"></p-calendar>
-						</div>
-					</div>
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<label class="" htmlFor="direccion">Direccion</label>
-							<input [(ngModel)]="proyecto.asesor!.direccion" [disabled]="bloquedo" pInputText id="direccion" type="text"/>
-						</div>
-						<div class="field col">
-							<label class="" htmlFor="dpi">Numero de DPI</label>
-							<input [(ngModel)]="proyecto.asesor!.dpi" pInputText id="dpi" [disabled]="bloquedo" type="text"/>
-						</div>
-					</div>
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<label class="" htmlFor="telefono">Numero de Telefono</label>
-							<input [(ngModel)]="proyecto.asesor!.telefono" pInputText id="telefono" [disabled]="bloquedo" type="text"/>
-						</div>
-						<div class="field col">
-							<label class="" htmlFor="colegiado">Numero de Colegiado</label>
-							<input [(ngModel)]="proyecto.asesor!.numeroColegiado" pInputText id="colegiado" [disabled]="bloquedo" type="text"/>
-						</div>
-					</div>
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<label class="" htmlFor="registro">Registro Academico (Opcional)</label>
-							<input [(ngModel)]="proyecto.asesor!.registroAcademico" pInputText id="registro" [disabled]="bloquedo" type="text"/>
-						</div>
-					</div>
-				</ng-container>
-				<div class="p-formgrid grid" >
-					<div class="field col" *ngIf="boton1.mostrar">
-						<div class="card">
-							<p-button [icon]="boton1.icono" (click)="boton1.accion()"
-								styleClass="p-button-outlined p-button-secondary"
-								[label]="boton1.titulo"></p-button>
-						</div>
-					</div>
-					<div class="field col" *ngIf="boton2.mostrar">
-						<div class="card">
-							<p-button [icon]="boton2.icono" styleClass="p-button-outlined" (click)="boton2.accion()"
-								[label]="boton2.titulo"></p-button>
-						</div>
+					<div class="field col-12 md:col-6 pb-0">
+						<label>Registro Academico (Opcional)</label>
+						<input [disabled]="!asesorTecnico.edicion" [(ngModel)]="asesorTecnico.asesor.registroAcademico"
+							pInputText class="text" />
 					</div>
 				</div>
-				<p-divider></p-divider>
-				<div class="field col">
-					<div class="comment-box">
-						<h3>Comentarios</h3>
-						<div class="comment-form">
-							<textarea [(ngModel)]="text" class="comment-input"
-								placeholder="Escribe tu comentario"></textarea>
-							<button type="submit" class="comment-button" (click)="comentar()">Comentar</button>
-						</div>
-						<br>
-						<br>
-						<div class="comment-list">
-							<app-phase *ngFor="let etapa of etapas" [name]="etapa.nombre" [icon]="etapa.icono">
-								<ng-container *ngFor="let comentario of etapa.comentarios">
-									<app-comment [comment]="comentario"></app-comment>
-								</ng-container>
-								<p-button *ngIf="!etapa.activo" label="ver comentarios" styleClass="p-button-link"
-									(click)="cargarComentario(etapa)"></p-button>
-							</app-phase>
-							<app-phase name="Creacion de Proyecto" icon="pi pi-flag"></app-phase>
-						</div>
+				<div class="grid p-fluid mt-3">
+					<div class="field col-12 md:col-6 pb-0">
+						<p-button *ngIf="asesorTecnico.edicion" label="Cancelar" icon="pi pi-times"
+							(onClick)="cancelarEdicionAsesorTecnico(asesorTecnico)"
+							styleClass="p-button-outlined p-button-secondary"></p-button>
+						<p-button *ngIf="!asesorTecnico.edicion" label="Eliminar" icon="pi pi-trash"
+							(onClick)="eliminarAsesorTecnico(asesorTecnico)"
+							styleClass="p-button-outlined p-button-secondary"></p-button>
+					</div>
+					<div class="field col-12 md:col-6 pb-0">
+						<p-button *ngIf="!asesorTecnico.edicion" label="Editar" icon="pi pi-pencil"
+							(onClick)="asesorTecnico.edicion=true"
+							styleClass="p-button-outlined p-button-secondary"></p-button>
+						<p-button *ngIf="asesorTecnico.edicion" label="Guardar" icon="pi pi-save"
+							(onClick)="guardarAsesorTecnico(asesorTecnico)"
+							styleClass="p-button-outlined p-button-secondary"></p-button>
 					</div>
 				</div>
-			</p-panel>
+			</div>
+		</ng-container>
+		<ng-container *ngFor="let asesorTecnico of asesoresTecnicosNuevosAny">
+			<div class="card">
+				<label class="negrita">Asesor tecnico</label>
+				<div class="grid p-fluid mt-3">
+					<div class="field col-12 md:col-6 pb-0">
+						<label htmlFor="nombres">Nombre</label>
+						<input [disabled]="!asesorTecnico.edicion"
+							[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.asesor.nombreCompleto)}"
+							[(ngModel)]="asesorTecnico.asesor.nombreCompleto" pInputText class="text" />
+					</div>
+					<div class="field col-12 md:col-6 pb-0">
+						<label htmlFor="email">Correo electrónico</label>
+						<input [disabled]="!asesorTecnico.edicion"
+							[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.asesor.correo)}"
+							[(ngModel)]="asesorTecnico.asesor.correo" pInputText class="text" />
+					</div>
+					<div class="field col-12 md:col-6 pb-0">
+						<label>Direccion</label>
+						<input [disabled]="!asesorTecnico.edicion" [(ngModel)]="asesorTecnico.asesor.direccion"
+							pInputText class="text"
+							[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.asesor.direccion)}" />
+					</div>
+					<div class="field col-12 md:col-6 pb-0">
+						<label>Numero de DPI</label>
+						<input [disabled]="!asesorTecnico.edicion" [(ngModel)]="asesorTecnico.asesor.dpi" pInputText
+							id="dpi" class="text"
+							[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.asesor.dpi)}" />
+					</div>
+					<div class="field col-12 md:col-6 pb-0">
+						<label>Numero de Telefono</label>
+						<input [disabled]="!asesorTecnico.edicion" [(ngModel)]="asesorTecnico.asesor.telefono"
+							pInputText class="text"
+							[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.asesor.telefono)}" />
+					</div>
+					<div class="field col-12 md:col-6 pb-0">
+						<label>Numero de Colegiado</label>
+						<input [disabled]="!asesorTecnico.edicion" [(ngModel)]="asesorTecnico.asesor.numeroColegiado"
+							pInputText class="text"
+							[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.asesor.numeroColegiado)}" />
+					</div>
+					<div class="field col-12 md:col-6 pb-0">
+						<label>Registro Academico (Opcional)</label>
+						<input [disabled]="!asesorTecnico.edicion" [(ngModel)]="asesorTecnico.asesor.registroAcademico"
+							pInputText class="text" />
+					</div>
+				</div>
+				<div class="grid p-fluid mt-3">
+					<div class="field col-12 md:col-6 pb-0">
+						<p-button *ngIf="asesorTecnico.edicion" label="Cancelar" icon="pi pi-times"
+							styleClass="p-button-outlined p-button-secondary"
+							(onClick)="cancelarAsesorTecnico(asesorTecnico)"></p-button>
+					</div>
+					<div class="field col-12 md:col-6 pb-0">
+						<p-button *ngIf="asesorTecnico.edicion" label="Guardar" icon="pi pi-save"
+							styleClass="p-button-outlined p-button-secondary"
+							(onClick)="guardarNuevoAsesorTecnico(asesorTecnico)"></p-button>
+					</div>
+				</div>
+			</div>
+		</ng-container>
+		<div *ngIf="modoEdicion" class="grid p-fluid mt-3">
+			<div class="field col-12 md:col-12 pb-0">
+				<p-button label="Agregar asesor tecnico" styleClass="p-button-link"
+					(click)="agregarAsesorTecnico()"></p-button>
+			</div>
+		</div>
+	</ng-container>
+	<ng-container *ngIf="activeIndex === 3">
+		<div class="grid p-fluid mt-3 pb-0">
+			<div class="field col-12 md:col-6 pb-0">
+				<label class="" htmlFor="nombres">Nombre</label>
+				<input [(ngModel)]="proyecto.usuario!.nombreCompleto" disabled="true" pInputText class="text" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label class="" htmlFor="email">Correo electrónico</label>
+				<input [(ngModel)]="proyecto.usuario!.correo" disabled="true" pInputText class="text" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label class="" htmlFor="direccion">Direccion</label>
+				<input [(ngModel)]="proyecto.usuario!.direccion" disabled="true" pInputText id="direccion"
+					class="text" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label class="" htmlFor="dpi">Numero de DPI</label>
+				<input [(ngModel)]="proyecto.usuario!.dpi" pInputText id="dpi" disabled="true" class="text" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label class="" htmlFor="telefono">Numero de Telefono</label>
+				<input [(ngModel)]="proyecto.usuario!.telefono" pInputText id="telefono" disabled="true" class="text" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label class="" htmlFor="registro">Registro Academico</label>
+				<input [(ngModel)]="proyecto.usuario!.registroAcademico" pInputText id="registro" disabled="true"
+					class="text" />
+			</div>
+		</div>
+	</ng-container>
+	<p-divider></p-divider>
+	<div class="field col">
+		<div class="comment-box">
+			<h3>Comentarios</h3>
+			<div class="comment-form">
+				<textarea [(ngModel)]="text" class="comment-input" placeholder="Escribe tu comentario"></textarea>
+				<button type="submit" class="comment-button" (click)="comentar()">Comentar</button>
+			</div>
+			<br>
+			<br>
+			<div class="comment-list">
+				<ng-container *ngFor="let comentario of comentarios">
+					<app-comment [comment]="comentario"></app-comment>
+				</ng-container>
+				<p-button *ngIf="(currentPage+1)<totalpages" label="ver mas comentarios" styleClass="p-button-link"
+					(onClick)="cargarMasComentarios()"></p-button>
+			</div>
 		</div>
 	</div>
 </div>
-<p-dialog header="Header" [(visible)]="visible" [style]="{ width: '50vw' }" (onHide)="resetEditor()">
+<p-dialog header="Header" [(visible)]="visible" [style]="{ width: '50vw' }">
 	<ng-template pTemplate="header">
 		<span class="text-xl font-bold">Solicitar Cambios</span>
 	</ng-template>
-	<editor #editor [(ngModel)]="text" apiKey="93afxat2vc9lyzupvxajjema7oakd4axpy6twnhw0cbdc6eb" [init]="{
-	height: 300,
-    menubar: false,
-    plugins: [
-      'advlist autolink lists link image charmap print preview anchor',
-      'searchreplace visualblocks code fullscreen',
-      'insertdatetime media table paste code help wordcount'
-    ],
-    toolbar:
-      'undo redo | formatselect | bold italic backcolor | \
-      alignleft aligncenter alignright alignjustify | \
-      bullist numlist outdent indent | removeformat | help'}"></editor>
+	<textarea [(ngModel)]="textCambios" class="comment-input" placeholder="Escribe tu comentario"></textarea>
 	<ng-template pTemplate="footer">
-		<p-button icon="pi pi-check" (click)="visible = false" label="Aceptar" styleClass="p-button-text"></p-button>
+		<p-button icon="pi pi-check" (click)="solicitarCambios()" label="Aceptar" styleClass="p-button-text"></p-button>
 	</ng-template>
 </p-dialog>
+
 <p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle" [style]="{width: '350px'}"
 	acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
-
 <style>
+	.remove {
+		margin-left: 5px;
+	}
+
+	.item {
+		width: auto;
+	}
+
+	.info {
+		margin-bottom: 10px;
+	}
+
 	h3 {
 		font-size: 20px;
 		font-weight: bold;
@@ -192,6 +707,11 @@
 
 	.comment-form {
 		margin-top: 20px;
+	}
+
+	.bordered-div {
+		border: 1px solid #757575;
+		border-radius: 10px;
 	}
 
 	.comment-input {
@@ -213,8 +733,48 @@
 		cursor: pointer;
 	}
 
+	.text {
+		color: black;
+	}
+
 	.comment-button:hover {
 		background-color: #696969;
 	}
-	
+
+	.negrita {
+		font-weight: bold;
+		font-style: italic;
+	}
+
+	.titulo {
+		color: #00274e;
+		font-weight: bold;
+	}
+
+	.icon-atras {
+		margin-top: 10px;
+	}
+
+	.input-container {
+		display: flex;
+		/* Enable Flexbox layout */
+		align-items: center;
+		/* Vertically center items */
+		justify-content: space-between;
+		/* Add space between items */
+	}
+
+	/* Optional: Adjust the padding or margins if needed */
+	.input-container text {
+		margin-right: 10px;
+		/* Adjust the spacing between textarea and button */
+	}
+
+	.button {
+		width: 100%;
+	}
+
+	.file-uploader {
+		width: 100%;
+	}
 </style>

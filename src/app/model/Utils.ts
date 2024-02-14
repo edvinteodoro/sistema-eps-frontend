@@ -1,0 +1,42 @@
+export enum Role {
+    Estudiante = 'Estudiante',
+    Supervisor = 'Supervisor',
+    Contraparte = 'Contraparte',
+    ID_SUPERVISOR = 2,
+    Secretaria = 'Secretaria',
+    Asesor = 'Asesor',
+    ID_ASESOR = 3,
+    ID_CONTRAPARTE = 7,
+    Coordinador = 'Coordinador Carrera',
+    CoordinadorEps = 'Coordinador EPS'
+}
+
+export enum EtapaUtils {
+    CREACION_PROYECTO = 1,
+    REVISION_SECRETARIA = 2,
+    REVISION_SUPERVISOR = 3,
+    DEFINIR_FECHA_EVALUACION = 4,
+    CARGA_CONVOCATORIA = 5,
+    SUBIR_NOTA=6,
+    CARGA_CARTA_ACEPTACION=7,
+    HABILITAR_BITACORA=8,
+    BITACORA = 9,
+    CONVOCATORIA_EXAMEN_GENERAL=10,
+    CARGA_CONVOCATORIA_EXAMEN_GENERAL=11,
+    EXAMEN_GENERAL=12,
+    REDACCION_ARTICULO=13
+}
+
+export enum ElementoUtils {
+    ID_ELEMENTO_TITULO = 1,
+    ID_ELEMENTO_ANTEPROYECTO = 2,
+    ID_ELEMENTO_INSCRIPCION = 3,
+    ID_ELEMENTO_PROPEDEUTICO = 4,
+    ID_ELEMENTO_NACIMIENTO = 5,
+    ID_ELEMENTO_CARTA=6,
+    ID_ELEMENTO_FINIQUITO = 7,
+    ID_ELEMENTO_CONVOCATORIA_ANTEPROYECTO = 8,
+    ID_ELEMENTO_CONVOCATORIA_ANTEPROYECTO_FIRMADA = 9,
+    ID_ELEMENTO_ACTA_ANTEPROYECTO = 10,
+    ID_ELEMENTO_CARTA_ACEPTACION_CONTRAPARTE = 11
+}

@@ -1,75 +1,80 @@
-<div class="grid">
-	<div class="col-12">
-		<p-toast key="tst"></p-toast>
-		<div class="card p-fluid">
-			<h5>Crear Usuario</h5>
-			<div class="p-formgrid grid">
-				<div class="field col">
-					<label htmlFor="nombres">Nombres</label>
-					<input [(ngModel)]="usuario.nombres" pInputText id="nombres" type="text" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.nombres) && crearUsuario}"/>
-				</div>
-				<div class="field col">
-					<label htmlFor="apellidos">Apellidos</label>
-					<input [(ngModel)]="usuario.apellidos" pInputText id="apellidos" type="text" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.apellidos) && crearUsuario}"/>
-				</div>
-			</div>
-			<div class="p-formgrid grid">	
-				<div class="field col">
-					<label htmlFor="email">Correo electrónico</label>
-					<input [(ngModel)]="usuario.correo" pInputText id="email" type="text" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.correo) && crearUsuario}"/>
-				</div>
-				<div class="field col">
-					<label htmlFor="fecha">Fecha de Nacimiento</label>
-					<p-calendar [(ngModel)]="usuario.fechaNacimiento" dateFormat="yy-mm-dd" inputId="dateformat" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.fechaNacimiento) && crearUsuario}"></p-calendar>
-				</div>
-			</div>
-			
-			<div class="p-formgrid grid">	
-				<div class="field col">
-					<label htmlFor="direccion">Direccion</label>
-					<input [(ngModel)]="usuario.direccion" pInputText id="direccion" type="text" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.direccion)}"/>
-				</div>
-				<div class="field col">
-					<label htmlFor="dpi">Numero de DPI</label>
-					<input [(ngModel)]="usuario.dpi" pInputText id="dpi" type="text" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.dpi)}"/>
-				</div>
-			</div>
-			<div class="p-formgrid grid">
-				<div class="field col">
-					<label htmlFor="telefono">Numero de Telefono</label>
-					<input [(ngModel)]="usuario.telefono" pInputText id="telefono" type="text" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.telefono)}"/>
-				</div>
-				<div class="field col">
-					<label  htmlFor="tipo" [ngClass]="{'p-error block': isFieldInvalid(usuario.rol)}">Rol de Usuario</label>
-					<p-dropdown #rolDropdown [(ngModel)]="usuario.rol"  [options]="roles" [editable]="true" optionLabel="titulo"></p-dropdown>
-				</div>
-			</div>
-			<div class="p-formgrid grid">
-				<div *ngIf="showCarreras()" class="field col">
-					<label htmlFor="carreras" [ngClass]="{'p-error block': isFieldInvalid(usuario.carreras)}">Carreras</label>
-					<p-multiSelect [(ngModel)]="usuario.carreras" inputId="multiselect" [options]="carreras" optionLabel="titulo" [filter]="false"></p-multiSelect>
-				</div>
-				<div *ngIf="showRegistro()" class="field col">
-					<label htmlFor="registro">Registro Academico</label>
-					<input [(ngModel)]="usuario.registroAcademico" pInputText id="registro" type="text" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.registroAcademico)}"/>
-				</div>
-				<div *ngIf="showColegiado()" class="field col">
-					<label htmlFor="colegiado">Numero de Colegiado</label>
-					<input [(ngModel)]="usuario.numeroColegiado" pInputText id="colegiado" type="text" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.numeroColegiado)}"/>
-				</div>
-			</div><br>
-			<div class="p-formgrid grid">
-				<div class="field col">
-					<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle"
-                             [style]="{width: '350px'}" acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
-					<p-confirmDialog header="Confirmacion" key="confirm2" icon="pi pi-exclamation-triangle"
-                             [style]="{width: '350px'}" acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
-					<button (click)="confirm()" pButton icon="pi pi-check" label="Crear Usuario"></button>	
-				</div>
-				<div class="field col">
-					<button (click)="cancelar()" pButton icon="pi pi-times" class="p-button-danger" label="Cancelar"></button>	
-				</div>	
-			</div>		
+<div class="card">
+	<p-toast key="tst"></p-toast>
+	<h5 class="titulo">Crear Usuario</h5>
+	<div class="grid p-fluid mt-3">
+		<div class="field col-12 md:col-6">
+			<label>Nombre Completo</label>
+			<input [(ngModel)]="usuario.nombreCompleto" pInputText type="text"
+				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.nombreCompleto)}" />
+		</div>
+		<div class="field col-12 md:col-6">
+			<label>Correo electrónico</label>
+			<input [(ngModel)]="usuario.correo" pInputText type="text"
+				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.correo)}" />
+		</div>
+		<div class="field col-12 md:col-6">
+			<label>Direccion</label>
+			<input [(ngModel)]="usuario.direccion" pInputText type="text"
+				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.direccion)}" />
+		</div>
+		<div class="field col-12 md:col-6">
+			<label>Numero de DPI</label>
+			<input [(ngModel)]="usuario.dpi" pInputText type="text"
+				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.dpi)}" />
+		</div>
+		<div class="field col-12 md:col-6">
+			<label>Numero de Telefono</label>
+			<input [(ngModel)]="usuario.telefono" pInputText type="text"
+				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.telefono)}" />
+		</div>
+
+		<div class="field col-12 md:col-6">
+			<label [ngClass]="{'p-error block': isFieldInvalid(usuario.rol)}">Rol de Usuario</label>
+			<p-dropdown #rolDropdown [(ngModel)]="usuario.rol" [options]="roles" [editable]="true"
+				optionLabel="titulo"></p-dropdown>
+		</div>
+
+		<div *ngIf="usuario.rol && usuario.rol.idRol!=1" class="field col-12 md:col-6">
+			<label htmlFor="tipo" [ngClass]="{'p-error block': isFieldInvalid(usuario.titulo)}">Titulo de Usuario</label>
+			<p-dropdown #rolDropdown [(ngModel)]="usuario.titulo" [options]="titulos" [editable]="true"
+				optionLabel="nombre"></p-dropdown>
+		</div>
+		<div *ngIf="usuario.rol && usuario.rol.contieneCarrera" class="field col-12 md:col-6">
+			<label htmlFor="carreras" [ngClass]="{'p-error block': isFieldInvalid(usuario.carreras)}">Carreras</label>
+			<p-multiSelect [(ngModel)]="usuario.carreras" inputId="multiselect" [options]="carreras"
+				optionLabel="nombre" [filter]="false"></p-multiSelect>
+		</div>
+		<div *ngIf="usuario.rol && usuario.rol.contieneRegistro" class="field col-12 md:col-6">
+			<label htmlFor="registro">Registro Academico</label>
+			<input [(ngModel)]="usuario.registroAcademico" pInputText id="registro" type="text"
+			[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.registroAcademico)}"/>
+		</div>
+		<div *ngIf="usuario.rol && usuario.rol.contieneColegiado" class="field col-12 md:col-6">
+			<label htmlFor="colegiado">Numero de Colegiado</label>
+			<input [(ngModel)]="usuario.numeroColegiado" pInputText id="colegiado" type="text"
+			[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.numeroColegiado)}"/>
+		</div>
+	</div>
+	<div class="grid p-fluid mt-3">
+		<div class="field col-12 md:col-6">
+			<p-button (click)="cancelar()" icon="pi pi-times" styleClass="p-button-outlined p-button-secondary"
+				label="Cancelar"></p-button>
+		</div>
+		<div class="field col-12 md:col-6">
+			<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle"
+				[style]="{width: '350px'}" acceptButtonStyleClass="p-button-text"
+				rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+			<p-confirmDialog header="Confirmacion" key="confirm2" icon="pi pi-exclamation-triangle"
+				[style]="{width: '350px'}" acceptButtonStyleClass="p-button-text"
+				rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+			<p-button (click)="confirm()" styleClass="p-button-outlined" icon="pi pi-check"
+				label="Crear Usuario"></p-button>
 		</div>
 	</div>
 </div>
+<style>
+	.titulo {
+		color: #00274e;
+		font-weight: bold;
+	}
+</style>

@@ -1,0 +1,222 @@
+<div class="card">
+	<p-toast key="tst"></p-toast>
+	<div class="flex md:flex-row justify-content-between align-items-center">
+		<div class="flex md:flex-row">
+			<span class="icon-atras block">
+				<p-button icon="pi pi-chevron-left" (click)="listaBitacoras()"
+					styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
+			</span>
+			<h5 class="titulo">Bitacora</h5>
+		</div>
+	</div>
+	<div class="card grid p-fluid mt-3">
+		<div class="field col-12 md:col-12 pb-0">
+			<label class="sub-title">Datos del proyecto:</label>
+		</div>
+		<div class="field col-12 md:col-12 pb-0">
+			<label>Titulo de proyecto:</label>
+			<textarea [(ngModel)]="tituloProyecto.informacion" [disabled]="true" class="text" rows="4"
+				pInputTextarea></textarea>
+		</div>
+		<div class="field col-12 md:col-12 pb-0">
+			<label>Carrera:</label>
+			<input [(ngModel)]="bitacora.carrera!.nombre" [disabled]="true" pInputText class="text" />
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Nombre Estudiante: </label>
+			<input [(ngModel)]="bitacora.usuario!.nombreCompleto" [disabled]="true" pInputText class="text" />
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Registro Academico: </label>
+			<input [(ngModel)]="bitacora.usuario!.registroAcademico!" [disabled]="true" pInputText class="text" />
+		</div>
+	</div>
+	<div class="card">
+		<div class="flex md:flex-row justify-content-between align-items-center">
+			<div class="flex md:flex-row">
+				<label class="sub-title">Datos de bitacora:</label>
+			</div>
+			<span class="block mt-2 p-input-icon-left">
+				<p-button *ngIf="modoEdicion && !editarInformacion" icon="pi pi-pencil"
+					styleClass="p-button-rounded p-button-secondary" (click)="editarInformacion=true"></p-button>
+				<p-button *ngIf="modoEdicion && editarInformacion" icon="pi pi-times"
+					styleClass="p-button-rounded p-button-secondary" (click)="cancelarEdicionContenido()"></p-button>
+				<p-button *ngIf="modoEdicion && editarInformacion" icon="pi pi-save" (click)="guardarEdicionContenido()"
+					styleClass="p-button-rounded p-button-secondary"></p-button>
+			</span>
+		</div>
+		<div class="grid p-fluid mt-3">
+			<div class="field col-12 md:col-12 pb-0">
+				<label>Actividades efectuadas</label>
+				<textarea class="text" rows="10" cols="30" [(ngModel)]="bitacora.descripcion"
+					[disabled]="!editarInformacion" pInputTextarea></textarea>
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label>Fecha de informe</label>
+				<input [disabled]="!editarInformacion" [(ngModel)]="bitacora.fechaReporteFormat" pInputText
+					class="text" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label>Porcentaje de avance en cronograma</label>
+				<p-inputNumber suffix="%" [min]="0" [max]="100" [disabled]="!editarInformacion"
+					[(ngModel)]="bitacora.avance" class="text"></p-inputNumber>
+			</div>
+			<div class="field col-12 md:col-4 pb-0">
+				<p-checkbox [(ngModel)]="bitacora.revisionAsesor" [binary]="true" [disabled]="true"
+					label="Revision Asesor"></p-checkbox>
+			</div>
+			<div class="field col-12 md:col-4 pb-0">
+				<p-checkbox [(ngModel)]="bitacora.revisionSupervisor" [binary]="true" [disabled]="true"
+					label="Revision Supervisor"></p-checkbox>
+			</div>
+			<div class="field col-12 md:col-4 pb-0">
+				<p-checkbox [(ngModel)]="bitacora.revisionContraparte" [binary]="true" [disabled]="true"
+					label="Revision Contraparte"></p-checkbox>
+			</div>
+		</div>
+	</div>
+	<div class="field col-12 md:col-12 pb-0">
+		<label class="sub-title">Recursos:</label>
+		<p-divider></p-divider>
+		<div>
+			<ng-container *ngFor="let recurso of recursos">
+				<div class="file-container">
+					<div class="file">
+						<i [class]="recurso.icono"></i>
+						<span class="file-name" *ngIf="recurso.file">{{recurso.file.name}}</span>
+						<span class="file-name" *ngIf="!recurso.file">{{recurso.link}}</span>
+					</div>
+					<div>
+						<p-button icon="pi pi-download" styleClass="p-button-rounded p-button-text button-center"
+							(click)="descargarRecurso(recurso)"></p-button>
+						<p-button *ngIf="modoEdicion" icon="pi pi-trash"
+							styleClass="p-button-rounded p-button-text button-center"
+							(click)="eliminarRecurso(recurso)"></p-button>
+					</div>
+				</div>
+				<p-divider></p-divider>
+			</ng-container>
+		</div>
+	</div>
+
+
+	<div class="grid p-fluid mt-3">
+		<div class="field col-12 md:col-12 pb-0">
+			<p-fileUpload [disabled]="bitacora.contieneInforme!" #fileUpload mode="basic" icon="pi pi-plus"
+				[style]="{'width':'100%'}" styleClass="p-button-outlined p-button-secondary"
+				chooseLabel="Agregar Informe Mensual" accept=".pdf" [showCancelButton]="false"
+				[showUploadButton]="false" [maxFileSize]="1000000"
+				(onSelect)="cargarInforme($event,fileUpload)"></p-fileUpload><br>
+			<p-fileUpload *ngIf="modoEdicion" #fileUpload mode="basic" icon="pi pi-plus" [style]="{'width':'100%'}"
+				styleClass="p-button-outlined p-button-secondary" chooseLabel="Agregar imagen/documento"
+				accept="image/*,.pdf" [showCancelButton]="false" [showUploadButton]="false" [maxFileSize]="1000000"
+				(onSelect)="cargarRecurso($event,fileUpload)"></p-fileUpload><br>
+			<p-button *ngIf="modoEdicion" icon="pi pi-plus" styleClass="p-button-outlined p-button-secondary"
+				label="Agregar links" (onClick)="mostrarLinkDialog=true"></p-button>
+		</div>
+	</div>
+	<div class="grid p-fluid mt-3">
+		<div class="field col-12 md:col-12 pb-0">
+			<p-button *ngIf="mostrarBotonRevision" icon="pi pi-check" label="Marcar como revisado"
+				(onClick)="mostrarLinkDialog=true"></p-button>
+		</div>
+	</div>
+	<p-divider></p-divider>
+	<div class="field col">
+		<div class="comment-box">
+			<h3>Comentarios</h3>
+			<div class="comment-form">
+				<textarea [(ngModel)]="text" class="comment-input" placeholder="Escribe tu comentario"></textarea>
+				<button type="submit" class="comment-button" (click)="comentar()">Comentar</button>
+			</div>
+			<br>
+			<br>
+			<div class="comment-list">
+				<ng-container *ngFor="let comentario of comentarios">
+					<app-comment [comment]="comentario"></app-comment>
+				</ng-container>
+				<p-button *ngIf="(currentPage+1)<totalpages" label="ver mas comentarios" styleClass="p-button-link"
+					(onClick)="cargarMasComentarios()"></p-button>
+			</div>
+		</div>
+	</div>
+</div>
+<p-dialog header="Header" [(visible)]="mostrarLinkDialog" [style]="{ width: '50vw' }">
+	<ng-template pTemplate="header">
+		<span class="text-xl font-bold">Agregar link</span>
+	</ng-template>
+	<ng-template pTemplate="body">
+		<div class="card p-fluid">
+
+			<label>Link: </label><br>
+			<input [(ngModel)]="linkNuevo" pInputText />
+
+		</div>
+	</ng-template>
+	<ng-template pTemplate="footer">
+		<p-button icon="pi pi-check" (click)="agregarLink()" label="Aceptar" styleClass="p-button-text"></p-button>
+	</ng-template>
+</p-dialog>
+<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle" [style]="{width: '350px'}"
+	acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<style>
+	.comment-form {
+		margin-top: 20px;
+	}
+
+	.comment-input {
+		width: 100%;
+		height: 100px;
+		padding: 5px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+	}
+
+	.comment-button {
+		display: block;
+		margin-top: 10px;
+		padding: 5px 10px;
+		background-color: #778899;
+		color: #fff;
+		border: none;
+		border-radius: 3px;
+		cursor: pointer;
+	}
+
+	.titulo {
+		color: #00274e;
+		font-weight: bold;
+	}
+
+	.icon-atras {
+		margin-top: 10px;
+	}
+
+	.text {
+		color: black;
+	}
+
+	.sub-title {
+		font-weight: bold;
+	}
+
+	.file {
+		margin-left: 10px;
+	}
+
+	.file i {
+		margin-right: 5px;
+	}
+
+	.file-container {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 5px;
+	}
+
+	.button-center {
+		margin-left: auto;
+		/* Push the button to the right (center vertically) */
+	}
+</style>

@@ -1,9 +1,9 @@
 <div class="comment">
-  <div class="comment-author">{{comment.usuario.nombres}} {{comment.usuario.apellidos}} - <span
-      class="user-role">{{comment.usuario.rol!.titulo}}</span></div>
-  <div class="comment-content">
-    {{ comment.texto }}
-  </div>
+  <div class="comment-author">{{comment.usuario!.nombreCompleto}} - <span
+      class="user-role">{{comment.rol!.titulo}}</span></div>
+  <p class="comment-content">
+    {{ comment.comentario }}
+  </p>
   <div class="comment-date">{{ comment.fecha }}</div>
 </div>
 <style>
@@ -36,6 +36,7 @@
   }
 
   .comment-content {
+    white-space: pre-line;
     margin-top: 5px;
     color: #555;
   }

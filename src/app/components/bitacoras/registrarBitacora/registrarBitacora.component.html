@@ -1,0 +1,155 @@
+<div *ngIf="!habilitarBitacora" class="card">
+	<i class="pi pi-exclamation-circle"></i><label> Usted no tiene proyectos en etapa de bitacora</label>
+</div>
+<div *ngIf="habilitarBitacora" class="card">
+	<p-toast key="tst"></p-toast>
+	<h5 class="titulo">Registrar Bitacora</h5>
+	<div class="grid p-fluid mt-3">
+		<div class="field col-12 md:col-12 pb-0">
+			<label class="sub-title">Datos del proyecto:</label>
+		</div>
+		<div class="field col-12 md:col-12 pb-0">
+			<label>Carrera:</label>
+			<ng-container *ngFor="let proyectoSel of proyectos">
+				<div class="flex align-items-center">
+					<p-radioButton [inputId]="proyectoSel.idProyecto!.toString()" name="carrera" [value]="proyectoSel"
+						[(ngModel)]="proyecto"></p-radioButton>
+					<label for="ingredient1" class="ml-2">{{proyectoSel.carrera!.nombre}}</label>
+				</div>
+			</ng-container>
+		</div>
+		<div class="field col-12 md:col-12 pb-0">
+			<label>Titulo de proyecto:</label>
+			<textarea [(ngModel)]="proyecto.elementoTitulo!.informacion" [disabled]="true" class="text" rows="4"
+				pInputTextarea></textarea>
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Nombre Estudiante: </label>
+			<input [(ngModel)]="proyecto.usuario!.nombreCompleto" [disabled]="true" pInputText class="text" />
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Registro Academico: </label>
+			<input [(ngModel)]="proyecto.usuario!.registroAcademico!" [disabled]="true" pInputText class="text" />
+		</div>
+	</div>
+	<p-divider></p-divider>
+	<div class="grid p-fluid mt-3">
+		<div class="field col-12 md:col-12 pb-0">
+			<label class="sub-title">Datos de bitacora:</label>
+		</div>
+		<div class="field col-12 md:col-12 pb-0">
+			<label>Actividades efectuadas</label>
+			<textarea [(ngModel)]="bitacora.descripcion" class="text" rows="10" cols="30"
+				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(bitacora.descripcion)}" pInputTextarea></textarea>
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Fecha de informe</label>
+			<p-calendar dateFormat="dd-mm-yy" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(bitacora.fechaReporte)}"
+				inputId="dateformat" [(ngModel)]="bitacora.fechaReporte" class="text"></p-calendar>
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Porcentaje de avance en cronograma</label>
+			<p-inputNumber suffix="%" [min]="0" [max]="100"
+				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(bitacora.avance)}" [(ngModel)]="bitacora.avance"
+				class="text"></p-inputNumber>
+		</div>
+		<div class="field col-12 md:col-12 pb-0">
+			<label class="sub-title">Recursos:</label>
+			<p-divider></p-divider>
+			<div>
+				<ng-container *ngIf="recursoInforme">
+					<div class="file-container">
+						<div class="file">
+							<i [class]="recursoInforme.icono"></i>
+							<span class="file-name">{{recursoInforme.file.name}}</span>
+						</div>
+						<p-button icon="pi pi-times" styleClass="p-button-rounded p-button-text button-center"
+							(click)="eliminarRecursoInforme(informeFile)"></p-button>
+					</div>
+					<p-divider></p-divider>
+				</ng-container>
+				<ng-container *ngFor="let recurso of recursos">
+					<div class="file-container">
+						<div class="file">
+							<i [class]="recurso.icono"></i>
+							<span class="file-name" *ngIf="recurso.file">{{recurso.file.name}}</span>
+							<span class="file-name" *ngIf="!recurso.file">{{recurso.link}}</span>
+						</div>
+						<p-button icon="pi pi-times" styleClass="p-button-rounded p-button-text button-center"
+							(click)="eliminarRecurso(recurso)"></p-button>
+					</div>
+					<p-divider></p-divider>
+				</ng-container>
+			</div>
+		</div>
+		<div class="field col-12 md:col-12 pb-0">
+			<p-fileUpload #informeFile mode="basic" icon="pi pi-plus" [style]="{'width':'100%'}"
+				styleClass="p-button-outlined p-button-secondary" chooseLabel="Agregar Informe Mensual" accept=".pdf"
+				[showCancelButton]="false" [showUploadButton]="false" [maxFileSize]="1000000"
+				(onSelect)="cargarInforme($event)"></p-fileUpload><br>
+			<p-fileUpload #fileUpload mode="basic" icon="pi pi-plus" [style]="{'width':'100%'}"
+				styleClass="p-button-outlined p-button-secondary" chooseLabel="Agregar imagen/documento"
+				accept="image/*,.pdf" [showCancelButton]="false" [showUploadButton]="false" [maxFileSize]="1000000"
+				(onSelect)="cargarRecurso($event,fileUpload)"></p-fileUpload><br>
+			<p-button icon="pi pi-plus" styleClass="p-button-outlined p-button-secondary" label="Agregar links"
+				(onClick)="mostrarLinkDialog=true"></p-button>
+			
+		</div>
+		<div class="field col-12 md:col-12 pb-0">
+			<p-button label="Registrar Bitacora" styleClass="p-button-outlined"
+				(onClick)="agregarBitacora()"></p-button>
+		</div>
+	</div>
+</div>
+<p-dialog header="Header" [(visible)]="mostrarLinkDialog" [style]="{ width: '50vw' }">
+	<ng-template pTemplate="header">
+		<span class="text-xl font-bold">Agregar link</span>
+	</ng-template>
+	<ng-template pTemplate="body">
+		<div class="card p-fluid">
+
+			<label>Link: </label><br>
+			<input [(ngModel)]="linkNuevo" pInputText />
+
+		</div>
+	</ng-template>
+	<ng-template pTemplate="footer">
+		<p-button icon="pi pi-check" (click)="agregarLink()" label="Aceptar" styleClass="p-button-text"></p-button>
+	</ng-template>
+</p-dialog>
+<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle" [style]="{width: '350px'}"
+	acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+<style>
+	.titulo {
+		color: #00274e;
+		font-weight: bold;
+	}
+
+	.text {
+		color: black;
+	}
+
+	.sub-title {
+		font-weight: bold;
+	}
+
+	.file {
+		margin-left: 10px;
+	}
+
+	.file i {
+		margin-right: 5px;
+	}
+
+	.file-container {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 5px;
+	}
+
+	.button-center {
+		margin-left: auto;
+		/* Push the button to the right (center vertically) */
+	}
+</style>

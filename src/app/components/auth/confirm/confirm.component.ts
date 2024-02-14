@@ -17,34 +17,32 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class ConfirmComponent {
     errorLabel: string = "";
-    activarUsuario:ActivarUsuario={
-        usuario:"",
-        token:"",
-        password1:"",
-        password2:""
+    activarUsuario: ActivarUsuario = {
+        usuario: "",
+        token: "",
+        password1: "",
+        password2: ""
     };
-    token!:String;
-    usuario!: string; 
+    token!: String;
+    usuario!: string;
 
-    constructor(private router: Router,private route: ActivatedRoute,private authService: AuthService) {  
+    constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService) {
     }
 
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
-          this.activarUsuario.token = params['token'];
+            this.activarUsuario.token = params['token'];
         });
-      }
+    }
 
-    onLogin(){
-        this.authService.activarUsuario(this.activarUsuario).subscribe((res: any) => {
-            this.router.navigate(['']);
-        },(error)=>{
-            if(error.status==401){
-                this.errorLabel="Usuario y/o contraseña invalida";    
-            }else{
-                this.errorLabel="Hubo un error en el sistema, vuelva a intentar mas tarde";
+    onLogin() {
+        this.authService.activarUsuario(this.activarUsuario).subscribe({
+            next: (response) => {
+                this.router.navigate(['']);
+            },
+            error: (error) => {
+                console.log(error);
             }
-            console.log('error message',error.status);
         })
     }
 }

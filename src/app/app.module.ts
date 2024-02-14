@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { PathLocationStrategy, LocationStrategy } from '@angular/common'; // Import PathLocationStrategy
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppLayoutModule } from './layout/app.layout.module';
@@ -12,7 +12,7 @@ import { IconService } from './demo/service/icon.service';
 import { NodeService } from './demo/service/node.service';
 import { PhotoService } from './demo/service/photo.service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import {JwtInterceptorService} from './services/jwt-interceptor.service';
+import { JwtInterceptorService } from './services/jwt-interceptor.service';
 
 @NgModule({
     declarations: [
@@ -25,7 +25,7 @@ import {JwtInterceptorService} from './services/jwt-interceptor.service';
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptorService, multi: true },
-        { provide: LocationStrategy, useClass: HashLocationStrategy },
+        { provide: LocationStrategy, useClass: PathLocationStrategy }, // Use PathLocationStrategy
         CountryService, CustomerService, EventService, IconService, NodeService,
         PhotoService, ProductService
     ],

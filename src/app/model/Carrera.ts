@@ -1,4 +1,5 @@
 export interface Carrera{
-    idCarrera: string;
-    titulo: string;
+    idCarrera: number;
+    nombre: string;
+    nombreCorto:string;
 }

@@ -15,4 +15,8 @@ export class RolService {
   getRoles():Observable<Rol[]>{
     return this.http.get<any[]>('http://localhost:8080/api/roles');
   }
+
+  getRol(idRol:number):Observable<Rol>{
+    return this.http.get<any>('http://localhost:8080/api/roles/'+idRol);
+  }
 }

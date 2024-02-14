@@ -24,6 +24,10 @@ import { DialogModule } from 'primeng/dialog';
 import { DividerModule } from 'primeng/divider';
 import { PhaseModule } from 'src/app/phase/phase.module';
 import { CommentModule } from 'src/app/comment/comment.module';
+import { TagModule } from 'primeng/tag';
+import { MenuModule } from 'primeng/menu';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+
 
 @NgModule({
 	imports: [
@@ -50,7 +54,10 @@ import { CommentModule } from 'src/app/comment/comment.module';
 		DialogModule,
 		DividerModule,
 		PhaseModule,
-		CommentModule
+		CommentModule,
+		TagModule,
+		MenuModule,
+        ProgressSpinnerModule
 	],
 	declarations: [ProyectoComponent]
 })

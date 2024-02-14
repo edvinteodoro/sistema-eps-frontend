@@ -1,181 +1,300 @@
-<div class="grid">
-	<div class="col-12">
-		<p-toast key="tst"></p-toast>
-		<div class="card p-fluid">
-			<p-panel header="Crear Proyecto Nuevo">
-				<div class="card">
-					<p-steps [model]="items" [(activeIndex)]="activeIndex"></p-steps>
+<div class="card">
+	<p-toast key="tst"></p-toast>
+	<h5 class="titulo">Crear Proyecto</h5><br>
+	<p-steps [model]="items" [(activeIndex)]="activeIndex"></p-steps><br>
+	<ng-container *ngIf="activeIndex === 0">
+		<div class="card">
+			<div class="grid p-fluid mt-3">
+				<div class="field col-12 md:col-12 pb-0">
+					<label class="negrita">Datos de institucion</label>
 				</div>
-				<ng-container *ngIf="activeIndex === 0">
-					<div>
-						<div class="field">
-							<label class="{{campos[0].class}}" htmlFor="titulo">Titulo del Proyecto</label>
-							<textarea [(ngModel)]="campos[0].valor" required="required" id="titulo" rows="2" cols="30"
-								pInputTextarea></textarea>
-						</div>
-						<div class="p-formgrid grid">
-							<div class="field col">
-								<label class="{{campos[6].class}}" htmlFor="coordenadas">Coordenadas de la
-									institucion
-									del
-									proyecto</label>
-								<input [(ngModel)]="campos[6].valor" pInputText id="coordenadas" type="text" />
-								<div class="map-container">
-									<div class="map-frame">
-										<div id="map"></div>
-									</div>
-								</div>
-							</div>
-							<div class="field col">
-								<label class="{{campos[7].class}}" htmlFor="carrera">Seleccionar Carrera</label>
-								<p-dropdown [options]="carreras" [(ngModel)]="campos[7].valor" [editable]="true"
-									optionLabel="titulo"></p-dropdown>
-							</div>
-						</div>
-					</div>
-					<div>
-						<div class="p-formgrid grid">
-							<div class="field col">
-								<label class="{{campos[1].class}}" htmlFor="inscripcion">Cargar constancia de
-									inscripcion</label>
-								<p-fileUpload chooseLabel="Seleccionar" name="demo[]"
-									(onSelect)="onUploadConstancia($event)" (onRemove)="onRemoveConstancia()"
-									[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
-								</p-fileUpload>
-							</div>
-						</div>
-						<div class="p-formgrid grid">
-							<div class="field col">
-								<label class="{{campos[2].class}}" htmlFor="propedeutico">Cargar constancia de
-									propedeutico</label>
-								<p-fileUpload chooseLabel="Seleccionar" name="demo[]"
-									(onSelect)="onUploadPropedeutico($event)" (onRemove)="onRemovePropedeutico()"
-									[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
-								</p-fileUpload>
-							</div>
-						</div>
-						<div class="p-formgrid grid">
-							<div class="field col">
-								<label class="{{campos[3].class}}" htmlFor="nacimiento">Cargar certificado de
-									nacimiento</label>
-								<p-fileUpload chooseLabel="Seleccionar" name="demo[]"
-									(onSelect)="onUploadCertificado($event)" (onRemove)="onRemoveCertificado()"
-									[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
-								</p-fileUpload>
-							</div>
-						</div>
-						<div class="p-formgrid grid">
-							<div class="field col">
-								<label class="{{campos[4].class}}" htmlFor="anteproyecto">Cargar
-									Anteproyecto</label>
-								<p-fileUpload chooseLabel="Seleccionar" name="demo[]"
-									(onSelect)="onUploadAnteproyecto($event)" (onRemove)="onRemoveAnteproyecto()"
-									[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
-								</p-fileUpload>
-							</div>
-						</div>
-						<div class="p-formgrid grid">
-							<div class="field col">
-								<label class="{{campos[5].class}}" htmlFor="cartaAsesor">Cargar Carta de
-									Asesor</label>
-								<p-fileUpload chooseLabel="Seleccionar" name="demo[]"
-									(onSelect)="onUploadCartaAsesor($event)" (onRemove)="onRemoveCartaAsesor()"
-									[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
-								</p-fileUpload>
-							</div>
-						</div>
-						<div class="p-formgrid grid">
-							<div class="field col">
-								<label class="{{campos[5].class}}" htmlFor="cartaAsesor">Finiquito
-									(Opcional)</label>
-								<p-fileUpload chooseLabel="Seleccionar" name="demo[]"
-									(onSelect)="onUploadCartaAsesor($event)" (onRemove)="onRemoveCartaAsesor()"
-									[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
-								</p-fileUpload>
-							</div>
-						</div>
-					</div>
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<div class="card">
-								<p-button (click)="cancelar()" icon="pi pi-times"
-									styleClass="p-button-outlined p-button-secondary" label="Cancelar"></p-button>
-							</div>
-						</div>
-						<div class="field col">
-							<div class="card">
-								<p-button (click)="siguiente()" icon="pi pi-chevron-right"
-									styleClass="p-button-outlined" label="Siguiente"></p-button>
-							</div>
-						</div>
-					</div>
-				</ng-container>
-				<ng-container *ngIf="activeIndex === 1">
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<label class="" htmlFor="nombres">Nombres</label>
-							<input [(ngModel)]="asesor.nombres" pInputText type="text" />
-						</div>
-						<div class="field col">
-							<label class="" htmlFor="apellidos">Apellidos</label>
-							<input [(ngModel)]="asesor.apellidos" pInputText id="apellidos" type="text" />
-						</div>
-					</div>
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<label class="" htmlFor="email">Correo electrónico</label>
-							<input [(ngModel)]="asesor.correo" pInputText type="text" />
-						</div>
-						<div class="field col">
-							<label class="" htmlFor="fecha">Fecha de Nacimiento</label>
-							<p-calendar [(ngModel)]="asesor.fechaNacimiento" dateFormat="yy-mm-dd"
-								inputId="dateformat"></p-calendar>
-						</div>
-					</div>
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<label class="" htmlFor="direccion">Direccion</label>
-							<input [(ngModel)]="asesor.direccion" pInputText id="direccion" type="text" />
-						</div>
-						<div class="field col">
-							<label class="" htmlFor="dpi">Numero de DPI</label>
-							<input [(ngModel)]="asesor.dpi" pInputText id="dpi" type="text" />
-						</div>
-					</div>
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<label class="" htmlFor="telefono">Numero de Telefono</label>
-							<input [(ngModel)]="asesor.telefono" pInputText id="telefono" type="text" />
-						</div>
-						<div class="field col">
-							<label class="" htmlFor="colegiado">Numero de Colegiado</label>
-							<input [(ngModel)]="asesor.numeroColegiado" pInputText id="colegiado" type="text" />
-						</div>
-					</div>
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<label class="" htmlFor="registro">Registro Academico (Opcional)</label>
-							<input [(ngModel)]="asesor.registroAcademico" pInputText id="registro" type="text" />
-						</div>
-					</div>
-					<div class="p-formgrid grid">
-						<div class="field col">
-							<div class="card">
-								<p-button (click)="regresar()" icon="pi pi-chevron-left"
-									styleClass="p-button-outlined p-button-secondary" label="Regresar"></p-button>
-							</div>
-						</div>
-						<div class="field col">
-							<div class="card">
-								<p-button (click)="confirm()" [loading]="loading" icon="pi pi-check"
-									styleClass="p-button-outlined" label="Crear Proyecto"></p-button>
-							</div>
-						</div>
-					</div>
-				</ng-container>
-			</p-panel>
+				<div class="field col-12 md:col-12 pb-0">
+					<label>Nombre de Institucion</label>
+					<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(institucion.nombre)}"
+						[(ngModel)]="institucion.nombre" pInputText type="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label [ngClass]="{'p-error block': isFieldInvalid(departamentoSeleccionado)}">Departamento</label>
+					<p-autoComplete [(ngModel)]="departamentoSeleccionado" [dropdown]="true"
+						[suggestions]="departamentoFiltrado" (completeMethod)="filtrarDepartamento($event)"
+						(onSelect)="getMunicipios()" field="nombre"></p-autoComplete>
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label [ngClass]="{'p-error block': isFieldInvalid(municipioSeleccionado)}">Municipio</label>
+					<p-autoComplete [(ngModel)]="municipioSeleccionado" [dropdown]="true"
+						[suggestions]="municipioFiltrado" (completeMethod)="filtrarMunicipio($event)"
+						(onSelect)="seleccionarMunicipio()" field="nombre"></p-autoComplete>
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Direccion</label>
+					<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(institucion.direccion)}"
+						[(ngModel)]="institucion.direccion" pInputText type="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Coordenadas</label>
+					<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(institucion.coordenadas)}"
+						[(ngModel)]="institucion.coordenadas" pInputText type="text" />
+				</div>
+			</div>
 		</div>
-	</div>
+		<div class="card">
+			<div class="grid p-fluid mt-3">
+				<div class="field col-12 md:col-12 pb-0">
+					<label class="negrita">Datos contraparte institucional</label>
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label htmlFor="nombres">Nombre</label>
+					<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(contraparte.nombreCompleto)}"
+						[(ngModel)]="contraparte.nombreCompleto" pInputText type="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Correo electrónico</label>
+					<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(contraparte.correo)}"
+						[(ngModel)]="contraparte.correo" pInputText type="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Numero de DPI</label>
+					<input [(ngModel)]="contraparte.dpi" pInputText type="text"
+						[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(contraparte.dpi)}" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Numero de Telefono</label>
+					<input [(ngModel)]="contraparte.telefono" pInputText id="telefono" type="text"
+						[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(contraparte.telefono)}" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label [ngClass]="{'p-error block': isFieldInvalid(contraparte.titulo)}">Titulo</label>
+					<p-dropdown #rolDropdown [(ngModel)]="contraparte.titulo" [options]="titulos" [editable]="true"
+						optionLabel="nombre"></p-dropdown>
+				</div>
+			</div>
+		</div>
+		<div class="grid p-fluid mt-3">
+			<div class="field col-12 md:col-6 pb-0">
+				<p-button (click)="cancelar()" icon="pi pi-times" styleClass="p-button-outlined p-button-secondary"
+					label="Cancelar"></p-button>
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<p-button (click)="siguiente()" icon="pi pi-chevron-right" styleClass="p-button-outlined"
+					label="Siguiente"></p-button>
+			</div>
+		</div>
+	</ng-container>
+	<ng-container *ngIf="activeIndex === 1">
+		<div class="grid p-fluid mt-3">
+			<div class="field col-12 md:col-12 pb-0">
+				<label class="negrita">Datos del asesor de proyecto</label>
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label htmlFor="nombres">Nombre</label>
+				<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesor.nombreCompleto)}"
+					[(ngModel)]="asesor.nombreCompleto" pInputText type="text" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label htmlFor="email">Correo electrónico</label>
+				<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesor.correo)}" [(ngModel)]="asesor.correo"
+					pInputText type="text" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label class="" htmlFor="direccion">Direccion</label>
+				<input [(ngModel)]="asesor.direccion" pInputText type="text"
+					[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesor.direccion)}" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label class="" htmlFor="dpi">Numero de DPI</label>
+				<input [(ngModel)]="asesor.dpi" pInputText type="text"
+					[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesor.dpi)}" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label class="" htmlFor="telefono">Numero de Telefono</label>
+				<input [(ngModel)]="asesor.telefono" pInputText id="telefono" type="text"
+					[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesor.telefono)}" />
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label class="" htmlFor="colegiado">Numero de Colegiado</label>
+				<input [(ngModel)]="asesor.numeroColegiado" pInputText id="colegiado" type="text"
+					[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesor.numeroColegiado)}" />
+			</div>
+			<!--
+			<div class="field col-12 md:col-6 pb-0">
+				<label>Titulo</label>
+				<p-dropdown #rolDropdown [(ngModel)]="asesor.titulo" [options]="titulos" [editable]="true"
+					optionLabel="nombre"></p-dropdown>
+			</div>-->
+			<!--
+			<div class="field col-12 md:col-6">
+				<label [ngClass]="{'p-error block': isFieldInvalid(asesor.carreras)}">Carreras</label>
+				<p-multiSelect [(ngModel)]="asesor.carreras" inputId="multiselect" [options]="carreras"
+					optionLabel="nombre" [filter]="false"></p-multiSelect>
+			</div>
+			-->
+			<div class="field col-12 md:col-6 pb-0">
+				<label class="" htmlFor="registro">Registro Academico (Opcional)</label>
+				<input [(ngModel)]="asesor.registroAcademico" pInputText id="registro" type="text" />
+			</div>
+		</div>
+		<p-divider></p-divider>
+		<ng-container *ngFor="let asesorTecnico of asesoresTecnicos">
+			<div class="grid p-fluid mt-3">
+				<div class="field col-12 md:col-12 pb-0">
+					<label class="negrita">Datos del asesor tecnico</label>
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label htmlFor="nombres">Nombres</label>
+					<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.nombreCompleto)}"
+						[(ngModel)]="asesorTecnico.nombreCompleto" pInputText type="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label htmlFor="email">Correo electrónico</label>
+					<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.correo)}"
+						[(ngModel)]="asesorTecnico.correo" pInputText type="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Direccion</label>
+					<input [(ngModel)]="asesorTecnico.direccion" pInputText type="text"
+						[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.direccion)}" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Numero de DPI</label>
+					<input [(ngModel)]="asesorTecnico.dpi" pInputText id="dpi" type="text"
+						[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.dpi)}" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Numero de Telefono</label>
+					<input [(ngModel)]="asesorTecnico.telefono" pInputText type="text"
+						[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.telefono)}" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Numero de Colegiado</label>
+					<input [(ngModel)]="asesorTecnico.numeroColegiado" pInputText type="text"
+						[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.numeroColegiado)}" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Registro Academico (Opcional)</label>
+					<input [(ngModel)]="asesorTecnico.registroAcademico" pInputText type="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label>Titulo</label>
+					<p-dropdown #rolDropdown [(ngModel)]="asesorTecnico.titulo" [options]="titulos" [editable]="true"
+						optionLabel="nombre"></p-dropdown>
+				</div>
+			</div>
+			<p-divider></p-divider>
+		</ng-container>
+		<div class="grid p-fluid mt-3">
+			<div class="field col-12 md:col-6 pb-0" *ngIf="asesoresTecnicos.length>0">
+				<p-button styleClass="p-button-danger" label="Remover asesor tecnico" styleClass="p-button-link"
+					(click)="removerAsesorTecnico()"></p-button>
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<p-button label="Agregar asesor tecnico" styleClass="p-button-link"
+					(click)="AgregarAsesorTecnico()"></p-button>
+			</div>
+		</div>
+		<p-divider></p-divider>
+		<div class="grid p-fluid mt-3">
+			<div class="field col-12 md:col-6 pb-0">
+				<p-button (click)="regresar()" icon="pi pi-chevron-left"
+					styleClass="p-button-outlined p-button-secondary" label="Regresar"></p-button>
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<p-button (click)="siguienteAsesor()" icon="pi pi-chevron-right" styleClass="p-button-outlined"
+					label="Siguiente"></p-button>
+			</div>
+		</div>
+	</ng-container>
+	<ng-container *ngIf="activeIndex === 2">
+		<div class="grid p-fluid mt-3">
+			<div class="field col-12 md:col-12 pb-0">
+				<label htmlFor="titulo">Titulo del Proyecto</label>
+				<textarea [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(elementoTitulo.informacion)}"
+					[(ngModel)]="elementoTitulo.informacion" required="required" id="titulo" rows="4" cols="30"
+					pInputTextarea></textarea>
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label [ngClass]="{'p-error block': isFieldInvalid(proyecto.carrera)}" htmlFor="carrera">Seleccionar
+					Carrera</label>
+				<p-dropdown [options]="carreras" [(ngModel)]="proyecto.carrera" [editable]="true"
+					optionLabel="nombre"></p-dropdown>
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label [ngClass]="{'p-error block': isFieldInvalid(proyecto.semestre)}">Seleccionar Semestre</label>
+				<p-dropdown [options]="semestres" [(ngModel)]="proyecto.semestre" [editable]="true"></p-dropdown>
+			</div>
+			<div class="field col-12 md:col-12 pb-0">
+				<label [ngClass]="{'p-error block': isFieldInvalid(elementoAnteproyecto.file)}"
+					htmlFor="anteproyecto">Cargar Anteproyecto</label>
+				<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadAnteproyecto($event)"
+					(onRemove)="onRemoveAnteproyecto()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+					[auto]="true">
+				</p-fileUpload>
+			</div>
+			<div class="field col-12 md:col-12 pb-0">
+				<label [ngClass]="{'p-error block': isFieldInvalid(elementoInscripcion.file)}"
+					htmlFor="inscripcion">Cargar constancia de
+					inscripcion</label>
+				<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadInscripcion($event)"
+					(onRemove)="onRemoveInscripcion()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+					[auto]="true">
+				</p-fileUpload>
+			</div>
+			<div class="field col-12 md:col-12 pb-0">
+				<label [ngClass]="{'p-error block': isFieldInvalid(elementoPropedeutico.file)}"
+					htmlFor="propedeutico">Cargar constancia de propedeutico</label>
+				<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadPropedeutico($event)"
+					(onRemove)="onRemovePropedeutico()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+					[auto]="true">
+				</p-fileUpload>
+			</div>
+			<div class="field col-12 md:col-12 pb-0">
+				<label [ngClass]="{'p-error block': isFieldInvalid(elementoNacimiento.file)}"
+					htmlFor="nacimiento">Cargar certificado de
+					nacimiento</label>
+				<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadNacimiento($event)"
+					(onRemove)="onRemoveNacimiento()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+					[auto]="true">
+				</p-fileUpload>
+			</div>
+			<div class="field col-12 md:col-12 pb-0">
+				<label [ngClass]="{'p-error block': isFieldInvalid(elementoCarta.file)}">Cargar
+					Carta de Asesor</label>
+				<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadCartaAsesor($event)"
+					(onRemove)="onRemoveCartaAsesor()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+					[auto]="true">
+				</p-fileUpload>
+			</div>
+			<div class="field col-12 md:col-12 pb-0">
+				<label htmlFor="cartaAsesor">Finiquito AEIO (Opcional)</label>
+				<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadFiniquito($event)"
+					(onRemove)="onRemoveFiniquito()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+					[auto]="true">
+				</p-fileUpload>
+			</div>
+		</div>
+		<div class="grid p-fluid mt-3">
+			<div class="field col-12 md:col-6 pb-0">
+				<p-button (click)="regresar()" icon="pi pi-chevron-left"
+					styleClass="p-button-outlined p-button-secondary" label="Regresar"></p-button>
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<p-button (click)="confirm()" [loading]="loading" icon="pi pi-check" styleClass="p-button-outlined"
+					label="Crear Proyecto"></p-button>
+			</div>
+		</div>
+	</ng-container>
 </div>
 <p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle" [style]="{width: '350px'}"
 	acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+
+
+<style>
+	.negrita {
+		font-weight: bold;
+		font-style: italic;
+	}
+
+	.titulo {
+		color: #00274e;
+		font-weight: bold;
+	}
+</style>
