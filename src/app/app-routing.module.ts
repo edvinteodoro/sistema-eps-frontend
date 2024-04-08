@@ -8,7 +8,7 @@ import { AuthGuard } from './shared/auth.guard';
 @NgModule({
     imports: [
         RouterModule.forRoot([
-            { path: 'auth/login', component: LoginComponent },
+            //{ path: 'auth/login', component: LoginComponent },
             {
                 path: '', component: AppLayoutComponent,
                 children: [
@@ -17,6 +17,7 @@ import { AuthGuard } from './shared/auth.guard';
                     { path: 'gestiones', loadChildren: () => import('./components/gestiones/gestiones.module').then(m => m.GestionesModule) },
                     { path: 'bitacoras', loadChildren: () => import('./components/bitacoras/bitacoras.module').then(m => m.BitacorasModule) },
                     { path: 'actas', loadChildren: () => import('./components/actas/actas.module').then(m => m.ActasModule) },
+                    { path: 'prorroga', loadChildren: () => import('./components/prorroga/prorroga.module').then(m => m.ProrrogaModule) },
                     { path: 'documentos', loadChildren: () => import('./components/documentos/documentos.module').then(m => m.DocumentosModule) }
                 ],
                 canActivate: [AuthGuard]

@@ -28,7 +28,7 @@ export class ActaComponent implements OnInit {
 
     constructor(private location: Location, private proyectoService: ProyectoService,
         private router: Router, private actaService: ActaService,
-        private messageService: MessageService,private confirmationService: ConfirmationService,
+        private messageService: MessageService, private confirmationService: ConfirmationService,
         private descargasService: DescargasService) { }
 
     ngOnInit() {
@@ -74,23 +74,55 @@ export class ActaComponent implements OnInit {
             acceptLabel: "Si",
             icon: 'pi pi-check-circle',
             accept: () => {
-                this.proyectoService.generarActaAnteproyecto(this.acta.proyecto!.idProyecto!, this.acta).subscribe(acta => {
-                    this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios aprobados', detail: 'Se han aprobado los cambios exitosamente' });
-                    this.acta = acta;
-                })
+                if (this.acta.tipo == 'ANTEPROYECTO') {
+                    this.proyectoService.generarActaAnteproyecto(this.acta.proyecto!.idProyecto!, this.acta).subscribe(acta => {
+                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios aprobados', detail: 'Se han aprobado los cambios exitosamente' });
+                        this.acta = acta;
+                    })
+                } else if (this.acta.tipo == 'EXAMEN GENERAL') {
+                    this.proyectoService.generarActaExamenGeneral(this.acta.proyecto!.idProyecto!, this.acta).subscribe(acta => {
+                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios aprobados', detail: 'Se han aprobado los cambios exitosamente' });
+                        this.acta = acta;
+                    })
+                } else if (this.acta.tipo == 'FINALIZACION') {
+                    this.proyectoService.generarActaAprobacion(this.acta.proyecto!.idProyecto!, this.acta).subscribe(acta => {
+                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios aprobados', detail: 'Se han aprobado los cambios exitosamente' });
+                        this.acta = acta;
+                    })
+                }
             }
         });
     }
 
     descargarActa() {
-        this.proyectoService.getElementoProyecto(this.acta.proyecto!.idProyecto!, ElementoUtils.ID_ELEMENTO_ACTA_ANTEPROYECTO).subscribe(elementoProyecto => {
-            this.descargasService.descargar(elementoProyecto.informacion!).subscribe(
-                response => {
-                    window.open(response.link.toString(), '_blank');
-                },
-                error => console.log('Error getting documento:', error)
-            );
-        });
+        if (this.acta.tipo == 'ANTEPROYECTO') {
+            this.proyectoService.getElementoProyecto(this.acta.proyecto!.idProyecto!, ElementoUtils.ID_ELEMENTO_ACTA_ANTEPROYECTO).subscribe(elementoProyecto => {
+                this.descargasService.descargar(elementoProyecto.informacion!).subscribe(
+                    response => {
+                        window.open(response.link.toString(), '_blank');
+                    },
+                    error => console.log('Error getting documento:', error)
+                );
+            });
+        }else if (this.acta.tipo == 'EXAMEN GENERAL') {
+            this.proyectoService.getElementoProyecto(this.acta.proyecto!.idProyecto!, ElementoUtils.ID_ELEMENTO_ACTA_EXAMEN_GENERAL).subscribe(elementoProyecto => {
+                this.descargasService.descargar(elementoProyecto.informacion!).subscribe(
+                    response => {
+                        window.open(response.link.toString(), '_blank');
+                    },
+                    error => console.log('Error getting documento:', error)
+                );
+            });
+        }else if (this.acta.tipo == 'FINALIZACION') {
+            this.proyectoService.getElementoProyecto(this.acta.proyecto!.idProyecto!, ElementoUtils.ID_ELEMENTO_ACTA_APROBACION).subscribe(elementoProyecto => {
+                this.descargasService.descargar(elementoProyecto.informacion!).subscribe(
+                    response => {
+                        window.open(response.link.toString(), '_blank');
+                    },
+                    error => console.log('Error getting documento:', error)
+                );
+            });
+        }
     }
 
 }

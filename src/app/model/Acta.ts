@@ -5,8 +5,10 @@ export interface Acta {
     nota:number;
     proyecto?:Proyecto;
     actaGenerada?:boolean;
+    tipo?:String;
     resultado:String;
     fechaEvaluacion?:Date;
+    fechaEvaluacionInput?:Date;
     horaInicioEvaluacion?:String;
     horaFinEvaluacion:String;
     salon?:String;

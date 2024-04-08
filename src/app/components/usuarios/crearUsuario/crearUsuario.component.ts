@@ -33,11 +33,14 @@ export class CrearUsuarioComponent implements OnInit {
     usuario: Usuario = {
         nombreCompleto: '',
         correo: '',
-        direccion: '',
         dpi: '',
         telefono: '',
-        rol: undefined
+        rol: undefined,
+        carreras: undefined,
+        numeroColegiado: undefined,
+        registroAcademico: undefined
     };
+    optionalFields: string[] = [];
 
     constructor(private confirmationService: ConfirmationService, private rolService: RolService,
         private carreraService: CarreraService, private messageService: MessageService,
@@ -59,9 +62,29 @@ export class CrearUsuarioComponent implements OnInit {
         if (this.idPersona != undefined) {
             this.personaService.getPersona(this.idPersona).subscribe(persona => {
                 this.usuario = persona;
-                console.log('persona',this.usuario);
+                this.usuario.carreras = [(this.location.getState() as { carrera: Carrera }).carrera];
                 this.getPersonaRol();
             })
+        }
+    }
+
+    onChangeRol(event: any) {
+        this.optionalFields = [];
+        this.usuario.carreras = undefined;
+        this.usuario.registroAcademico = undefined;
+        this.usuario.numeroColegiado = undefined;
+        this.usuario.titulo = undefined;
+        if (!event.value.contieneCarrera) {
+            this.optionalFields.push('carreras');
+        }
+        if (!event.value.contieneColegiado) {
+            this.optionalFields.push('numeroColegiado');
+        }
+        if (!event.value.contieneRegistro) {
+            this.optionalFields.push('registroAcademico');
+        }
+        if (!event.value.contieneTitulo) {
+            this.optionalFields.push('titulo');
         }
     }
 
@@ -69,11 +92,14 @@ export class CrearUsuarioComponent implements OnInit {
         if (this.tipo == 1) {
             this.rolService.getRol(Role.ID_ASESOR).subscribe(rol => {
                 this.usuario.rol = rol;
-                console.log('asesor: ', this.usuario);
+                this.optionalFields.push('registroAcademico');
             })
         } else if (this.tipo == 2) {
             this.rolService.getRol(Role.ID_CONTRAPARTE).subscribe(rol => {
                 this.usuario.rol = rol;
+                this.optionalFields.push('registroAcademico');
+                this.optionalFields.push('carreras');
+                this.optionalFields.push('numeroColegiado');
             })
         }
     }
@@ -90,8 +116,8 @@ export class CrearUsuarioComponent implements OnInit {
 
     confirm() {
         this.crearUsuario = true;
-        console.log('usuario: ',this.usuario);
-        if (!this.validarCampos(this.usuario, [])) {
+        console.log('campos: ', this.optionalFields);
+        if (!this.validarCampos(this.usuario, this.optionalFields)) {
             this.messageService.add({ key: 'tst', severity: 'error', summary: 'Campos invalidos', detail: 'Ingrese informacion en los campos obligatorias' });
         } else {
             if (!this.usuario.titulo) {
@@ -113,9 +139,9 @@ export class CrearUsuarioComponent implements OnInit {
                         }, 2000);
                     }, (error) => {
                         if (error.status == 401) {
-                            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'Sin permisos para crear el usuario' });
+                            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: error.error });
                         } else {
-                            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'Hubo un error en el sistema' });
+                            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: error.error });
                         }
                     });
                 }
@@ -141,7 +167,7 @@ export class CrearUsuarioComponent implements OnInit {
             if (obj.hasOwnProperty(key) && !excludeFields.includes(key)) {
                 const value = obj[key];
                 if (value === undefined || (typeof value === 'string' && value.trim() === '')) {
-                    console.log('campo',key);
+                    console.log('campo', key);
                     return false;
                 }
             }

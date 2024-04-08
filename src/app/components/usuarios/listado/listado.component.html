@@ -9,15 +9,18 @@
     <h5 class="titulo">Usuarios</h5>
     <div class="grid p-fluid mt-3">
         <div class="field col-12 md:col-4 pb-0">
-            <input pInputText placeholder="Nombres" [(ngModel)]="usuarioFilter.nombreCompleto" />
+            <input pInputText placeholder="Nombre" [(ngModel)]="usuarioFilter.nombreCompleto" />
         </div>
         <div class="field col-12 md:col-3 pb-0">
-            <input pInputText placeholder="Colegiado" [(ngModel)]="usuarioFilter.numeroColegiado" />
-        </div>
-        <div class="field col-12 md:col-3 pb-0">
-            <input pInputText placeholder="Registro" [(ngModel)]="usuarioFilter.registroAcademico" />
+            <input pInputText placeholder="Registro Academico" [(ngModel)]="usuarioFilter.registroAcademico" />
         </div>
         <div class="field col-12 md:col-2 pb-0">
+            <input pInputText placeholder="Dpi" [(ngModel)]="usuarioFilter.dpi" />
+        </div>
+        <div class="field col-12 md:col-2 pb-0">
+            <input pInputText placeholder="Colegiado" [(ngModel)]="usuarioFilter.numeroColegiado" />
+        </div>
+        <div class="field col-12 md:col-1 pb-0">
             <p-button icon="pi pi-search" styleClass="p-button-rounded p-button-secondary p-button-outlined"
                 (click)="buscar()"></p-button>
         </div>

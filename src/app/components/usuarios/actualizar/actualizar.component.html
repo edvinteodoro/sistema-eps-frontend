@@ -25,11 +25,11 @@
 			<input [(ngModel)]="usuario.correo" pInputText type="text" [disabled]="bloqueado"
 				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.correo)}" />
 		</div>
-		<div class="field col-12 md:col-6">
+		<!--<div class="field col-12 md:col-6">
 			<label>Direccion</label>
 			<input [(ngModel)]="usuario.direccion" pInputText type="text" [disabled]="bloqueado"
 				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.direccion)}" />
-		</div>
+		</div>-->
 		<div class="field col-12 md:col-6">
 			<label>Numero de DPI</label>
 			<input [(ngModel)]="usuario.dpi" pInputText type="text" [disabled]="bloqueado"
@@ -43,9 +43,9 @@
 		<div class="field col-12 md:col-6">
 			<label [ngClass]="{'p-error block': isFieldInvalid(usuario.rol)}">Rol de Usuario</label>
 			<p-dropdown #rolDropdown [(ngModel)]="usuario.rol" [options]="roles" [disabled]="bloqueado"
-				optionLabel="titulo"></p-dropdown>
+				optionLabel="titulo" (onChange)="onChangeRol($event)"></p-dropdown>
 		</div>
-		<div *ngIf="usuario.rol && usuario.rol.idRol!=1" class="field col-12 md:col-6">
+		<div *ngIf="usuario.rol && usuario.rol.contieneTitulo" class="field col-12 md:col-6">
 			<label htmlFor="tipo" [ngClass]="{'p-error block': isFieldInvalid(usuario.titulo)}">Titulo de Usuario</label>
 			<p-dropdown #rolDropdown [(ngModel)]="usuario.titulo" [options]="titulos" [editable]="true" [disabled]="bloqueado"
 				optionLabel="nombre"></p-dropdown>
@@ -72,8 +72,8 @@
 				(click)="cancelarEdicion()"></p-button>
 		</div>
 		<div class="field col-12 md:col-6">
-			<p-button *ngIf="!bloqueado" icon="pi pi-undo" styleClass="p-button-outlined" label="Guardar Cambios"
-				(click)="cancelarEdicion()"></p-button>
+			<p-button *ngIf="!bloqueado" icon="pi pi-save" styleClass="p-button-outlined" label="Guardar Cambios"
+				(click)="guardarUsuario()"></p-button>
 		</div>
 		<div class="field col-12 md:col-12">
 			<p-button *ngIf="bloqueado" icon="pi pi-user-edit" styleClass="p-button-outlined" label="Editar usuario"
@@ -81,6 +81,8 @@
 		</div>
 	</div>
 </div>
+<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle" [style]="{width: '350px'}"
+	acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
 <style>
 	.titulo {
 		color: #00274e;

@@ -6,7 +6,7 @@
 		<div class="card">
 			<div class="grid p-fluid mt-3">
 				<div class="field col-12 md:col-12 pb-0">
-					<label class="negrita">Datos de institucion</label>
+					<label class="negrita">Datos del proyecto e institucion</label>
 				</div>
 				<div class="field col-12 md:col-12 pb-0">
 					<label>Nombre de Institucion</label>
@@ -14,33 +14,49 @@
 						[(ngModel)]="institucion.nombre" pInputText type="text" />
 				</div>
 				<div class="field col-12 md:col-6 pb-0">
-					<label [ngClass]="{'p-error block': isFieldInvalid(departamentoSeleccionado)}">Departamento</label>
+					<label [ngClass]="{'p-error block': isFieldInvalid(departamentoSeleccionado)}"><b>Departamento:</b> Ubicacion de la institucion</label>
 					<p-autoComplete [(ngModel)]="departamentoSeleccionado" [dropdown]="true"
 						[suggestions]="departamentoFiltrado" (completeMethod)="filtrarDepartamento($event)"
 						(onSelect)="getMunicipios()" field="nombre"></p-autoComplete>
 				</div>
 				<div class="field col-12 md:col-6 pb-0">
-					<label [ngClass]="{'p-error block': isFieldInvalid(municipioSeleccionado)}">Municipio</label>
+					<label [ngClass]="{'p-error block': isFieldInvalid(municipioSeleccionado)}"><b>Municipio:</b> Ubicacion de la institucion</label>
+					<p-autoComplete [(ngModel)]="municipioSeleccionado" [dropdown]="true"
+						[suggestions]="municipioFiltrado" (completeMethod)="filtrarMunicipio($event)"
+						(onSelect)="seleccionarMunicipio()" field="nombre"></p-autoComplete>
+				</div>
+				<div class="field col-12 md:col-12 pb-0">
+					<label><b>Direccion:</b> Dirreccion exacta de la institucion</label>
+					<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(institucion.direccion)}"
+						[(ngModel)]="institucion.direccion" pInputText type="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label><b>Departamento proyecto (opcional):</b> Ubicacion fisica donde se ejecutara el proyecto</label>
+					<p-autoComplete [(ngModel)]="departamentoSeleccionado" [dropdown]="true"
+						[suggestions]="departamentoFiltrado" (completeMethod)="filtrarDepartamento($event)"
+						(onSelect)="getMunicipios()" field="nombre"></p-autoComplete>
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label><b>Municipio proyecto (opcional):</b> Ubicacion fisica donde se ejecutara el proyecto</label>
 					<p-autoComplete [(ngModel)]="municipioSeleccionado" [dropdown]="true"
 						[suggestions]="municipioFiltrado" (completeMethod)="filtrarMunicipio($event)"
 						(onSelect)="seleccionarMunicipio()" field="nombre"></p-autoComplete>
 				</div>
 				<div class="field col-12 md:col-6 pb-0">
-					<label>Direccion</label>
+					<label><b>Direccion Proyecto (opcional):</b> Dirreccion exacta donde se ejecutara el proyecto</label>
 					<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(institucion.direccion)}"
 						[(ngModel)]="institucion.direccion" pInputText type="text" />
 				</div>
 				<div class="field col-12 md:col-6 pb-0">
-					<label>Coordenadas</label>
-					<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(institucion.coordenadas)}"
-						[(ngModel)]="institucion.coordenadas" pInputText type="text" />
+					<label><b>Coordenada proyecto (opcional): </b>Coordenadas de google maps (x,y)</label>
+					<input [(ngModel)]="institucion.coordenadaProyecto" pInputText type="text" placeholder="Ej: 14.84,-91.53" />
 				</div>
 			</div>
 		</div>
 		<div class="card">
 			<div class="grid p-fluid mt-3">
 				<div class="field col-12 md:col-12 pb-0">
-					<label class="negrita">Datos contraparte institucional</label>
+					<label class="negrita">Datos representante contraparte institucional</label>
 				</div>
 				<div class="field col-12 md:col-6 pb-0">
 					<label htmlFor="nombres">Nombre</label>
@@ -95,11 +111,11 @@
 				<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesor.correo)}" [(ngModel)]="asesor.correo"
 					pInputText type="text" />
 			</div>
-			<div class="field col-12 md:col-6 pb-0">
+			<!--<div class="field col-12 md:col-6 pb-0">
 				<label class="" htmlFor="direccion">Direccion</label>
 				<input [(ngModel)]="asesor.direccion" pInputText type="text"
 					[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesor.direccion)}" />
-			</div>
+			</div>-->
 			<div class="field col-12 md:col-6 pb-0">
 				<label class="" htmlFor="dpi">Numero de DPI</label>
 				<input [(ngModel)]="asesor.dpi" pInputText type="text"
@@ -149,11 +165,11 @@
 					<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.correo)}"
 						[(ngModel)]="asesorTecnico.correo" pInputText type="text" />
 				</div>
-				<div class="field col-12 md:col-6 pb-0">
+				<!--<div class="field col-12 md:col-6 pb-0">
 					<label>Direccion</label>
 					<input [(ngModel)]="asesorTecnico.direccion" pInputText type="text"
 						[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.direccion)}" />
-				</div>
+				</div>-->
 				<div class="field col-12 md:col-6 pb-0">
 					<label>Numero de DPI</label>
 					<input [(ngModel)]="asesorTecnico.dpi" pInputText id="dpi" type="text"
@@ -173,11 +189,11 @@
 					<label>Registro Academico (Opcional)</label>
 					<input [(ngModel)]="asesorTecnico.registroAcademico" pInputText type="text" />
 				</div>
-				<div class="field col-12 md:col-6 pb-0">
+				<!--<div class="field col-12 md:col-6 pb-0">
 					<label>Titulo</label>
 					<p-dropdown #rolDropdown [(ngModel)]="asesorTecnico.titulo" [options]="titulos" [editable]="true"
 						optionLabel="nombre"></p-dropdown>
-				</div>
+				</div>-->
 			</div>
 			<p-divider></p-divider>
 		</ng-container>
@@ -231,8 +247,7 @@
 			</div>
 			<div class="field col-12 md:col-12 pb-0">
 				<label [ngClass]="{'p-error block': isFieldInvalid(elementoInscripcion.file)}"
-					htmlFor="inscripcion">Cargar constancia de
-					inscripcion</label>
+					htmlFor="inscripcion">Cargar constancia de inscripcion</label>
 				<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadInscripcion($event)"
 					(onRemove)="onRemoveInscripcion()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
 					[auto]="true">
@@ -247,26 +262,47 @@
 				</p-fileUpload>
 			</div>
 			<div class="field col-12 md:col-12 pb-0">
+				<label [ngClass]="{'p-error block': isFieldInvalid(elementoConstanciaCierre.file)}"
+					htmlFor="nacimiento">Cargar constancia de cierre o carta de cierre en proceso</label>
+				<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadConstanciaCierre($event)"
+					(onRemove)="onRemoveConstanciaCierre()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+					[auto]="true">
+				</p-fileUpload>
+			</div>
+			<div class="field col-12 md:col-12 pb-0">
 				<label [ngClass]="{'p-error block': isFieldInvalid(elementoNacimiento.file)}"
-					htmlFor="nacimiento">Cargar certificado de
-					nacimiento</label>
+					htmlFor="nacimiento">Cargar certificado de nacimiento: </label>
 				<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadNacimiento($event)"
 					(onRemove)="onRemoveNacimiento()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
 					[auto]="true">
 				</p-fileUpload>
 			</div>
 			<div class="field col-12 md:col-12 pb-0">
-				<label [ngClass]="{'p-error block': isFieldInvalid(elementoCarta.file)}">Cargar
-					Carta de Asesor</label>
+				<label [ngClass]="{'p-error block': isFieldInvalid(elementoSolicitud.file)}"
+					htmlFor="anteproyecto"><b>Cargar solicitud a supervisor: </b>Solicitud de estudiante dirigida al supervisor para ingresar al regimen de eps.</label>
+				<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadSolicitud($event)"
+					(onRemove)="onRemoveSolicitud()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+					[auto]="true">
+				</p-fileUpload>
+			</div>
+			<div class="field col-12 md:col-12 pb-0">
+				<label [ngClass]="{'p-error block': isFieldInvalid(elementoCarta.file)}"><b>Cargar Carta de asesor: </b>Carta con el Vo. Bo. del asesor, indicando las lineas de investigacion abordadas en el mismo y aceptacion de este compromiso. </label>
 				<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadCartaAsesor($event)"
 					(onRemove)="onRemoveCartaAsesor()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
 					[auto]="true">
 				</p-fileUpload>
 			</div>
 			<div class="field col-12 md:col-12 pb-0">
-				<label htmlFor="cartaAsesor">Finiquito AEIO (Opcional)</label>
+				<label><b>Finiquito AEIO (Opcional):</b> Unicamente estudiantes que formaron parte de la AEIO.</label>
 				<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadFiniquito($event)"
 					(onRemove)="onRemoveFiniquito()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+					[auto]="true">
+				</p-fileUpload>
+			</div>
+			<div class="field col-12 md:col-12 pb-0">
+				<label><b>Otros documentos (Opcional):</b> En caso de multiples documentos, deben ser unidos en un solo documento pdf. </label>
+				<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadOtros($event)"
+					(onRemove)="onRemoveOtros()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
 					[auto]="true">
 				</p-fileUpload>
 			</div>

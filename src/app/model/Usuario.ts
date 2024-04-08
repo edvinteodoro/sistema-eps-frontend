@@ -6,12 +6,11 @@ export interface Usuario{
     idUsuario?:String;
     nombreCompleto?:String;
     correo?:String;
-    direccion?:String;
+    //direccion?:String;
     dpi?:String;
     telefono?:String;
     activo?:Boolean;
     rol?:Rol;
-    //roles?:Rol[];
     carreras?:Carrera[];
     titulo?:Titulo;
     registroAcademico?:String;

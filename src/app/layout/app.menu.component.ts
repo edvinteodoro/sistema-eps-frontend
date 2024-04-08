@@ -41,20 +41,16 @@ export class AppMenuComponent implements OnInit {
                     {
                         label: 'Nuevo Proyecto', icon: 'pi pi-fw pi-plus-circle', routerLink: ['/gestiones/crear-proyecto'],
                         roles: [Role.Estudiante]
-                    },
-                    /*{
-                        label: 'Extension Eps', icon: 'pi pi-fw pi-clock', routerLink: ['/extension/listado'],
-                        roles: [Role.Asesor, Role.Estudiante, Role.Supervisor, Role.Coordinador, Role.CoordinadorEps]
-                    }*/
+                    }
                 ]
             },
             {
                 label: 'Bitacoras',
-                roles: [Role.Estudiante, Role.Asesor, Role.Supervisor, Role.Asesor, Role.Contraparte,Role.CoordinadorEps,Role.Coordinador],
+                roles: [Role.Estudiante, Role.Asesor, Role.Supervisor, Role.Asesor, Role.Contraparte, Role.CoordinadorEps, Role.Coordinador],
                 items: [
                     {
                         label: 'Bitacoras', icon: 'pi pi-fw pi-book', routerLink: ['/bitacoras/listado'],
-                        roles: [Role.Asesor, Role.Estudiante, Role.Supervisor, Role.Coordinador, Role.CoordinadorEps,Role.Coordinador]
+                        roles: [Role.Asesor, Role.Estudiante, Role.Supervisor, Role.Coordinador, Role.CoordinadorEps, Role.Coordinador]
                     },
                     {
                         label: 'Registrar Bitacora', icon: 'pi pi-fw pi-plus-circle', routerLink: ['/bitacoras/registrar-bitacora'],
@@ -85,8 +81,21 @@ export class AppMenuComponent implements OnInit {
                         roles: [Role.Secretaria, Role.Supervisor]
                     }
                 ]
-            },
-            {
+            }, {
+                label: 'Extension EPS',
+                roles: [Role.Estudiante, Role.Supervisor],
+                items: [
+                    {
+                        label: 'Solucitudes', icon: 'pi pi-fw pi-list', routerLink: ['/prorroga/listado'],
+                        roles: [Role.Estudiante, Role.Supervisor]
+                    },
+                    {
+                        label: 'Nueva Solicitud', icon: 'pi pi-fw pi-plus-circle', routerLink: ['/prorroga/nuevo'],
+                        roles: [Role.Estudiante]
+                    }
+                ]
+            }
+            /*{
                 label: 'Documentos',
                 roles: [Role.Asesor, Role.Secretaria, Role.Supervisor],
                 items: [
@@ -95,7 +104,7 @@ export class AppMenuComponent implements OnInit {
                         roles: [Role.Asesor, Role.Secretaria, Role.Supervisor]
                     }
                 ]
-            }
+            }*/
         ];
     }
 }

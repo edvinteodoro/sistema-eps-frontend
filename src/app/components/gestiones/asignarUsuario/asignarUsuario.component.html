@@ -78,6 +78,7 @@
 					<th>Nombre</th>
 					<th>Colegiado</th>
 					<th>Dpi</th>
+					<th>Rol</th>
 					<th>Estado</th>
 				</tr>
 			</ng-template>
@@ -89,6 +90,7 @@
 					<td>{{usuarioLista.nombreCompleto}}</td>
 					<td>{{usuarioLista.numeroColegiado}}</td>
 					<td>{{usuarioLista.dpi}}</td>
+					<td>{{usuarioLista.rol.titulo}}</td>
 					<td style="width:14%; min-width: 10rem;"><span class="p-column-title">Estado</span>
 						<p-tag *ngIf="usuarioLista.activo" severity="success" value="ACTIVO"></p-tag>
 						<p-tag *ngIf="!usuarioLista.activo" severity="danger" value="INACTIVO"></p-tag>

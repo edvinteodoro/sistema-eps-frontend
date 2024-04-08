@@ -8,15 +8,14 @@
                 </div>
 
                 <div>
-                    <label for="email1" class="block text-900 mb-2">Registro academico o colegiado</label>
-                    <input required="required" id="email1" [(ngModel)]="activarUsuario.usuario" type="text" pInputText class="w-full md:w-30rem mb-5" style="padding:1rem"/>
-
-                    <label for="password1" class="block text-900 mb-2">Contraseña</label>
-                    <p-password required="required" id="password1" [(ngModel)]="activarUsuario.password1" [toggleMask]="true" [feedback]="true" 
+                    <input id="email1" [(ngModel)]="activarUsuario.usuario" placeholder="registro academico, numero colegiado o dpi" 
+                    type="text" pInputText class="w-full md:w-30rem mb-5" style="padding:1rem"/>
+                    <br>
+                    <p-password required="required" id="password1" [(ngModel)]="activarUsuario.password1" [toggleMask]="true" [feedback]="true" placeholder="contraseña" 
                     weakLabel="Debil" mediumLabel="Medio" strongLabel="Fuerte"styleClass="mb-5" inputStyleClass="w-full p-3 md:w-30rem"></p-password>
-
-                    <label for="password2" class="block text-900 mb-2">Confirmar Contraseña</label>
-                    <p-password required="required" id="password2" [(ngModel)]="activarUsuario.password2" [toggleMask]="true" [feedback]="false" styleClass="mb-5" inputStyleClass="w-full p-3 md:w-30rem"></p-password>
+                    <br>
+                    <p-password required="required" id="password2" [(ngModel)]="activarUsuario.password2" placeholder="confirmar contraseña"
+                    [toggleMask]="true" [feedback]="false" styleClass="mb-5" inputStyleClass="w-full p-3 md:w-30rem"></p-password>
 
                     <div class="flex align-items-center justify-content-between mb-5 gap-5">
                         <label for="errorMsg" class="p-error block">{{errorLabel}}</label>
@@ -34,3 +33,4 @@
         </div>
     </div>
 </div>
+<p-toast></p-toast>

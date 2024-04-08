@@ -31,6 +31,7 @@ export class ActualizarComponent implements OnInit {
     guardarCambios: boolean = false;
     bloqueado: boolean = true;
     menuItems: MenuItem[] = [];
+    optionalFields: string[] = [];
 
     constructor(private confirmationService: ConfirmationService, private rolService: RolService,
         private carreraService: CarreraService, private messageService: MessageService, private usuarioService: UsuarioService,
@@ -54,6 +55,7 @@ export class ActualizarComponent implements OnInit {
                 this.usuario = usuario;
                 this.getRoles();
                 this.getTitulos();
+                this.getOpcionesMenu();
             })
         } else {
             this.router.navigate(['usuarios/listado']);
@@ -77,7 +79,7 @@ export class ActualizarComponent implements OnInit {
     }
 
     getUsuario() {
-        this.usuarioService.getUsuarios(0, 10, undefined, undefined, this.usuario.numeroColegiado, this.usuario.registroAcademico).subscribe(usuarios => {
+        this.usuarioService.getUsuarios(0, 10, { numeroColegiado: this.usuario.numeroColegiado, registroAcademico: this.usuario.registroAcademico }).subscribe(usuarios => {
             this.usuario = usuarios[0];
         });
     }
@@ -92,7 +94,6 @@ export class ActualizarComponent implements OnInit {
     getRoles() {
         this.rolService.getRoles().subscribe(roles => {
             this.roles = roles;
-            this.onRoleChange();
         });
     }
 
@@ -105,10 +106,35 @@ export class ActualizarComponent implements OnInit {
     }
 
     desactivarUsuario() {
+        this.confirmationService.confirm({
+            key: 'confirm1',
+            message: '¿Estas seguro de desactivar el usuario?',
+            acceptLabel: "Si",
+            icon: 'pi pi-check-circle',
+            accept: () => {
+                this.usuarioService.desactivarUsuario(this.usuario.idUsuario!).subscribe(usuario => {
+                    this.messageService.add({ key: 'tst', severity: 'success', summary: 'Usuario Desactivado', detail: 'Se ha desactivado el usuario.' });
+                    this.usuario.activo=false;
+                    this.getOpcionesMenu();
+                }, (error) => {
+                    this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: error.error });
+                });
+            }
+        });
     }
 
     activarUsuario() {
-        this.usuarioService.activarUsuario(this.usuario.idUsuario!).subscribe();
+        this.confirmationService.confirm({
+            key: 'confirm1',
+            message: '¿Estas seguro de activar el usuario?',
+            acceptLabel: "Si",
+            icon: 'pi pi-check-circle',
+            accept: () => {
+                this.usuarioService.activarUsuario(this.usuario.idUsuario!).subscribe(() => {
+                    this.messageService.add({ key: 'tst', severity: 'success', summary: 'Listo!', detail: 'Se ha enviado un correo al usuario para activar su cuenta.' });
+                });
+            }
+        });
     }
 
     isFieldInvalid(field: any): boolean {
@@ -152,8 +178,67 @@ export class ActualizarComponent implements OnInit {
         this.location.back();
     }
 
-    onRoleChange() {
-        
+    onChangeRol(event: any) {
+        this.optionalFields = [];
+        this.usuario.carreras = undefined;
+        this.usuario.registroAcademico = undefined;
+        this.usuario.numeroColegiado = undefined;
+        this.usuario.titulo = undefined;
+        if (!event.value.contieneCarrera) {
+            this.optionalFields.push('carreras');
+        }
+        if (!event.value.contieneColegiado) {
+            this.optionalFields.push('numeroColegiado');
+        }
+        if (!event.value.contieneRegistro) {
+            this.optionalFields.push('registroAcademico');
+        }
+        if (!event.value.contieneTitulo) {
+            this.optionalFields.push('titulo');
+        }
+    }
+
+    guardarUsuario() {
+        if (!this.validarCampos(this.usuario, this.optionalFields)) {
+            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Campos invalidos', detail: 'Ingrese informacion en los campos obligatorias' });
+        } else {
+            if (!this.usuario.titulo) {
+                this.usuario.titulo = this.titulos[0];
+            }
+            this.confirmationService.confirm({
+                key: 'confirm1',
+                message: '¿Estas seguro de actualizar datos del usuario?',
+                acceptLabel: "Si",
+                icon: 'pi pi-check-circle',
+                accept: () => {
+                    console.log('usuario', this.usuario);
+                    this.usuarioService.actualizarUsuario(this.usuario.idUsuario!, this.usuario).subscribe((res: any) => {
+                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Usuario Actualizado', detail: 'Se han actualizado los datos del usuarios exitosamente.' });
+                        this.bloqueado = true;
+                    }, (error) => {
+                        if (error.status == 401) {
+                            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: error.error });
+                        } else {
+                            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: error.error });
+                        }
+                    });
+                }
+            });
+        }
+
+    }
+
+    validarCampos(obj: any, excludeFields: string[]): boolean {
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key) && !excludeFields.includes(key)) {
+                const value = obj[key];
+                if (value === undefined || (typeof value === 'string' && value.trim() === '')) {
+                    console.log('campo', key);
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 }

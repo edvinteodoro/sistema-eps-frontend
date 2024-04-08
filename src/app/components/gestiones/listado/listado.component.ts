@@ -20,6 +20,9 @@ export class ListadoComponent implements OnInit {
 
     rolUsuario: string = "";
 
+    nombreFilter: string = '';
+    registroFilter: string = '';
+
     constructor(private proyectoService: ProyectoService, private messageService: MessageService,
         private router: Router, private authService: AuthService) { }
 
@@ -59,5 +62,17 @@ export class ListadoComponent implements OnInit {
             })
             this.totalRecords = response.totalElements;
         })
+    }
+
+    buscar() {
+        this.proyectoService.getProyectos(0, 10, this.nombreFilter, this.registroFilter).subscribe(response => {
+            this.proyectos = response.content;
+            this.proyectos.forEach(proyecto => {
+                this.proyectoService.getElementoProyecto(proyecto.idProyecto!, ElementoUtils.ID_ELEMENTO_TITULO).subscribe(elementoProyecto => {
+                    proyecto.elementoTitulo = elementoProyecto;
+                })
+            })
+            this.totalRecords = response.totalElements;
+        });
     }
 }

@@ -26,6 +26,7 @@ import { Convocatoria } from 'src/app/model/Convocatoria';
 
 export class EvaluarProyectoComponent implements OnInit {
     idProyecto!: number;
+    idEtapaActiva!:number;
     proyecto!: Proyecto;
 
     elementoTitulo!: ElementoProyecto;
@@ -98,13 +99,22 @@ export class EvaluarProyectoComponent implements OnInit {
     getEtapaActiva() {
         this.proyectoService.getEtapaActiva(this.idProyecto).subscribe(etapaActiva => {
             this.etapaActiva = etapaActiva.etapa;
+            this.idEtapaActiva=etapaActiva.etapa.idEtapa;
             if (this.etapaActiva.idEtapa == EtapaUtils.CARGA_CONVOCATORIA
                 || this.etapaActiva.idEtapa == EtapaUtils.SUBIR_NOTA) {
                 this.proyectoService.getConvocatoriaAnteproyecto(this.idProyecto).subscribe(convocatoria => {
                     this.convocatoriaGenerada = convocatoria;
+                    this.acta.fechaEvaluacion = convocatoria.fechaEvaluacionFormat;
                     this.acta.horaInicioEvaluacion = convocatoria.horaEvaluacion;
                     this.acta.horaFinEvaluacion = convocatoria.horaEvaluacion;
                 });
+            }else if(this.etapaActiva.idEtapa == EtapaUtils.EXAMEN_GENERAL){
+                this.proyectoService.getConvocatoriaExamenGeneral(this.idProyecto).subscribe(convocatoria=>{
+                    this.convocatoriaGenerada = convocatoria;
+                    this.acta.fechaEvaluacion = convocatoria.fechaEvaluacionFormat;
+                    this.acta.horaInicioEvaluacion = convocatoria.horaEvaluacion;
+                    this.acta.horaFinEvaluacion = convocatoria.horaEvaluacion;
+                })
             }
         });
     }
@@ -136,7 +146,7 @@ export class EvaluarProyectoComponent implements OnInit {
                 icon: 'pi pi-check-circle',
                 accept: () => {
 
-                    this.proyectoService.crearActaAnteproyecto(this.idProyecto, this.acta).subscribe({
+                    this.proyectoService.crearActa(this.idProyecto, this.acta).subscribe({
                         next: () => {
                             this.messageService.add({ key: 'tst', severity: 'success', summary: 'Evaluacion Definida', detail: 'Se ha definido la fecha de evaluacion exitosamente' });
                             setTimeout(() => {

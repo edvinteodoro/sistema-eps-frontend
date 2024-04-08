@@ -37,8 +37,11 @@ export class CrearProyectoComponent implements OnInit {
     //elementos de proyecto
     elementoTitulo: ElementoProyecto = {};
     elementoAnteproyecto: ElementoProyecto = {};
+    elementoSolicitud:ElementoProyecto={};
     elementoInscripcion: ElementoProyecto = {};
     elementoPropedeutico: ElementoProyecto = {};
+    elementoConstanciaCierre:ElementoProyecto={};
+    elementoOtros:ElementoProyecto={};
     elementoNacimiento: ElementoProyecto = {};
     elementoCarta: ElementoProyecto = {};
     elementoFiniquito: ElementoProyecto = {};
@@ -66,7 +69,7 @@ export class CrearProyectoComponent implements OnInit {
 
     institucion: Institucion = {
         nombre: '',
-        coordenadas: '',
+        coordenadaProyecto: '',
         direccion: '',
         municipio: undefined,
     }
@@ -81,7 +84,7 @@ export class CrearProyectoComponent implements OnInit {
     asesor: Usuario = {
         nombreCompleto: "",
         correo: "",
-        direccion: "",
+        //direccion: "",
         dpi: "",
         telefono: "",
         numeroColegiado: ""
@@ -125,7 +128,9 @@ export class CrearProyectoComponent implements OnInit {
             this.elementoInscripcion.file != undefined &&
             this.elementoPropedeutico.file != undefined &&
             this.elementoNacimiento.file != undefined &&
-            this.elementoCarta.file != undefined) {
+            this.elementoCarta.file != undefined &&
+            this.elementoSolicitud.file != undefined && 
+            this.elementoConstanciaCierre.file != undefined) {
             this.confirmationService.confirm({
                 key: 'confirm1',
                 message: '¿Estas seguro de crear el proyecto?',
@@ -134,7 +139,6 @@ export class CrearProyectoComponent implements OnInit {
                 accept: () => {
                     this.loading = true;
                     this.crearProyecto = false;
-                    this.proyecto.asesor!.titulo=this.titulos[0];
                     this.proyectoService.crearProyecto(this.proyecto).subscribe(proyecto => {
                         this.asesoresTecnicos.forEach(asesorTecnico => {
                             this.proyectoService.agregarAsesorTecnicos(proyecto.idProyecto!, asesorTecnico).subscribe();
@@ -145,8 +149,13 @@ export class CrearProyectoComponent implements OnInit {
                         this.proyectoService.agregarElementoProyecto(proyecto.idProyecto!, ElementoUtils.ID_ELEMENTO_PROPEDEUTICO, this.elementoPropedeutico).subscribe();
                         this.proyectoService.agregarElementoProyecto(proyecto.idProyecto!, ElementoUtils.ID_ELEMENTO_NACIMIENTO, this.elementoNacimiento).subscribe();
                         this.proyectoService.agregarElementoProyecto(proyecto.idProyecto!, ElementoUtils.ID_ELEMENTO_CARTA, this.elementoCarta).subscribe();
+                        this.proyectoService.agregarElementoProyecto(proyecto.idProyecto!, ElementoUtils.ID_ELEMENTO_SOLICITUD_ESTUDIANTE, this.elementoSolicitud).subscribe();
+                        this.proyectoService.agregarElementoProyecto(proyecto.idProyecto!, ElementoUtils.ID_ELEMENTO_CONSTANCIA_CIERRE, this.elementoConstanciaCierre).subscribe();
                         if (this.elementoFiniquito.file != undefined) {
                             this.proyectoService.agregarElementoProyecto(proyecto.idProyecto!, ElementoUtils.ID_ELEMENTO_FINIQUITO, this.elementoFiniquito).subscribe();
+                        }
+                        if(this.elementoOtros.file!=undefined){
+                            this.proyectoService.agregarElementoProyecto(proyecto.idProyecto!, ElementoUtils.ID_ELEMENTO_OTROS, this.elementoOtros).subscribe();     
                         }
                         this.messageService.add({ key: 'tst', severity: 'success', summary: 'Proyecto Creado', detail: 'Se ha creado el proyecto exitosamente' });
                         setTimeout(() => {
@@ -197,6 +206,12 @@ export class CrearProyectoComponent implements OnInit {
     onRemoveAnteproyecto() {
         this.elementoAnteproyecto.file = undefined;
     }
+    onUploadSolicitud(event: any) {
+        this.elementoSolicitud.file = event.currentFiles[0];
+    }
+    onRemoveSolicitud() {
+        this.elementoSolicitud.file = undefined;
+    }
     onUploadInscripcion(event: any) {
         this.elementoInscripcion.file = event.currentFiles[0];
     }
@@ -208,6 +223,19 @@ export class CrearProyectoComponent implements OnInit {
     }
     onRemovePropedeutico() {
         this.elementoPropedeutico.file = undefined;
+    }
+
+    onUploadConstanciaCierre(event: any) {
+        this.elementoConstanciaCierre.file = event.currentFiles[0];
+    }
+    onRemoveConstanciaCierre() {
+        this.elementoConstanciaCierre.file = undefined;
+    }
+    onUploadOtros(event: any) {
+        this.elementoOtros.file = event.currentFiles[0];
+    }
+    onRemoveOtros() {
+        this.elementoOtros.file = undefined;
     }
     onUploadNacimiento(event: any) {
         this.elementoNacimiento.file = event.currentFiles[0];
@@ -254,22 +282,22 @@ export class CrearProyectoComponent implements OnInit {
 
     siguienteAsesor() {
         var next: Boolean = true;
-        if (!this.validarCampos(this.asesor, [])) {
+        if (!this.validarCampos(this.asesor, ['registroAcademico'])) {
             next = false;
         }
         for(let asesor of this.asesoresTecnicos){
-            if (!this.validarCampos(asesor, [])) {
+            if (!this.validarCampos(asesor, ['registroAcademico'])) {
                 next = false;
             }    
         }
         if (next) {
             this.crearProyecto = false;
             this.activeIndex++;
+            this.asesor!.titulo=this.titulos[0];
             this.proyecto.asesor = this.asesor;
         }else{
             this.crearProyecto = true;
             this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'Ingrese los campos obligatorios' });
-        
         }
     }
 
@@ -307,11 +335,10 @@ export class CrearProyectoComponent implements OnInit {
         const nuevoAsesor: Usuario = {
             nombreCompleto: "",
             correo: "",
-            direccion: "",
             dpi: "",
             telefono: "",
             numeroColegiado: "",
-            titulo: undefined,
+            //titulo: undefined,
         };
         this.asesoresTecnicos.push(nuevoAsesor);
     }

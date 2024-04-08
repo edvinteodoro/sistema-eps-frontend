@@ -12,6 +12,7 @@ import { ElementoProyecto } from 'src/app/model/ElementoProyecto';
 import { ElementoUtils, Role } from 'src/app/model/Utils';
 import { ComentarioBitacora } from 'src/app/model/ComentarioBitacora';
 import { AuthService } from 'src/app/services/auth.service';
+import { DescargasService } from 'src/app/services/descargas.service';
 
 @Component({
     templateUrl: './bitacora.component.html',
@@ -21,56 +22,84 @@ import { AuthService } from 'src/app/services/auth.service';
 export class BitacoraComponent implements OnInit {
 
     idBitacora!: number;
-    modoEdicion: boolean = true;
+    modoEdicion: boolean = false;
     editarInformacion: boolean = false;
     fecha: Date = new Date();
     bitacora!: Bitacora;
     recursos: Recurso[] = [];
     mostrarLinkDialog: boolean = false;
     linkNuevo: string = '';
-    proyecto!: Proyecto;
     tituloProyecto!: ElementoProyecto;
     fechaReporteText: string = '';
     comentarios: ComentarioBitacora[] = [];
     text: string = '';
     totalpages: number = 1;
     currentPage: number = 0;
-    idUsuario!:number;
-    mostrarBotonRevision:boolean=false;
+    idUsuario!: number;
+    mostrarBotonRevision: boolean = false;
 
     constructor(private location: Location, private proyectoService: ProyectoService,
         private router: Router, private bitacoraService: BitacoraService,
-        private documentosService: DocumentosService, private datePipe: DatePipe,
-        private confirmationService: ConfirmationService,private authService:AuthService) { }
+        private descargasService: DescargasService, private datePipe: DatePipe,
+        private confirmationService: ConfirmationService, private authService: AuthService) { }
 
     ngOnInit() {
-        this.idUsuario=this.authService.getUserId();
+        this.idUsuario = this.authService.getUserId();
+        this.getIdBitacora();
+        sessionStorage.setItem('idBitacora', JSON.stringify(this.idBitacora));
+        this.getComentarios();
+        this.bitacoraService.getBitacora(this.idBitacora).subscribe(bitacora => {
+            this.bitacora = bitacora;
+            this.getUsuariosAsignados();
+            this.fechaReporteText = this.datePipe.transform(bitacora.fechaReporte, 'dd-MM-yyyy')!;
+            this.bitacoraService.getRecursos(this.idBitacora).subscribe(recursos => {
+                this.recursos = recursos;
+            })
+            this.proyectoService.getElementoProyecto(bitacora.idProyecto!, ElementoUtils.ID_ELEMENTO_TITULO).subscribe(elementoProyecto => {
+                this.tituloProyecto = elementoProyecto;
+            });
+        });
+    }
+
+    getIdBitacora() {
+        this.idBitacora = (this.location.getState() as { data: number }).data;
         if (this.idBitacora == undefined) {
             const storedIdProyecto = sessionStorage.getItem('idBitacora');
             this.idBitacora = storedIdProyecto ? JSON.parse(storedIdProyecto) : undefined;
         }
-        if (this.idBitacora != undefined) {
-            sessionStorage.setItem('idBitacora', JSON.stringify(this.idBitacora));
-            this.getComentarios();
-            this.bitacoraService.getBitacora(this.idBitacora).subscribe(bitacora => {
-                this.bitacora = bitacora;
-                this.fechaReporteText = this.datePipe.transform(bitacora.fechaReporte, 'dd-MM-yyyy')!;
-                this.bitacoraService.getRecursos(this.idBitacora).subscribe(recursos => {
-                    this.recursos = recursos;
-                })
-                this.proyectoService.getElementoProyecto(bitacora.idProyecto!, ElementoUtils.ID_ELEMENTO_TITULO).subscribe(elementoProyecto => {
-                    this.tituloProyecto = elementoProyecto;
-                });
-            });
-        } else {
+        if (this.idBitacora == undefined) {
             this.router.navigate(['bitacoras/listado']);
         }
     }
 
-    getUsuariosAsignados(){
-        if(!this.authService.hasRole(Role.Estudiante)){
-
-        }    
+    getUsuariosAsignados() {
+        if (this.authService.hasRole(Role.Estudiante)) {
+            this.modoEdicion = true;
+        } else {
+            if (!this.bitacora.revisionSupervisor) {
+                this.proyectoService.getSupervisor(this.bitacora.idProyecto!).subscribe(supervisor => {
+                    if (supervisor.idUsuario == this.idUsuario.toString()) {
+                        this.mostrarBotonRevision = true;
+                    }
+                });
+            }
+            if (!this.bitacora.revisionContraparte) {
+                console.log('contraparte: ', this.idUsuario)
+                this.proyectoService.getUsuarioContraparte(this.bitacora.idProyecto!).subscribe(contraparte => {
+                    console.log('contra: ', contraparte);
+                    if (contraparte.idUsuario == this.idUsuario.toString()) {
+                        this.mostrarBotonRevision = true;
+                    }
+                });
+            }
+            if (!this.bitacora.revisionAsesor) {
+                this.proyectoService.getUsuarioAsesor(this.bitacora.idProyecto!).subscribe(asesor => {
+                    if (asesor.idUsuario == this.idUsuario.toString()) {
+                        this.mostrarBotonRevision = true;
+                    }
+                });
+            }
+        }
     }
 
     getComentarios() {
@@ -144,7 +173,7 @@ export class BitacoraComponent implements OnInit {
 
     agregarLink() {
         if (this.linkNuevo !== '') {
-            this.bitacoraService.agregarRecurso(this.idBitacora, { link: this.linkNuevo, icono: "pi pi-link",tipoRecurso:"LINK" }).subscribe(recurso => {
+            this.bitacoraService.agregarRecurso(this.idBitacora, { link: this.linkNuevo, icono: "pi pi-link", tipoRecurso: "LINK" }).subscribe(recurso => {
                 this.recursos.push(recurso);
                 this.linkNuevo = '';
                 this.mostrarLinkDialog = false;
@@ -159,7 +188,7 @@ export class BitacoraComponent implements OnInit {
     descargarRecurso(recurso: Recurso) {
         let link = recurso.link;
         if (recurso.tipoRecurso !== 'LINK') {
-            this.documentosService.getDocumento(recurso.link!).subscribe(
+            this.descargasService.descargar(recurso.link!).subscribe(
                 requisito => {
                     //this.link = requisito.link;
                     window.open(requisito.link.toString(), '_blank');
@@ -196,6 +225,21 @@ export class BitacoraComponent implements OnInit {
             this.bitacora = bitacora;
             this.editarInformacion = false;
         })
+    }
+
+    marcarRevisado() {
+        this.confirmationService.confirm({
+            key: 'confirm1',
+            message: 'Estas seguro de marcar el registro como revisado?',
+            acceptLabel: "Si",
+            icon: 'pi pi-check-circle',
+            accept: () => {
+                this.bitacoraService.revisarBitacora(this.idBitacora).subscribe(bitacora => {
+                    this.mostrarBotonRevision = false;
+                    this.bitacora = bitacora;
+                })
+            }
+        });
     }
 
 }

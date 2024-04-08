@@ -4,4 +4,6 @@ export interface Rol {
     contieneCarrera: boolean;
     contieneRegistro: boolean;
     contieneColegiado: boolean;
+    contieneTitulo: boolean;
+    contieneMultiplesCarreras: boolean;
 }

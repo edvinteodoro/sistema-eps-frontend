@@ -1,0 +1,127 @@
+<div class="card">
+	<p-toast key="tst"></p-toast>
+	<h5 class="titulo">Solicitud Prorroga de EPS</h5>
+	<div class="grid p-fluid mt-3">
+		<div class="field col-12 md:col-12 pb-0">
+			<label>Titulo de proyecto:</label>
+			<textarea [(ngModel)]="prorroga.proyecto!.elementoTitulo!.informacion" [disabled]="true" class="text"
+				rows="4" pInputTextarea></textarea>
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Nombre Estudiante: </label>
+			<input [(ngModel)]="prorroga.proyecto!.usuario!.nombreCompleto" [disabled]="true" pInputText class="text" />
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Registro Academico: </label>
+			<input [(ngModel)]="prorroga.proyecto!.usuario!.registroAcademico!" [disabled]="true" pInputText
+				class="text" />
+		</div>
+	</div>
+	<p-divider></p-divider>
+	<div class="grid p-fluid mt-3">
+		<div class="field col-12 md:col-12 pb-0">
+			<label>Cantidad de dias de prorroga: </label>
+			<div class="input-container">
+				<p-inputNumber [(ngModel)]="prorroga.diasExtension" suffix=" dias" [disabled]="!edicionDias">
+				</p-inputNumber>
+				<p-button *ngIf="modoEdicion && !edicionDias" icon="pi pi-pencil" (onClick)="edicionDias=true"
+					styleClass="p-button-rounded p-button-text p-button-raised"></p-button>
+				<p-button *ngIf="modoEdicion && edicionDias" icon="pi pi-times" (onClick)="cancelarEdicionDias()"
+					styleClass="p-button-rounded p-button-text p-button-raised"></p-button>
+				<p-button *ngIf="modoEdicion && edicionDias" icon="pi pi-save" (onClick)="guardarDias()"
+					styleClass="p-button-rounded p-button-text p-button-raised"></p-button>
+			</div>
+		</div>
+		<div class="field col-12 md:col-12 pb-0">
+			<label>Solicitud de prorroga: </label>
+			<div class="input-container">
+				<p-button *ngIf="!edicionSolicitud" label="Descargar Documento"
+					(onClick)="descargar(prorroga.linkSolicitud!)"></p-button>
+				<p-fileUpload class="file-uploader" *ngIf="edicionSolicitud" (onSelect)="cargarSolicitud($event)"
+					chooseLabel="Cargar Documento" mode="basic" [multiple]="false" accept=".pdf"
+					[maxFileSize]="1000000"></p-fileUpload>
+				<p-button *ngIf="modoEdicion && !edicionSolicitud" icon="pi pi-pencil" (onClick)="edicionSolicitud=true"
+					styleClass="p-button-rounded p-button-text p-button-raised"></p-button>
+				<p-button *ngIf="modoEdicion && edicionSolicitud" icon="pi pi-times"
+					(onClick)="cancelarEdicionSolicitud()"
+					styleClass="p-button-rounded p-button-text p-button-raised"></p-button>
+				<p-button *ngIf="modoEdicion && edicionSolicitud && solicitud" icon="pi pi-save"
+					(onClick)="guardarSolicitud()"
+					styleClass="p-button-rounded p-button-text p-button-raised"></p-button>
+			</div>
+		</div>
+		<div class="field col-12 md:col-12 pb-0">
+			<label>Carta de amparo contraparte: </label>
+			<div class="input-container">
+				<p-button *ngIf="!edicionAmparo" label="Descargar Documento"
+					(onClick)="descargar(prorroga.linkAmparo!)"></p-button>
+				<p-fileUpload class="file-uploader" *ngIf="edicionAmparo" (onSelect)="cargarAmparo($event)"
+					chooseLabel="Cargar Documento" mode="basic" [multiple]="false" accept=".pdf"
+					[maxFileSize]="1000000"></p-fileUpload>
+				<p-button *ngIf="modoEdicion && !edicionAmparo" icon="pi pi-pencil" (onClick)="edicionAmparo=true"
+					styleClass="p-button-rounded p-button-text p-button-raised"></p-button>
+				<p-button *ngIf="modoEdicion && edicionAmparo" icon="pi pi-times" (onClick)="cancelarEdicionAmparo()"
+					styleClass="p-button-rounded p-button-text p-button-raised"></p-button>
+				<p-button *ngIf="modoEdicion && edicionAmparo && amparo" icon="pi pi-save" (onClick)="guardarAmparo()"
+					styleClass="p-button-rounded p-button-text p-button-raised"></p-button>
+			</div>
+		</div>
+		<div *ngIf="prorroga.comentarioSupervisor && !mostrarLinkDialog" class="field col-12 md:col-12 pb-0">
+			<label>Motivo de rechazo: </label>
+			<textarea [(ngModel)]="prorroga.comentarioSupervisor" class="text"[disabled]="true" 
+			rows="8" pInputTextarea placeholder="Justifique el motivo del rechazo de solicitud"></textarea>
+		</div>
+	</div>
+	<p-divider></p-divider>
+	<div class="grid p-fluid mt-3">
+		<div class="field col-12 md:col-6 pb-0">
+			<p-button *ngIf="isSupervisor && prorroga.aprobado==undefined" icon="pi pi-times" label="Rechazar Prorroga"
+				(onClick)="mostrarLinkDialog=true"></p-button>
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<p-button *ngIf="isSupervisor && prorroga.aprobado==undefined" icon="pi pi-check" label="Aprobar Prorroga"
+				(onClick)="aprobarProrroga()"></p-button>
+		</div>
+	</div>
+</div>
+<p-dialog header="Header" [(visible)]="mostrarLinkDialog" [style]="{ width: '50vw' }">
+	<ng-template pTemplate="header">
+		<span class="text-xl font-bold">Rechazar Prorroga</span>
+	</ng-template>
+	<ng-template pTemplate="body">
+		<div class="p-fluid">
+			<textarea [(ngModel)]="prorroga.comentarioSupervisor" class="text" rows="8" pInputTextarea placeholder="Justifique el motivo del rechazo de solicitud"></textarea>
+		</div>
+	</ng-template>
+	<ng-template pTemplate="footer">
+		<p-button icon="pi pi-check" (click)="rechazarProrroga()" label="Listo" styleClass="p-button-text" [disabled]="prorroga.comentarioSupervisor==undefined"></p-button>
+	</ng-template>
+</p-dialog>
+<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle" [style]="{width: '350px'}"
+	acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+
+<style>
+	.titulo {
+		color: #00274e;
+		font-weight: bold;
+	}
+
+	.input-container {
+		display: flex;
+		/* Enable Flexbox layout */
+		align-items: center;
+		/* Vertically center items */
+		justify-content: space-between;
+		/* Add space between items */
+	}
+
+	/* Optional: Adjust the padding or margins if needed */
+	.input-container text {
+		margin-right: 10px;
+		/* Adjust the spacing between textarea and button */
+	}
+
+	.file-uploader {
+		width: 100%;
+	}
+</style>

@@ -62,10 +62,21 @@ export class ProyectoService {
     return this.http.get<any>('http://localhost:8080/api/proyectos/' + idProyecto);
   }
 
-  getProyectos(page: number, size: number): Observable<any> {
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
+  finalizarProyecto(idProyecto:number,comentario:Comentario):Observable<Proyecto>{
+    return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/finalizar-proyecto', comentario);
+  }
+
+  getProyectos(page: number, size: number,nombreFilter?:string,registroAcademico?:string): Observable<any> {
+    let params = new HttpParams();
+    params = params.set('page', page.toString());
+    params = params.set('size', size.toString());
+    if (nombreFilter && nombreFilter.trim() !== '') {
+      params = params.set('nombre', nombreFilter);
+    }
+    if (registroAcademico && registroAcademico.trim() !== '') {
+      params = params.set('registroAcademico', registroAcademico.toString());
+    }
+console.log('params: ',params)
     return this.http.get<any>('http://localhost:8080/api/proyectos', { params });
   }
 
@@ -95,6 +106,10 @@ export class ProyectoService {
 
   getPersonaContraparte(idProyecto: number): Observable<Usuario> {
     return this.http.get<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/personas/contraparte');
+  }
+
+  getUsuarioContraparte(idProyecto: number): Observable<Usuario> {
+    return this.http.get<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/usuarios/contraparte');
   }
 
   /*actualizarContraparte(proyectoId: String, contraparte: Usuario): Observable<Usuario> {
@@ -164,6 +179,10 @@ export class ProyectoService {
     return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/aprobar-cambios-supervisor', usuario);
   }
 
+  aprobacionInformeFinalSupervisor(idProyecto: number) {
+    return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/aprobar-informe-final-supervisor', {});
+  }
+
   habilitarBitacora(idProyecto: number, usuario: Usuario) {
     return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/habilitar-bitacora', usuario);
   }
@@ -192,16 +211,32 @@ export class ProyectoService {
     return this.http.get<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/convocatoria-anteproyecto');
   }
 
+  getConvocatoriaExamenGeneral(idProyecto: number): Observable<Convocatoria> {
+    return this.http.get<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/convocatoria-examen-general');
+  }
+
   getActaAnteproyecto(idProyecto: number): Observable<Acta> {
     return this.http.get<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/acta-anteproyecto');
   }
 
-  crearActaAnteproyecto(idProyecto: number, acta: Acta) {
-    return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/acta-anteproyecto', acta);
+  getActaExamenGeneral(idProyecto: number): Observable<Acta> {
+    return this.http.get<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/acta-examen-general');
+  }
+
+  crearActa(idProyecto: number, acta: Acta) {
+    return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/acta', acta);
   }
 
   generarActaAnteproyecto(idProyecto: number, acta: Acta): Observable<Acta> {
     return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/generar-acta-anteproyecto', acta);
+  }
+
+  generarActaExamenGeneral(idProyecto: number, acta: Acta): Observable<Acta> {
+    return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/generar-acta-examen-general', acta);
+  }
+
+  generarActaAprobacion(idProyecto: number, acta: Acta): Observable<Acta> {
+    return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/generar-acta-aprobacion', acta);
   }
 
   getFechaEvaluacionAnteproyecto(idProyecto: number): Observable<Evaluacion> {
@@ -259,6 +294,26 @@ export class ProyectoService {
     formData.append('finiquitoContraparte', cartaFinalizacion);
     formData.append('informeFinal', finiquitoContraparte);
     return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/finalizar-bitacora', formData);
+  }
+
+  cargarArticulo(idProyecto: number, articulo: any, traduccionArticulo: any) {
+    const formData = new FormData();
+    formData.append('articulo', articulo);
+    formData.append('traduccionArticulo', traduccionArticulo);
+    return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/cargar-articulo', formData);
+  }
+
+  cargarConstanciaLinguistica(idProyecto: number, constanciaLinguistica: any) {
+    const formData = new FormData();
+    formData.append('constanciaLinguistica', constanciaLinguistica);
+    return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/cargar-constancia-linguistica', formData);
+  }
+
+  cargarDictamenRevision(idProyecto: number, dictamenRevision: any,cartaRevision:any) {
+    const formData = new FormData();
+    formData.append('dictamenRevision', dictamenRevision);
+    formData.append('cartaRevision', cartaRevision);
+    return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/cargar-dictamen-revision', formData);
   }
 
 }

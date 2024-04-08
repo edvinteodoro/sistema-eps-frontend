@@ -57,7 +57,11 @@ export class LoginComponent {
                 this.reloadPage();
             },
             error: err => {
-                this.errorLabel = err.error.message;
+                console.log('error',err);
+                this.errorLabel = err.error;
+                if(err.status==0){
+                    this.errorLabel= "Error en el sistema, vuelva a intentar mas tarde.";
+                }
                 this.isLoginFailed = true;
             }
         });

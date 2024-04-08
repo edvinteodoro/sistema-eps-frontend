@@ -27,6 +27,7 @@ import { CommentModule } from 'src/app/comment/comment.module';
 import { TagModule } from 'primeng/tag';
 import { MenuModule } from 'primeng/menu';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { FileModule } from 'src/app/file/file.module';
 
 
 @NgModule({
@@ -57,7 +58,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 		CommentModule,
 		TagModule,
 		MenuModule,
-        ProgressSpinnerModule
+        ProgressSpinnerModule,
+		FileModule
 	],
 	declarations: [ProyectoComponent]
 })

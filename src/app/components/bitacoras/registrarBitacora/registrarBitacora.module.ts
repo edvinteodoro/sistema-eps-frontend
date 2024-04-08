@@ -6,7 +6,6 @@ import { RegistrarBitacoraRoutingModule } from './registrarBitacora-routing.modu
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { CalendarModule } from "primeng/calendar";
 import { ChipsModule } from "primeng/chips";
-import {GMapModule} from 'primeng/gmap';
 import { DropdownModule } from "primeng/dropdown";
 import { InputMaskModule } from "primeng/inputmask";
 import { InputNumberModule } from "primeng/inputnumber";
@@ -17,7 +16,6 @@ import { InputTextModule } from "primeng/inputtext";
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import {FileUploadModule} from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
-import { EditorModule } from '@tinymce/tinymce-angular';
 import { PanelModule } from 'primeng/panel';
 import { StepsModule } from 'primeng/steps';
 import { DialogModule } from 'primeng/dialog';
@@ -37,7 +35,6 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 		RegistrarBitacoraRoutingModule,
 		AutoCompleteModule,
 		CalendarModule,
-		GMapModule,
 		ChipsModule,
 		DropdownModule,
 		InputMaskModule,
@@ -49,7 +46,6 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 		ConfirmDialogModule,
 		FileUploadModule,
 		ToastModule,
-		EditorModule,
 		PanelModule,
 		StepsModule,
 		DialogModule,

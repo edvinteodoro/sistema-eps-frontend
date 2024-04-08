@@ -12,27 +12,23 @@
 		(firstChange)="loadActas($event)" [loading]="loading" [scrollable]="true" [totalRecords]="totalRecords">
 		<ng-template pTemplate="header">
 			<tr>
+				<th pSortableColumn="fechaEvaluacion">Tipo de Acta</th>
 				<th pSortableColumn="fechaEvaluacion">Carrera</th>
-				<th pSortableColumn="fechaEvaluacion">Fecha Evaluacion</th>
-				<th pSortableColumn="horaInicioEvaluacion">Hora Evaluacion</th>
-				<th pSortableColumn="horaFinEvaluacion">Hora fin de Evaluacion</th>
+				<th pSortableColumn="fechaEvaluacion">Fecha de Acta</th>
 				<th pSortableColumn="actaGenerada">Acta Generada</th>
 				<th></th>
 			</tr>
 		</ng-template>
 		<ng-template pTemplate="body" let-acta>
 			<tr>
+				<td style="width:20%; min-width:10rem;"><span class="p-column-title">Tipo de Acta</span>
+					{{acta.tipo}}
+				</td>
 				<td style="width:30%; min-width:10rem;"><span class="p-column-title">Carrera</span>
 					{{acta.proyecto!.carrera.nombre}}
 				</td>
 				<td style="width:20%; min-width:10rem;"><span class="p-column-title">Fecha Evaluacion</span>
 					{{acta.fechaEvaluacion}}
-				</td>
-				<td style="width:10%; min-width:10rem;"><span class="p-column-title">Hora Evaluacion</span>
-					{{acta.horaInicioEvaluacion}}
-				</td>
-				<td style="width:10%; min-width:10rem;"><span class="p-column-title">Hora Fin Evaluacion</span>
-					{{acta.horaFinEvaluacion}}
 				</td>
 				<td style="width:14%; min-width: 10rem;"><span class="p-column-title">Acta Generada</span>
 					<p-tag [severity]="getTagSeverity(acta.actaGenerada).class"

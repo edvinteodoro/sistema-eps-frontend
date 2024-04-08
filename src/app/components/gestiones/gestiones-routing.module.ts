@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
         { path: 'evaluar-proyecto', data: { breadcrumb: 'Evaluar Proyecto' }, loadChildren: () => import('./evaluarProyecto/evaluarProyecto.module').then(m => m.EvaluarProyectoModule) },
         { path: 'cambiar-usuario', data: { breadcrumb: 'Cambiar Usuario' }, loadChildren: () => import('./cambiarUsuario/cambiarUsuario.module').then(m => m.CambiarUsuarioModule) },
         { path: 'asignar-usuario', data: { breadcrumb: 'Asignar Usuario' }, loadChildren: () => import('./asignarUsuario/asignarUsuario.module').then(m => m.AsignarUsuarioModule) },
+        { path: 'cargar-documento', data: { breadcrumb: 'Cargar Documentos' }, loadChildren: () => import('./cargarDocumento/cargarDocumento.module').then(m => m.CargarDocumentoModule) },
         { path: '**', redirectTo: '/notfound' }
     ])],
     exports: [RouterModule]

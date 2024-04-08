@@ -12,11 +12,11 @@
 			<input [(ngModel)]="usuario.correo" pInputText type="text"
 				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.correo)}" />
 		</div>
-		<div class="field col-12 md:col-6">
+		<!--<div class="field col-12 md:col-6">
 			<label>Direccion</label>
 			<input [(ngModel)]="usuario.direccion" pInputText type="text"
 				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(usuario.direccion)}" />
-		</div>
+		</div>-->
 		<div class="field col-12 md:col-6">
 			<label>Numero de DPI</label>
 			<input [(ngModel)]="usuario.dpi" pInputText type="text"
@@ -31,10 +31,10 @@
 		<div class="field col-12 md:col-6">
 			<label [ngClass]="{'p-error block': isFieldInvalid(usuario.rol)}">Rol de Usuario</label>
 			<p-dropdown #rolDropdown [(ngModel)]="usuario.rol" [options]="roles" [editable]="true"
-				optionLabel="titulo"></p-dropdown>
+				optionLabel="titulo" (onChange)="onChangeRol($event)"></p-dropdown>
 		</div>
 
-		<div *ngIf="usuario.rol && usuario.rol.idRol!=1" class="field col-12 md:col-6">
+		<div *ngIf="usuario.rol && usuario.rol.contieneTitulo" class="field col-12 md:col-6">
 			<label htmlFor="tipo" [ngClass]="{'p-error block': isFieldInvalid(usuario.titulo)}">Titulo de Usuario</label>
 			<p-dropdown #rolDropdown [(ngModel)]="usuario.titulo" [options]="titulos" [editable]="true"
 				optionLabel="nombre"></p-dropdown>

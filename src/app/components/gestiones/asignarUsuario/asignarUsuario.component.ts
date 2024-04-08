@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Proyecto } from 'src/app/model/Proyecto';
-import { DocumentosService } from 'src/app/services/documentos.service';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
 import { ProyectoService } from 'src/app/services/proyecto.service';
 import { EditorComponent } from '@tinymce/tinymce-angular';
 import { Phase } from 'src/app/shared/models/phase.model';
@@ -126,12 +124,12 @@ export class AsignarUsuarioComponent implements OnInit {
 
     getUsuarios() {
         if (this.opcion == 1) {
-            this.usuarioService.getUsuarios(0, 10, Role.ID_ASESOR, this.nombresFiltro, this.colegiadoFiltro).subscribe(response => {
+            this.usuarioService.getUsuarios(0, 10, {nombreCompleto:this.nombresFiltro, numeroColegiado:this.colegiadoFiltro}).subscribe(response => {
                 console.log('usuarios', response.content);
                 this.usuariosLista = response.content;
             })
         } else if (this.opcion == 2) {
-            this.usuarioService.getUsuarios(0, 10, undefined, this.nombresFiltro, this.colegiadoFiltro,undefined,this.dpiFiltro).subscribe(response => {
+            this.usuarioService.getUsuarios(0, 10, {nombreCompleto:this.nombresFiltro, numeroColegiado:this.colegiadoFiltro,dpi:this.dpiFiltro}).subscribe(response => {
                 console.log('usuarios', response.content);
                 this.usuariosLista = response.content;
             })
@@ -143,7 +141,7 @@ export class AsignarUsuarioComponent implements OnInit {
     }
 
     crearUsuario() {
-        this.router.navigate(['usuarios/crear-usuario'], { state: { idPersona: this.idPersona, tipo: this.opcion } });
+        this.router.navigate(['usuarios/crear-usuario'], { state: { idPersona: this.idPersona, tipo: this.opcion, carrera:this.proyecto.carrera} });
     }
 
     asignarAsesor() {

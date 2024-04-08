@@ -38,7 +38,7 @@
 			</div>
 		</div>
 	</app-phase>
-	<!--<app-phase name="Coordinador de EPS" icon="pi pi-users">
+	<app-phase name="Coordinador de EPS" icon="pi pi-users">
 		<div class="grid p-fluid mt-3">
 			<div class="field col-12 md:col-6 pb-0">
 				<label>Coordinador de EPS:</label>
@@ -66,8 +66,8 @@
 				<input pInputText disabled="true" class="title" type="text" [(ngModel)]="asesor.nombreCompleto" />
 			</div>
 		</div>
-	</app-phase>-->
-	<app-phase name="Datos de convocatoria" icon="pi pi-calendar-times">
+	</app-phase>
+	<app-phase *ngIf="idEtapaActiva==6 || idEtapaActiva==12" name="Datos de convocatoria" icon="pi pi-calendar-times">
 		<div class="grid p-fluid mt-3">
 			<div class="field col-12 md:col-6 pb-0">
 				<label>Fecha de evaluacion:</label>
@@ -92,20 +92,26 @@
 				<label htmlFor="fecha">Resultado: </label>
 				<p-dropdown [options]="resuldados" [(ngModel)]="acta.resultado" [autofocus]="true"></p-dropdown>
 			</div>
-			<div class="field col-12 md:col-12 pb-0">
+			<div class="field col-12 md:col-6 pb-0">
 				<label htmlFor="fecha">Nota: </label>
 				<p-inputNumber [(ngModel)]="acta.nota" [showButtons]="true" inputId="minmax-buttons" [min]="0"
 					[max]="100"></p-inputNumber>
 			</div>
 			<div class="field col-12 md:col-6 pb-0">
-				<label htmlFor="fecha">Hora de inicio de evaluacion: </label>
+				<label>Fecha de acta:</label>
+				<input *ngIf="idEtapaActiva!=17" [(ngModel)]="acta.fechaEvaluacion" pInputText />
+				<p-calendar *ngIf="idEtapaActiva==17" dateFormat="dd-mm-yy" inputId="dateformat"
+					[(ngModel)]="acta.fechaEvaluacionInput"></p-calendar>
+			</div>
+			<div class="field col-12 md:col-6 pb-0">
+				<label htmlFor="fecha">Hora de inicio de acta: </label>
 				<input pInputText [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(acta.horaInicioEvaluacion)}"
 					[(ngModel)]="acta.horaInicioEvaluacion" />
 			</div>
 			<div class="field col-12 md:col-6 pb-0">
-				<label htmlFor="fecha">Hora de finalizacion de evaluacion: </label>
+				<label htmlFor="fecha">Hora de finalizacion de acta: </label>
 				<input pInputText [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(acta.horaFinEvaluacion)}"
-					[(ngModel)]="acta.horaFinEvaluacion"/>
+					[(ngModel)]="acta.horaFinEvaluacion" />
 			</div>
 			<div class="field col-12 md:col-12 pb-0">
 				<label htmlFor="fecha">Comentario: </label>

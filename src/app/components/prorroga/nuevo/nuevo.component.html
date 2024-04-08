@@ -1,0 +1,63 @@
+<div class="card">
+	<p-toast key="tst"></p-toast>
+	<h5 class="titulo">Solicitud Prorroga de EPS</h5>
+	<div class="grid p-fluid mt-3">
+		<div class="field col-12 md:col-12 pb-0">
+			<label>Carrera:</label>
+			<ng-container *ngFor="let proyectoSel of proyectos">
+				<div class="flex align-items-center">
+					<p-radioButton [inputId]="proyectoSel.idProyecto!.toString()" name="carrera" [value]="proyectoSel"
+						[(ngModel)]="proyecto"></p-radioButton>
+					<label for="ingredient1" class="ml-2">{{proyectoSel.carrera!.nombre}}</label>
+				</div>
+			</ng-container>
+		</div>
+		<div *ngIf="proyecto" class="field col-12 md:col-12 pb-0">
+			<label>Titulo de proyecto:</label>
+			<textarea [(ngModel)]="proyecto.elementoTitulo!.informacion" [disabled]="true" class="text" rows="4"
+				pInputTextarea></textarea>
+		</div>
+		<div *ngIf="proyecto" class="field col-12 md:col-6 pb-0">
+			<label>Nombre Estudiante: </label>
+			<input [(ngModel)]="proyecto.usuario!.nombreCompleto" [disabled]="true" pInputText class="text" />
+		</div>
+		<div *ngIf="proyecto" class="field col-12 md:col-6 pb-0">
+			<label>Registro Academico: </label>
+			<input [(ngModel)]="proyecto.usuario!.registroAcademico!" [disabled]="true" pInputText class="text" />
+		</div>
+	</div>
+	<p-divider></p-divider>
+	<div class="grid p-fluid mt-3">
+		<div *ngIf="proyecto" class="field col-12 md:col-12 pb-0">
+			<label>Cantidad de dias de prorroga: </label>
+			<p-inputNumber [(ngModel)]="prorroga.diasExtension" suffix=" dias"> </p-inputNumber>
+		</div>
+		<div *ngIf="proyecto" class="field col-12 md:col-12 pb-0">
+			<label>Cargar Solicitud de Prorroga: </label>
+			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadSolicitud($event)"
+				(onRemove)="onRemoveSolicitud()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
+			</p-fileUpload>
+		</div>
+		<div *ngIf="proyecto" class="field col-12 md:col-12 pb-0">
+			<label>Cargar Carta de Amparo Contraparte: </label>
+			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadAmparo($event)" (onRemove)="onRemoveAmparo()"
+				[multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
+			</p-fileUpload>
+		</div>
+		<div *ngIf="proyecto" class="field col-12 md:col-6 pb-0"></div>
+		<div *ngIf="proyecto" class="field col-12 md:col-6 pb-0">
+			<p-button icon="pi pi-check" styleClass="p-button-outlined" label="Solicitar Prorroga"
+				(click)="solicitarProrroga()"
+				[disabled]="!solicitud || !amparo || prorroga.diasExtension==undefined"></p-button>
+		</div>
+	</div>
+</div>
+<p-confirmDialog header="Confirmacion" key="confirm1" icon="pi pi-exclamation-triangle" [style]="{width: '350px'}"
+	acceptButtonStyleClass="p-button-text" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+
+<style>
+	.titulo {
+		color: #00274e;
+		font-weight: bold;
+	}
+</style>

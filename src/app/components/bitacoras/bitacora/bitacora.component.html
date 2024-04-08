@@ -48,7 +48,7 @@
 		<div class="grid p-fluid mt-3">
 			<div class="field col-12 md:col-12 pb-0">
 				<label>Actividades efectuadas</label>
-				<textarea class="text" rows="10" cols="30" [(ngModel)]="bitacora.descripcion"
+				<textarea class="text" rows="20" cols="30" [(ngModel)]="bitacora.descripcion"
 					[disabled]="!editarInformacion" pInputTextarea></textarea>
 			</div>
 			<div class="field col-12 md:col-6 pb-0">
@@ -62,12 +62,12 @@
 					[(ngModel)]="bitacora.avance" class="text"></p-inputNumber>
 			</div>
 			<div class="field col-12 md:col-4 pb-0">
-				<p-checkbox [(ngModel)]="bitacora.revisionAsesor" [binary]="true" [disabled]="true"
-					label="Revision Asesor"></p-checkbox>
-			</div>
-			<div class="field col-12 md:col-4 pb-0">
 				<p-checkbox [(ngModel)]="bitacora.revisionSupervisor" [binary]="true" [disabled]="true"
 					label="Revision Supervisor"></p-checkbox>
+			</div>
+			<div class="field col-12 md:col-4 pb-0">
+				<p-checkbox [(ngModel)]="bitacora.revisionAsesor" [binary]="true" [disabled]="true"
+					label="Revision Asesor"></p-checkbox>
 			</div>
 			<div class="field col-12 md:col-4 pb-0">
 				<p-checkbox [(ngModel)]="bitacora.revisionContraparte" [binary]="true" [disabled]="true"
@@ -102,7 +102,7 @@
 
 	<div class="grid p-fluid mt-3">
 		<div class="field col-12 md:col-12 pb-0">
-			<p-fileUpload [disabled]="bitacora.contieneInforme!" #fileUpload mode="basic" icon="pi pi-plus"
+			<p-fileUpload *ngIf="modoEdicion" [disabled]="bitacora.contieneInforme!" #fileUpload mode="basic" icon="pi pi-plus"
 				[style]="{'width':'100%'}" styleClass="p-button-outlined p-button-secondary"
 				chooseLabel="Agregar Informe Mensual" accept=".pdf" [showCancelButton]="false"
 				[showUploadButton]="false" [maxFileSize]="1000000"
@@ -118,7 +118,7 @@
 	<div class="grid p-fluid mt-3">
 		<div class="field col-12 md:col-12 pb-0">
 			<p-button *ngIf="mostrarBotonRevision" icon="pi pi-check" label="Marcar como revisado"
-				(onClick)="mostrarLinkDialog=true"></p-button>
+				(onClick)="marcarRevisado()"></p-button>
 		</div>
 	</div>
 	<p-divider></p-divider>

@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { ActivarUsuario } from 'src/app/model/ActivarUsuario';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
     selector: 'app-login',
     templateUrl: './confirm.component.html',
+    providers: [MessageService],
     styles: [`
         :host ::ng-deep .pi-eye,
         :host ::ng-deep .pi-eye-slash {
@@ -26,7 +28,8 @@ export class ConfirmComponent {
     token!: String;
     usuario!: string;
 
-    constructor(private router: Router, private route: ActivatedRoute, private authService: AuthService) {
+    constructor(private router: Router, private route: ActivatedRoute,
+        private authService: AuthService, private messageService: MessageService) {
     }
 
     ngOnInit() {
@@ -38,10 +41,14 @@ export class ConfirmComponent {
     onLogin() {
         this.authService.activarUsuario(this.activarUsuario).subscribe({
             next: (response) => {
-                this.router.navigate(['']);
+                this.messageService.add({ severity: 'success', summary: 'Usuario Activado', detail: 'Usuario activado exitosamente!'});
+                setTimeout(() => {
+                    this.router.navigate(['']);
+                }, 2000);
             },
             error: (error) => {
-                console.log(error);
+                console.log('error: ',error)
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error: ' + error.error });
             }
         })
     }

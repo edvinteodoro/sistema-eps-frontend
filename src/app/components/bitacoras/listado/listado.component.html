@@ -1,22 +1,16 @@
 <div class="card">
 	<p-toast></p-toast>
-	<div class="flex md:flex-row justify-content-between align-items-center">
-		<div class="flex md:flex-row">
-			<h5 class="titulo">Bitacoras</h5>
-		</div>
-		<span class="block mt-2 p-input-icon-left">
-			<p-button icon="pi pi-ellipsis-v" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-		</span>
-	</div>
+	<h5 class="titulo">Bitacoras</h5>
 	<div class="grid p-fluid mt-3">
-		<div class="field col-12 md:col-5 pb-0">
-			<label>Nombres:</label>
+		<div class="field col-12 md:col-6 pb-0">
+			<input pInputText placeholder="Nombres" [(ngModel)]="nombreFilter" />
 		</div>
 		<div class="field col-12 md:col-5 pb-0">
-			<label>Registro academico:</label>
+			<input pInputText placeholder="Registro Academico" [(ngModel)]="registroFilter" />
 		</div>
-		<div class="field col-12 md:col-2 pb-0">
-			<p-button icon="pi pi-search" styleClass="p-button-rounded p-button-secondary p-button-outlined"></p-button>
+		<div class="field col-12 md:col-1 pb-0">
+			<p-button icon="pi pi-search" styleClass="p-button-rounded p-button-secondary p-button-outlined"
+				(click)="buscar()"></p-button>
 		</div>
 	</div>
 	<p-table [value]="bitacoras" [paginator]="true" [rows]="10" [lazy]="true" (onLazyLoad)="loadBitacoras($event)"
@@ -51,10 +45,12 @@
 					<i *ngIf="!bitacora.contieneInforme" class="pi pi-times"></i>
 				</td>
 				<td style="width:10%"><span class="p-column-title">Revision</span>
-					<p-tag
-						*ngIf="bitacora.revisionAsesor && bitacora.revisionSupervisor && bitacora.revisionContraparte"
-						severity="success" value="Finalizado"></p-tag>
-					<p-tag *ngIf="!(bitacora.revisionAsesor && bitacora.revisionSupervisor && bitacora.revisionContraparte)" severity="danger" value="Pendiente"></p-tag>
+					<span
+						[ngClass]="{'true-value': bitacora.revisionSupervisor, 'false-value': !bitacora.revisionSupervisor}">S</span>
+					<span
+						[ngClass]="{'true-value': bitacora.revisionAsesor, 'false-value': !bitacora.revisionAsesor}">A</span>
+					<span
+						[ngClass]="{'true-value': bitacora.revisionContraparte, 'false-value': !bitacora.revisionContraparte}">C</span>
 				</td>
 				<td>
 					<div class="flex">
@@ -71,5 +67,28 @@
 	.titulo {
 		color: #00274e;
 		font-weight: bold;
+	}
+
+	.true-value,
+	.false-value {
+		color: white;
+		font-size: 10px;
+		font-weight: bold;
+		padding: 4px 8px;
+		/* Adjust padding as needed */
+		border-radius: 25%;
+		/* Rounded corners for a stylish look */
+		margin-right: 3px;
+		/* Add some space between characters */
+	}
+
+	.true-value {
+		background-color: #287233;
+		/* Modern green */
+	}
+
+	.false-value {
+		background-color: #C41E3A;
+		/* Modern red */
 	}
 </style>

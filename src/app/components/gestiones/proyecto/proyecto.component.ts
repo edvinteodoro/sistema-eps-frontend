@@ -35,6 +35,8 @@ interface AutoCompleteCompleteEvent {
 })
 
 export class ProyectoComponent implements OnInit {
+    ElementoUtils = ElementoUtils;
+
     idProyecto!: number;
     proyecto!: Proyecto;
     //asesoresTecnicos: Usuario[] = [];
@@ -47,16 +49,6 @@ export class ProyectoComponent implements OnInit {
     titulos!: Titulo[];
     //elementos del proyecto
     elementoTitulo: ElementoProyecto = {};
-    elementoAnteproyecto?: ElementoProyecto;
-    elementoInscripcion?: ElementoProyecto;
-    elementoPropedeutico?: ElementoProyecto;
-    elementoNacimiento?: ElementoProyecto;
-    elementoCarta?: ElementoProyecto;
-    elementoFiniquito?: ElementoProyecto;
-    elementoConvocatoriaAnteproyecto?: ElementoProyecto;
-    elementoConvocatoriaAnteproyectoFirmada?: ElementoProyecto;
-    elementoCartaAceptacionContraparte?: ElementoProyecto;
-
     departamentos!: Departamento[];
     departamentoSeleccionado!: Departamento;
     departamentoFiltrado!: Departamento[];
@@ -68,16 +60,8 @@ export class ProyectoComponent implements OnInit {
 
     tituloBloqueado: boolean = true;
     semestreBloqueado: boolean = true;
-    anteproyectoBloqueado: boolean = true;
-    inscripcionBloqueado: boolean = true;
-    propedeuticoBloqueado: boolean = true;
-    nacimientoBloqueado: boolean = true;
-    cartaBloqueado: boolean = true;
-    finiquitoBloqueado: boolean = true;
-    convocatoriaAnteproyectoBloqueado: boolean = true;
-    convocatoriaAnteproyectoFirmadaBloqueado: boolean = true;
-    cartaAceptacionContraparteBloqueado: boolean = true;
 
+    finalizaProyecto: boolean = false;
     editarInstitucion: boolean = false;
     editarAsesor: boolean = false;
     editarContraparte: boolean = false;
@@ -85,8 +69,6 @@ export class ProyectoComponent implements OnInit {
     modoEdicion: boolean = false;
     proyectoEditable: boolean = false;
     rolUsuario: string = "";
-
-    isEstudiante: boolean = false;
 
     guardar: boolean = false;
     aprobacionAsesor: boolean = false;
@@ -103,6 +85,16 @@ export class ProyectoComponent implements OnInit {
         mostrar: false
     }
 
+    isSupervisor: boolean = false;
+    isSecretaria: boolean = false;
+    isEstudiante: boolean = false;
+    isAsesor: boolean = false;
+    isContraparte: boolean = false;
+    isCoordinadorEps: boolean = false;
+    isCoordinadorCarrera: boolean = false;
+
+    idUsuario!: number;
+
     convocatoriaGenerada!: Convocatoria;
     actaGenerada!: Acta;
     semestres: any = ['Primer Semestre', 'Segundo Semestre'];
@@ -114,6 +106,7 @@ export class ProyectoComponent implements OnInit {
     link!: any;
     text: string = '';
     textCambios: string = '';
+    comentarioFinalizarBitacora: string = '';
     opcion: any;
     items: any[] = [
         { label: 'Proyecto' },
@@ -128,41 +121,7 @@ export class ProyectoComponent implements OnInit {
     notaDialogVisible: boolean = false;
     value1: number = 0;
     comentario: any;
-    opciones: MenuItem[] = [
-        {
-            label: 'Cambiar Supervisor',
-            icon: 'pi pi-fw pi-users',
-            visible: this.authService.hasRole(Role.CoordinadorEps),
-            command: () => {
-                this.cambiarSupervisor();
-            }
-        },
-        {
-            label: 'Cambiar Asesor',
-            icon: 'pi pi-fw pi-users',
-            visible: this.authService.hasRole(Role.Supervisor) ||
-                this.authService.hasRole(Role.CoordinadorEps),
-            command: () => {
-                this.cambiarAsesor();
-            }
-        },
-        {
-            label: 'Cambiar Contraparte',
-            icon: 'pi pi-fw pi-users',
-            visible: this.authService.hasRole(Role.Supervisor) ||
-                this.authService.hasRole(Role.CoordinadorEps),
-            command: () => {
-                this.cambiarContraparte();
-            }
-        },
-        {
-            label: 'Documentos',
-            icon: 'pi pi-fw pi-book',
-            command: () => {
-                this.cambiarContraparte();
-            }
-        }
-    ];
+    opciones: MenuItem[] = [];
 
 
     constructor(private confirmationService: ConfirmationService, private messageService: MessageService, private location: Location,
@@ -173,11 +132,14 @@ export class ProyectoComponent implements OnInit {
 
 
     ngOnInit() {
+        this.idUsuario = this.authService.getUserId();
         this.rolUsuario = this.authService.getUserRole();
         this.loading = true;
         this.getIdProyecto();
         this.proyectoService.getProyectoPorId(this.idProyecto).subscribe(proyecto => {
             this.proyecto = proyecto;
+            this.idEtapaActiva = proyecto.etapaActiva!.idEtapa;
+            this.getUsuarioRol();
             this.saveIdproyecto();
             this.getTituloUsuario();
             this.getDepartementos();
@@ -194,6 +156,42 @@ export class ProyectoComponent implements OnInit {
     }
     saveIdproyecto() {
         sessionStorage.setItem('idProyecto', JSON.stringify(this.idProyecto));
+    }
+
+    getUsuarioRol() {
+        if (this.proyecto.usuario!.idUsuario == this.idUsuario.toString()) {
+            this.isEstudiante = true;
+        } else if (this.authService.hasRole(Role.Secretaria)) {
+            this.isSecretaria = true;
+        } else {
+            this.proyectoService.getSupervisor(this.idProyecto).subscribe(supervisor => {
+                if (supervisor.idUsuario == this.idUsuario.toString()) {
+                    this.isSupervisor = true;
+                    this.actualizarMenu();
+                }
+            });
+            this.proyectoService.getUsuarioContraparte(this.idProyecto).subscribe(contraparte => {
+                if (contraparte.idUsuario == this.idUsuario.toString()) {
+                    this.isContraparte = true;
+                }
+            });
+            this.proyectoService.getUsuarioAsesor(this.idProyecto).subscribe(asesor => {
+                if (asesor.idUsuario == this.idUsuario.toString()) {
+                    this.isContraparte = true;
+                }
+            })
+            this.proyectoService.getCoordinadorCarrera(this.idProyecto).subscribe(coordinadorC => {
+                if (coordinadorC.idUsuario == this.idUsuario.toString()) {
+                    this.isCoordinadorCarrera = true;
+                }
+            })
+            this.usuarioService.getCoordinadorEps().subscribe(coordinadorEps => {
+                if (coordinadorEps.idUsuario == this.idUsuario.toString()) {
+                    this.isCoordinadorEps = true;
+                    this.actualizarMenu();
+                }
+            })
+        }
     }
 
     getTituloUsuario() {
@@ -240,7 +238,7 @@ export class ProyectoComponent implements OnInit {
             this.proyectoEditable = etapaProyectoActiva.editable;
             if (this.proyectoEditable) {
                 if (this.authService.getUserRole() == Role.Estudiante) {
-                    this.modoEdicion = true;
+                    this.modoEdicion = true && this.proyecto.activo!;
                 }
             }
             this.opcionesEtapaProyecto();
@@ -257,31 +255,25 @@ export class ProyectoComponent implements OnInit {
         });
     }
 
+
     getElementosDeProyecto() {
         this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_TITULO).subscribe(elementoProyecto => {
             this.elementoTitulo = elementoProyecto;
         });
-        this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_ANTEPROYECTO).subscribe(elementoProyecto => {
-            this.elementoAnteproyecto = elementoProyecto;
-        });
-        this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_INSCRIPCION).subscribe(elementoProyecto => {
-            this.elementoInscripcion = elementoProyecto;
-        });
-        this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_PROPEDEUTICO).subscribe(elementoProyecto => {
-            this.elementoPropedeutico = elementoProyecto;
-        });
-        this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_NACIMIENTO).subscribe(elementoProyecto => {
-            this.elementoNacimiento = elementoProyecto;
-        });
-        this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_CARTA).subscribe(elementoProyecto => {
-            this.elementoCarta = elementoProyecto;
-        });
-        this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_FINIQUITO).subscribe(elementoProyecto => {
-            this.elementoFiniquito = elementoProyecto;
-        });
+        if (this.idEtapaActiva == 11 || this.idEtapaActiva == 12) {
+            this.proyectoService.getConvocatoriaExamenGeneral(this.idProyecto).subscribe(convocatoria => {
+                this.convocatoriaGenerada = convocatoria;
+            });
+        }
+        if (this.idEtapaActiva == 13){
+            this.proyectoService.getActaExamenGeneral(this.idProyecto).subscribe(acta=>{
+                this.actaGenerada=acta;
+            })
+        }
     }
 
     opcionesEtapaProyecto() {
+        console.log('etapa: ', this.idEtapaActiva)
         switch (this.idEtapaActiva) {
             case EtapaUtils.CREACION_PROYECTO:
                 this.etapaCreacion();
@@ -303,12 +295,19 @@ export class ProyectoComponent implements OnInit {
                 this.getConvocatoria();
                 this.etapaIngresarNota();
                 break;
+            case EtapaUtils.CARGA_CARTA_ACEPTACION:
+                this.getActa();
+                this.etapaHabilitacionBitacora();
+                break;
             case EtapaUtils.HABILITAR_BITACORA:
                 this.getActa();
                 this.etapaHabilitacionBitacora();
                 break;
             case EtapaUtils.BITACORA:
                 this.etapaBitacora();
+                break;
+            case EtapaUtils.CARGA_CONVOCATORIA_EXAMEN_GENERAL:
+                this.etapaCargarConvocatoria();
                 break;
             default:
                 break;
@@ -372,6 +371,7 @@ export class ProyectoComponent implements OnInit {
     }
 
     getConvocatoria() {
+        console.log('get convocatoria');
         this.proyectoService.getConvocatoriaAnteproyecto(this.idProyecto).subscribe(convocatoria => {
             this.convocatoriaGenerada = convocatoria;
         });
@@ -395,13 +395,13 @@ export class ProyectoComponent implements OnInit {
     }
 
     etapaCargarConvocatoria() {
-        if (this.authService.getUserRole() == Role.CoordinadorEps) {
+        /*if (this.authService.getUserRole() == Role.CoordinadorEps) {
             this.convocatoriaAnteproyectoFirmadaBloqueado = false;
             this.elementoConvocatoriaAnteproyectoFirmada = {};
         }
         this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_CONVOCATORIA_ANTEPROYECTO).subscribe(elementoProyecto => {
             this.elementoConvocatoriaAnteproyecto = elementoProyecto;
-        });
+        });*/
     }
 
     modificarEvaluacion() {
@@ -409,9 +409,6 @@ export class ProyectoComponent implements OnInit {
     }
 
     etapaIngresarNota() {
-        this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_CONVOCATORIA_ANTEPROYECTO_FIRMADA).subscribe(elementoProyecto => {
-            this.elementoConvocatoriaAnteproyectoFirmada = elementoProyecto;
-        });
         if (this.authService.getUserRole() == Role.Supervisor) {
             this.boton1 = {
                 accion: this.modificarEvaluacion.bind(this),
@@ -429,12 +426,12 @@ export class ProyectoComponent implements OnInit {
     }
 
     etapaHabilitacionBitacora() {
-        this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_CARTA_ACEPTACION_CONTRAPARTE).subscribe(elementoProyecto => {
+        /*this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_CARTA_ACEPTACION_CONTRAPARTE).subscribe(elementoProyecto => {
             this.elementoCartaAceptacionContraparte = elementoProyecto;
         }, (error) => {
-            this.cartaAceptacionContraparteBloqueado = false;
+            this.cartaAceptacionBloqueado = false;
             this.elementoCartaAceptacionContraparte = {};
-        });
+        });*/
     }
 
     etapaBitacora() {
@@ -459,38 +456,8 @@ export class ProyectoComponent implements OnInit {
         this.router.navigate(['gestiones/evaluar-proyecto'], { state: { data: this.idProyecto } });
     }
 
-    guardarConvocatoria() {
-        this.confirmationService.confirm({
-            key: 'confirm1',
-            message: '¿Estas seguro de subir la convocatoria seleccionada?',
-            acceptLabel: "Si",
-            icon: 'pi pi-check',
-            accept: () => {
-                this.proyectoService.cargarConvocatoria(this.idProyecto, this.elementoConvocatoriaAnteproyectoFirmada?.file).subscribe(proyecto => {
-                    this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios guardados', detail: 'Se ha cargado la convocatoria exitosamente' });
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 2000);
-                });
-            }
-        });
-    }
-
-    guardarCartaAceptacion() {
-        this.confirmationService.confirm({
-            key: 'confirm1',
-            message: '¿Estas seguro de subir la carta de aceptacion?',
-            acceptLabel: "Si",
-            icon: 'pi pi-check',
-            accept: () => {
-                this.proyectoService.cargarCartaAceptacionContraparte(this.idProyecto, this.elementoCartaAceptacionContraparte?.file).subscribe(proyecto => {
-                    this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios guardados', detail: 'Se ha cargado la convocatoria exitosamente' });
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 2000);
-                });
-            }
-        });
+    cargarDocumento() {
+        this.router.navigate(['gestiones/cargar-documento'], { state: { data: this.idProyecto } });
     }
 
     finalizarBitacora() {
@@ -499,41 +466,6 @@ export class ProyectoComponent implements OnInit {
 
     listaProyectos() {
         this.router.navigate(['gestiones/listado']);
-    }
-
-    cargarConvocatoria(event: any) {
-        this.convocatoriaFirmada = event.currentFiles[0];
-        this.boton3.mostrar = false;
-
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-
-            let blob = new Blob([this.convocatoriaFirmada], { type: this.convocatoriaFirmada.type });
-            let url = window.URL.createObjectURL(blob);
-
-            this.convocatoriaUrl = this.sanitizer.bypassSecurityTrustUrl(url);
-
-        };
-        reader.readAsDataURL(this.convocatoriaFirmada);
-
-        this.boton1 = {
-            accion: this.cancelarCambios.bind(this),
-            mostrar: true,
-            icono: 'pi pi-times',
-            titulo: 'Cancelar'
-        }
-        this.boton2 = {
-            accion: this.guardarConvocatoria.bind(this),
-            mostrar: true,
-            icono: 'pi pi-save',
-            titulo: 'Guardar'
-        }
-
-    }
-
-    createDownloadUrl(fileContent: string): string {
-        const blob = new Blob([fileContent], { type: 'application/octet-stream' });
-        return URL.createObjectURL(blob);
     }
 
     solicitarRevision() {
@@ -597,7 +529,26 @@ export class ProyectoComponent implements OnInit {
                 });
             }
         });
+    }
 
+    aprobarInformeFinalSupervisor() {
+        this.confirmationService.confirm({
+            key: 'confirm1',
+            message: '¿Estas seguro de aprobar el informe final?',
+            acceptLabel: "Si",
+            icon: 'pi pi-check',
+            accept: () => {
+                this.proyectoService.aprobacionInformeFinalSupervisor(this.idProyecto).subscribe(() => {
+                    this.messageService.add({ key: 'tst', severity: 'success', summary: 'Informe Final Aprobado', detail: 'Se ha aprobado el informe final exitosamente' });
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                }, (error) => {
+                    console.log('error: ', error)
+                    this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'Error: ' + error.error });
+                });
+            }
+        });
     }
 
     aprobarCambiosSupervisor() {
@@ -748,186 +699,6 @@ export class ProyectoComponent implements OnInit {
         });
     }
 
-    //Elemento Anteproyecto Acciones
-
-    modificarElementoAnteproyecto() {
-        this.anteproyectoBloqueado = false;
-        this.elementoAnteproyecto = {};
-    }
-
-    cancelarElementoAnteproyecto() {
-        this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_ANTEPROYECTO).subscribe(elementoProyecto => {
-            this.elementoAnteproyecto = elementoProyecto;
-            this.anteproyectoBloqueado = true;
-        }, (error) => {
-            //if (error.status != 404) 
-            this.elementoAnteproyecto = undefined;
-            this.anteproyectoBloqueado = true;
-        })
-    }
-
-    guardarElementoAnteproyecto() {
-        this.proyectoService.agregarElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_ANTEPROYECTO, this.elementoAnteproyecto!)
-            .subscribe(elementoProyecto => {
-                this.elementoAnteproyecto = elementoProyecto;
-                this.anteproyectoBloqueado = true;
-                this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios guardados', detail: 'Se cambiado el anteproyecto exitosamente.' });
-            }, (error) => {
-                this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo cambiar el anteproyecto' });
-            })
-    }
-
-    //Inscripcion
-
-    modificarElementoInscripcion() {
-        this.inscripcionBloqueado = false;
-        this.elementoInscripcion = {};
-    }
-
-    cancelarElementoInscripcion() {
-        this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_INSCRIPCION).subscribe(elementoProyecto => {
-            this.elementoInscripcion = elementoProyecto;
-            this.inscripcionBloqueado = true;
-        }, (error) => {
-            this.inscripcionBloqueado = true;
-            this.elementoInscripcion = undefined
-        })
-    }
-
-    guardarElementoInscripcion() {
-        this.proyectoService.agregarElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_INSCRIPCION, this.elementoInscripcion!)
-            .subscribe(elementoProyecto => {
-                this.elementoAnteproyecto = elementoProyecto;
-                this.inscripcionBloqueado = true;
-                this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios guardados', detail: 'Se cambiado la constancia de inscripcion exitosamente.' });
-            }, (error) => {
-                this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo cambiar la constancia de inscripcion' });
-            })
-    }
-
-    //Propedeutico
-
-    modificarElementoPropedeutico() {
-        this.propedeuticoBloqueado = false;
-        this.elementoPropedeutico = {};
-    }
-
-    cancelarElementoPropedeutico() {
-        this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_PROPEDEUTICO).subscribe(elementoProyecto => {
-            this.elementoPropedeutico = elementoProyecto;
-            this.propedeuticoBloqueado = true;
-        }, (error) => {
-            this.propedeuticoBloqueado = true;
-            this.elementoPropedeutico = undefined;
-        })
-    }
-
-    guardarElementoPropedeutico() {
-        this.proyectoService.agregarElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_PROPEDEUTICO, this.elementoPropedeutico!)
-            .subscribe(elementoProyecto => {
-                this.elementoPropedeutico = elementoProyecto;
-                this.propedeuticoBloqueado = true;
-                this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios guardados', detail: 'Se cambiado la constancia de propedeutico exitosamente.' });
-            }, (error) => {
-                this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo cambiar la constancia de propedeutico' });
-            })
-    }
-
-    //nacimiento
-
-    modificarElementoNacimiento() {
-        this.nacimientoBloqueado = false;
-        this.elementoNacimiento = {};
-    }
-
-    cancelarElementoNacimiento() {
-        this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_NACIMIENTO).subscribe(elementoProyecto => {
-            this.elementoNacimiento = elementoProyecto;
-            this.nacimientoBloqueado = true;
-        }, (error) => {
-            this.nacimientoBloqueado = true;
-            this.elementoNacimiento = undefined;
-        })
-    }
-
-    guardarElementoNacimiento() {
-        this.proyectoService.agregarElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_NACIMIENTO, this.elementoNacimiento!)
-            .subscribe(elementoProyecto => {
-                this.elementoNacimiento = elementoProyecto;
-                this.nacimientoBloqueado = true;
-                this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios guardados', detail: 'Se ha cambiado el certificado de nacimiento exitosamente.' });
-            }, (error) => {
-                this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo cambiar el certificado de nacimiento' });
-            })
-    }
-
-    //carta
-
-    modificarElementoCarta() {
-        this.cartaBloqueado = false;
-        this.elementoCarta = {};
-    }
-
-    cancelarElementoCarta() {
-        this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_CARTA).subscribe(elementoProyecto => {
-            this.elementoCarta = elementoProyecto;
-            this.cartaBloqueado = true;
-        }, (error) => {
-            this.cartaBloqueado = true;
-            this.elementoCarta = undefined;
-        })
-    }
-
-    guardarElementoCarta() {
-        this.proyectoService.agregarElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_CARTA, this.elementoCarta!)
-            .subscribe(elementoProyecto => {
-                this.elementoCarta = elementoProyecto;
-                this.cartaBloqueado = true;
-                this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios guardados', detail: 'Se ha cambiado la carta de asesor exitosamente.' });
-            }, (error) => {
-                this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo cambiar la carta de asesor' });
-            })
-    }
-
-    //Finiquito AEIO
-
-    modificarElementoFiniquito() {
-        this.finiquitoBloqueado = false;
-        this.elementoFiniquito = {};
-    }
-
-    cancelarElementoFiniquito() {
-        this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_FINIQUITO).subscribe(elementoProyecto => {
-            this.elementoFiniquito = elementoProyecto;
-            this.finiquitoBloqueado = true;
-        }, (error) => {
-            this.elementoFiniquito = undefined;
-            this.finiquitoBloqueado = true;
-        })
-    }
-
-    guardarElementoFiniquito() {
-        this.proyectoService.agregarElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_FINIQUITO, this.elementoFiniquito!)
-            .subscribe(elementoProyecto => {
-                this.elementoFiniquito = elementoProyecto;
-                this.finiquitoBloqueado = true;
-                this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios guardados', detail: 'Se cambiado finiquito AEIO exitosamente.' });
-            }, (error) => {
-                this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo cambiar el finiquito AEIO' });
-            })
-    }
-
-    guardarElementoConvocatoriaAnteproyectoFirmada() {
-        this.proyectoService.agregarElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_CONVOCATORIA_ANTEPROYECTO_FIRMADA, this.elementoConvocatoriaAnteproyectoFirmada!)
-            .subscribe(elementoProyecto => {
-                this.elementoConvocatoriaAnteproyectoFirmada = elementoProyecto;
-                this.convocatoriaAnteproyectoFirmadaBloqueado = true;
-                this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios guardados', detail: 'Se cambiado finiquito AEIO exitosamente.' });
-            }, (error) => {
-                this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo cambiar el finiquito AEIO' });
-            })
-    }
-
     cancelarElementoConvocatoriaAnteproyectoFirmada() {
         window.location.reload();
     }
@@ -1069,7 +840,7 @@ export class ProyectoComponent implements OnInit {
         const nuevoAsesor: Usuario = {
             nombreCompleto: "",
             correo: "",
-            direccion: "",
+            //direccion: "",
             dpi: "",
             telefono: "",
             numeroColegiado: "",
@@ -1099,26 +870,6 @@ export class ProyectoComponent implements OnInit {
                 }
             });
         }
-    }
-
-    eliminarFiniquito() {
-        this.confirmationService.confirm({
-            key: 'confirm1',
-            message: '¿Estas seguro de eliminar el finiquito?',
-            acceptLabel: "Si",
-            icon: 'pi pi-trash',
-            accept: () => {
-                console.log('elemento: ', this.elementoFiniquito);
-                this.proyectoService.desactivarElementoProyecto(this.elementoFiniquito!.idElementoProyecto!)
-                    .subscribe(response => {
-                        this.elementoFiniquito = undefined;
-                        this.messageService.add({
-                            key: 'tst', severity: 'success',
-                            summary: 'Finiquito eliminado', detail: 'Se ha eliminado el finiquito exitosamente'
-                        });
-                    });
-            }
-        });
     }
 
     cancelarAsesorTecnico(asesor: any) {
@@ -1177,5 +928,71 @@ export class ProyectoComponent implements OnInit {
             key: 'tst', severity: 'success',
             summary: summary, detail: detail
         });
+    }
+
+    finalizarProyecto() {
+        this.confirmationService.confirm({
+            key: 'confirm1',
+            message: '¿Estas seguro de finalizar este proyecto?',
+            acceptLabel: "Si",
+            icon: 'pi pi-exclamation-circle',
+            accept: () => {
+                this.proyectoService.finalizarProyecto(this.idProyecto, { comentario: this.comentarioFinalizarBitacora }).subscribe(proyecto => {
+                    this.mensajeExito("Proyecto Finalizado", "se ha finalizado el proyecto exitosamente");
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                })
+            }
+        });
+    }
+
+    opcionFinalizarProyecto() {
+        this.confirmationService.confirm({
+            key: 'confirm1',
+            message: '¿Estas seguro de finalizar este proyecto?',
+            acceptLabel: "Si",
+            icon: 'pi pi-exclamation-circle',
+            accept: () => {
+                this.finalizaProyecto = true;
+            }
+        });
+    }
+
+    actualizarMenu() {
+        this.opciones = [
+            {
+                label: 'Cambiar Supervisor',
+                icon: 'pi pi-fw pi-users',
+                visible: this.isCoordinadorEps && this.idEtapaActiva > 2,
+                command: () => {
+                    this.cambiarSupervisor();
+                }
+            },
+            {
+                label: 'Cambiar Asesor',
+                icon: 'pi pi-fw pi-users',
+                visible: (this.isSupervisor || this.isCoordinadorEps) && this.idEtapaActiva > 3,
+                command: () => {
+                    this.cambiarAsesor();
+                }
+            },
+            {
+                label: 'Cambiar Contraparte',
+                icon: 'pi pi-fw pi-users',
+                visible: (this.isSupervisor || this.isCoordinadorEps) && this.idEtapaActiva > 8,
+                command: () => {
+                    this.cambiarContraparte();
+                }
+            },
+            {
+                label: 'Finalizar Proyecto',
+                icon: 'pi pi-fw pi-stop-circle',
+                visible: this.isSupervisor && this.proyecto.activo,
+                command: () => {
+                    this.opcionFinalizarProyecto();
+                }
+            }
+        ];
     }
 }

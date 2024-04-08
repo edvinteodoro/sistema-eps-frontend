@@ -1,18 +1,19 @@
 <div class="card">
     <p-toast></p-toast>
-    <div class="flex md:flex-row justify-content-between align-items-center">
-        <div class="flex md:flex-row">
-            <h5 class="titulo">Proyectos</h5>
+    <h5 class="titulo">Proyectos</h5>
+    <div class="grid p-fluid mt-3">
+        <div class="field col-12 md:col-6 pb-0">
+            <input pInputText placeholder="Nombre" [(ngModel)]="nombreFilter" />
         </div>
-        <span class="block mt-2 p-input-icon-left">
-            <p-button icon="pi pi-ellipsis-v" styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
-        </span>
+        <div class="field col-12 md:col-5 pb-0">
+            <input pInputText placeholder="Registro Academico" [(ngModel)]="registroFilter" />
+        </div>
+        <div class="field col-12 md:col-1 pb-0">
+            <p-button icon="pi pi-search" styleClass="p-button-rounded p-button-secondary p-button-outlined"
+                (click)="buscar()"></p-button>
+        </div>
     </div>
-    <p-table [value]="proyectos" 
-        [paginator]="true" 
-        [rows]="10" 
-        [lazy]="true"
-        (onLazyLoad)="loadProyectos($event)"
+    <p-table [value]="proyectos" [paginator]="true" [rows]="10" [lazy]="true" (onLazyLoad)="loadProyectos($event)"
         [totalRecords]="totalRecords">
 
         <ng-template pTemplate="header">
@@ -43,19 +44,24 @@
                 <td style="width:10%; min-width:8rem;">
                     <span class="p-column-title">Estado</span>
                     <p-tag *ngIf="proyecto.activo" severity="success" value="ACTIVO"></p-tag>
-                    <p-tag *ngIf="!proyecto.activo" severity="danger" value="INACTIVO"></p-tag>
+                    <p-tag *ngIf="!proyecto.activo" severity="danger" value="FINALIZADO"></p-tag>
                 </td>
                 <td>
                     <div class="flex gap-2">
                         <div>
-                            <p-button *ngIf="proyecto.etapaActiva && rolUsuario==proyecto.etapaActiva.rol.titulo" icon="pi pi-eye" styleClass="p-button-rounded p-button-danger p-button-outlined"
+                            <p-button
+                                *ngIf="(proyecto.etapaActiva.rol && rolUsuario==proyecto.etapaActiva.rol.titulo) && proyecto.activo"
+                                icon="pi pi-eye" styleClass="p-button-rounded p-button-danger p-button-outlined"
                                 title="Ver Proyecto" (click)="revisarProyecto(proyecto)"></p-button>
-                            <p-button *ngIf="!proyecto.etapaActiva || rolUsuario!=proyecto.etapaActiva.rol.titulo" icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-outlined"
+                            <p-button
+                                *ngIf="(!proyecto.etapaActiva.rol || rolUsuario!=proyecto.etapaActiva.rol.titulo) || !proyecto.activo"
+                                icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-outlined"
                                 title="Ver Proyecto" (click)="revisarProyecto(proyecto)"></p-button>
                         </div>
                         <div *ngIf="mostrarOpcionBitacora">
-                            <p-button icon="pi pi-book" styleClass="p-button-rounded p-button-secondary p-button-outlined"
-                                title="Ver Bitacora" (click)="revisarBitacora(proyecto)"></p-button>
+                            <p-button icon="pi pi-book"
+                                styleClass="p-button-rounded p-button-secondary p-button-outlined" title="Ver Bitacora"
+                                (click)="revisarBitacora(proyecto)"></p-button>
                         </div>
                     </div>
                 </td>

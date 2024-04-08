@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from 'src/app/demo/api/product';
 import { MenuItem, MessageService } from 'primeng/api';
-import { Table } from 'primeng/table';
 import { Proyecto } from 'src/app/model/Proyecto';
 import { ProyectoService } from 'src/app/services/proyecto.service';
 import { Router } from '@angular/router';
@@ -20,7 +18,10 @@ export class ListadoComponent implements OnInit {
     cols: any[] = [];
     proyectoActivo?: Proyecto;
     totalRecords!: number;
-    loading:boolean=false;
+    loading: boolean = false;
+
+    nombreFilter: string = '';
+    registroFilter: string = '';
 
     constructor(private bitacoraService: BitacoraService,
         private proyectoService: ProyectoService, private authService: AuthService,
@@ -31,9 +32,9 @@ export class ListadoComponent implements OnInit {
         this.loading = true;
         this.bitacoraService.getBitacoras(0, 10).subscribe(response => {
             this.bitacoras = response.content;
-            this.loading=false;
-        },(error)=>{
-            this.loading=false;
+            this.loading = false;
+        }, (error) => {
+            this.loading = false;
         });
         /*
         if (this.authService.getUserRole() == Role.Estudiante) {
@@ -53,7 +54,7 @@ export class ListadoComponent implements OnInit {
 
     loadBitacoras(event: any) {
         this.bitacoras = [];
-        let page =  event.first/ 10;
+        let page = event.first / 10;
         this.bitacoraService.getBitacoras(page, 10).subscribe(response => {
             this.bitacoras = response.content;
             this.totalRecords = response.totalElements;
@@ -61,6 +62,10 @@ export class ListadoComponent implements OnInit {
     }
 
     revisarBitacora(bitacora: Bitacora) {
-        this.router.navigate(['bitacoras/bitacora'], { state: { data: bitacora.idBitacora}});
+        this.router.navigate(['bitacoras/bitacora'], { state: { data: bitacora.idBitacora } });
+    }
+
+    buscar(){
+        
     }
 }

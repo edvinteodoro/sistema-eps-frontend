@@ -5,6 +5,7 @@ export interface Etapa {
     idEtapa: number;
     nombre: string;
     rol:Rol;
+    descripcion:string;
     //icono:String;
     //activo:boolean;
     //editable:boolean;

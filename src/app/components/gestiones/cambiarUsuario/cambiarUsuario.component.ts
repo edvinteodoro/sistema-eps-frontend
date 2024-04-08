@@ -34,7 +34,7 @@ export class CambiarUsuarioComponent implements OnInit {
 
     constructor(private location: Location, private router: Router,
         private proyectoService: ProyectoService, private usuarioService: UsuarioService,
-        private messageService: MessageService) { }
+        private messageService: MessageService, private confirmationService: ConfirmationService) { }
 
 
     ngOnInit() {
@@ -66,21 +66,21 @@ export class CambiarUsuarioComponent implements OnInit {
         if (this.opcion === 1) {
             this.proyectoService.getPersonaAsesor(this.idProyecto).subscribe(asesor => {
                 this.usuario = asesor;
-                this.usuarioService.getUsuarios(0, 15, Role.ID_ASESOR).subscribe(response => {
+                this.usuarioService.getUsuarios(0, 15,undefined, Role.ID_ASESOR).subscribe(response => {
                     this.usuariosLista = response.content;
                 })
             });
         } else if (this.opcion === 2) {
             this.proyectoService.getSupervisor(this.idProyecto).subscribe(supervisor => {
                 this.usuario = supervisor;
-                this.usuarioService.getUsuarios(0, 15, Role.ID_SUPERVISOR).subscribe(response => {
+                this.usuarioService.getUsuarios(0, 15,undefined, Role.ID_SUPERVISOR).subscribe(response => {
                     this.usuariosLista = response.content;
                 })
             });
         } else if (this.opcion === 3) {
-            this.proyectoService.getSupervisor(this.idProyecto).subscribe(supervisor => {
-                this.usuario = supervisor;
-                this.usuarioService.getUsuarios(0, 15, Role.ID_CONTRAPARTE).subscribe(response => {
+            this.proyectoService.getUsuarioContraparte(this.idProyecto).subscribe(contraparte => {
+                this.usuario = contraparte;
+                this.usuarioService.getUsuarios(0, 15,undefined, Role.ID_CONTRAPARTE).subscribe(response => {
                     this.usuariosLista = response.content;
                 })
             });
@@ -106,7 +106,8 @@ export class CambiarUsuarioComponent implements OnInit {
 
     buscar() {
         if (this.opcion === 1) {
-            this.usuarioService.getUsuarios(0, 10, Role.ID_ASESOR, this.nombresFiltro, this.colegiadoFiltro).subscribe(response => this.usuariosLista = response.context);
+            this.usuarioService.getUsuarios(0, 10, {nombreCompleto:this.nombresFiltro, numeroColegiado:this.colegiadoFiltro},Role.ID_ASESOR)
+            .subscribe(response => this.usuariosLista = response.context);
         }
     }
 
@@ -117,29 +118,54 @@ export class CambiarUsuarioComponent implements OnInit {
     }
 
     cambiarSupervisor() {
-        this.proyectoService.actualizarSupervisorProyecto(this.idProyecto, this.usuarioSeleccionado).subscribe(() => {
-            this.messageService.add({ key: 'tst', severity: 'success', summary: 'Supervisor asignado', detail: 'Se ha asignado supervisor exitosamente.' });
-            setTimeout(() => {
-                this.router.navigate(['gestiones/proyecto']);
-            }, 2000);
+        this.confirmationService.confirm({
+            key: 'confirm1',
+            message: '¿Estas seguro de asignar el supervisor de proyecto?',
+            acceptLabel: "Si",
+            icon: 'pi pi-check-circle',
+            accept: () => {
+                this.proyectoService.actualizarSupervisorProyecto(this.idProyecto, this.usuarioSeleccionado).subscribe(() => {
+                    this.messageService.add({ key: 'tst', severity: 'success', summary: 'Supervisor asignado', detail: 'Se ha asignado supervisor exitosamente.' });
+                    setTimeout(() => {
+                        this.router.navigate(['gestiones/proyecto']);
+                    }, 2000);
+                });
+            }
         });
     }
 
     cambiarAsesor() {
-        this.proyectoService.actualizarAsesorProyecto(this.idProyecto, this.usuarioSeleccionado).subscribe(() => {
-            this.messageService.add({ key: 'tst', severity: 'success', summary: 'Asesor asignado', detail: 'Se ha asignado asesor exitosamente.' });
-            setTimeout(() => {
-                this.router.navigate(['gestiones/proyecto']);
-            }, 2000);
+
+        this.confirmationService.confirm({
+            key: 'confirm1',
+            message: '¿Estas seguro de asignar el asesor de proyecto?',
+            acceptLabel: "Si",
+            icon: 'pi pi-check-circle',
+            accept: () => {
+                this.proyectoService.actualizarAsesorProyecto(this.idProyecto, this.usuarioSeleccionado).subscribe(() => {
+                    this.messageService.add({ key: 'tst', severity: 'success', summary: 'Asesor asignado', detail: 'Se ha asignado asesor exitosamente.' });
+                    setTimeout(() => {
+                        this.router.navigate(['gestiones/proyecto']);
+                    }, 2000);
+                });
+            }
         });
     }
 
     cambiarContraparte() {
-        this.proyectoService.actualizarContraparteProyecto(this.idProyecto, this.usuarioSeleccionado).subscribe(() => {
-            this.messageService.add({ key: 'tst', severity: 'success', summary: 'Responsable de contraparte asignado', detail: 'Se ha asignado responsable de contraparte exitosamente.' });
-            setTimeout(() => {
-                this.router.navigate(['gestiones/proyecto']);
-            }, 2000);
+        this.confirmationService.confirm({
+            key: 'confirm1',
+            message: '¿Estas seguro de asignar el representante de contraparte de proyecto?',
+            acceptLabel: "Si",
+            icon: 'pi pi-check-circle',
+            accept: () => {
+                this.proyectoService.actualizarContraparteProyecto(this.idProyecto, this.usuarioSeleccionado).subscribe(() => {
+                    this.messageService.add({ key: 'tst', severity: 'success', summary: 'Responsable de contraparte asignado', detail: 'Se ha asignado responsable de contraparte exitosamente.' });
+                    setTimeout(() => {
+                        this.router.navigate(['gestiones/proyecto']);
+                    }, 2000);
+                });
+            }
         });
     }
 

@@ -65,4 +65,8 @@ export class BitacoraService {
     return this.http.get<any>('http://localhost:8080/api/bitacoras/' + idBitacora + '/comentarios', { params });
   }
 
+  revisarBitacora(idBitacora:number):Observable<Bitacora>{
+    return this.http.put<any>('http://localhost:8080/api/bitacoras/'+idBitacora+'/revisar',{});  
+  }
+
 }

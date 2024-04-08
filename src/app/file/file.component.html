@@ -1,0 +1,42 @@
+<div class="input-container">
+  <label *ngIf="!elementoProyecto && elementoBloqueado"> -- Sin elemento --</label>
+  <p-button *ngIf="elementoProyecto && elementoBloqueado" label="Descargar documento" class="button"
+    (onClick)="descargar(elementoProyecto)"></p-button>
+  <p-fileUpload class="file-uploader" *ngIf="modoEdicion && !elementoBloqueado"
+    (onSelect)="cargarElemento($event,elementoProyecto!)" chooseLabel="Cargar Documento" mode="basic"
+    [multiple]="false" accept=".pdf" [maxFileSize]="1000000">
+  </p-fileUpload>
+  <p-button icon="pi pi-pencil" *ngIf="modoEdicion && elementoBloqueado"
+    styleClass="p-button-rounded p-button-text p-button-raised" (onClick)="modificarElemento()"></p-button>
+    <p-button icon="pi pi-trash" *ngIf="modoEdicion && elementoBloqueado && elementoProyecto!=undefined && eliminable"
+    styleClass="p-button-rounded p-button-text p-button-raised"
+    (onClick)="eliminarElemento()"></p-button>
+  <p-button *ngIf="modoEdicion && !elementoBloqueado" icon="pi pi-times"
+    styleClass="p-button-rounded p-button-text p-button-raised" (onClick)="cancelarElemento()"></p-button>
+  <p-button *ngIf="modoEdicion && !elementoBloqueado && elementoProyecto!.file!=undefined" icon="pi pi-save"
+    styleClass="p-button-rounded p-button-text p-button-raised" (onClick)="guardarElemento()"></p-button>
+</div>
+<style>
+  .input-container {
+		display: flex;
+		/* Enable Flexbox layout */
+		align-items: center;
+		/* Vertically center items */
+		justify-content: space-between;
+		/* Add space between items */
+	}
+
+	/* Optional: Adjust the padding or margins if needed */
+	.input-container text {
+		margin-right: 10px;
+		/* Adjust the spacing between textarea and button */
+	}
+
+  .button {
+		width: 100%;
+	}
+
+	.file-uploader {
+		width: 100%;
+	}
+</style>

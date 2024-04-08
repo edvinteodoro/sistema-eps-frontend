@@ -1,10 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MenuItem, MessageService } from 'primeng/api';
+import { Component, OnInit } from '@angular/core';
+import { MessageService } from 'primeng/api';
 import { ProductService } from 'src/app/demo/service/product.service';
 import { Usuario } from 'src/app/model/Usuario';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { Router } from '@angular/router';
-import { Paginator } from 'primeng/paginator';
 
 @Component({
     templateUrl: './listado.component.html',
@@ -46,8 +45,7 @@ export class ListadoComponent implements OnInit {
     }
 
     buscar() {
-        this.usuarioService.getUsuarios(0, 10, undefined, this.usuarioFilter.nombreCompleto, this.usuarioFilter.numeroColegiado,
-            this.usuarioFilter.registroAcademico).subscribe(response => {
+        this.usuarioService.getUsuarios(0, 10, this.usuarioFilter).subscribe(response => {
                 this.usuarios = response.content;
                 this.totalRecords = response.totalElements;
             });
@@ -57,8 +55,7 @@ export class ListadoComponent implements OnInit {
     loadUsuarios(event: any) {
         this.usuarios = [];
         let page =  event.first/ 10;
-        this.usuarioService.getUsuarios(page, 10,undefined, this.usuarioFilter.nombreCompleto, this.usuarioFilter.numeroColegiado,
-            this.usuarioFilter.registroAcademico).subscribe(response => {
+        this.usuarioService.getUsuarios(page, 10,this.usuarioFilter).subscribe(response => {
             this.usuarios = response.content;
             this.loading = false;
             this.totalRecords = response.totalElements;
