@@ -22,6 +22,9 @@ export class ListadoComponent implements OnInit {
     totalRecords!: number;
     loading:boolean=false;
 
+    nombreFilter: string = '';
+    registroFilter: string = '';
+
     constructor(private actaService: ActaService,
         private proyectoService: ProyectoService, private authService: AuthService,
         private messageService: MessageService,
@@ -33,14 +36,6 @@ export class ListadoComponent implements OnInit {
     }
 
     getActas(){
-        this.actaService.getActas(0, 10).subscribe(response => {
-            console.log('response: ',response);
-            this.actas = response.content;
-            console.log('actas: ',this.actas);
-            this.loading=false;
-        },(error)=>{
-            this.showErrorPage();
-        });
     }
 
     showErrorPage(){
@@ -51,7 +46,7 @@ export class ListadoComponent implements OnInit {
         this.loading = true;
         this.actas = [];
         let page = event / 10;
-        this.actaService.getActas(page, event).subscribe(response => {
+        this.actaService.getActas(page, event,this.nombreFilter,this.registroFilter).subscribe(response => {
             this.actas = response.content;
             this.loading = false;
             this.totalRecords = response.totalElements;
@@ -66,5 +61,12 @@ export class ListadoComponent implements OnInit {
         let result={class:'danger',value:'Pendiente'};
         if(revisado)result={class:'success',value:'Finalizado'};
         return result;
+    }
+
+    buscar() {
+        this.actaService.getActas(0, 10, this.nombreFilter, this.registroFilter).subscribe(response => {
+            this.actas = response.content;
+            this.totalRecords = response.totalElements;
+        });
     }
 }

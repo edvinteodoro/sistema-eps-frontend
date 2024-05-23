@@ -76,17 +76,17 @@ export class ActaComponent implements OnInit {
             accept: () => {
                 if (this.acta.tipo == 'ANTEPROYECTO') {
                     this.proyectoService.generarActaAnteproyecto(this.acta.proyecto!.idProyecto!, this.acta).subscribe(acta => {
-                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios aprobados', detail: 'Se han aprobado los cambios exitosamente' });
+                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios aprobados', detail: 'El acta se ha generado exitosamente' });
                         this.acta = acta;
                     })
                 } else if (this.acta.tipo == 'EXAMEN GENERAL') {
                     this.proyectoService.generarActaExamenGeneral(this.acta.proyecto!.idProyecto!, this.acta).subscribe(acta => {
-                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios aprobados', detail: 'Se han aprobado los cambios exitosamente' });
+                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios aprobados', detail: 'El acta se ha generado exitosamente' });
                         this.acta = acta;
                     })
                 } else if (this.acta.tipo == 'FINALIZACION') {
                     this.proyectoService.generarActaAprobacion(this.acta.proyecto!.idProyecto!, this.acta).subscribe(acta => {
-                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios aprobados', detail: 'Se han aprobado los cambios exitosamente' });
+                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios aprobados', detail: 'El acta se ha generado exitosamente' });
                         this.acta = acta;
                     })
                 }

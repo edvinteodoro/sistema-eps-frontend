@@ -36,6 +36,7 @@
                 <th pSortableColumn="nombres">Nombre</th>
                 <th pSortableColumn="colegiado">Colegiado</th>
                 <th pSortableColumn="registro">Registro</th>
+                <th pSortableColumn="registro">Dpi</th>
                 <th pSortableColumn="telefono">Telefono</th>
                 <th pSortableColumn="rol">Tipo de Usuario</th>
                 <th pSortableColumn="estado">Estado</th>
@@ -44,27 +45,31 @@
         </ng-template>
         <ng-template pTemplate="body" let-usuario>
             <tr>
-                <td style="width:14%; min-width:10rem;">
+                <td style="width:20%; min-width:10rem;">
                     <span class="p-column-title">Nombre</span>
                     {{usuario.nombreCompleto}}
                 </td>
-                <td style="width:14%; min-width:10rem;">
+                <td style="width:10%; min-width:10rem;">
                     <span class="p-column-title">Colegiado</span>
                     {{usuario.numeroColegiado}}
                 </td>
-                <td style="width:14%; min-width:10rem;">
+                <td style="width:10%; min-width:10rem;">
                     <span class="p-column-title">Registro</span>
                     {{usuario.registroAcademico}}
                 </td>
-                <td style="width:14%; min-width:10rem;">
+                <td style="width:10%; min-width:10rem;">
+                    <span class="p-column-title">Dpi</span>
+                    {{usuario.dpi}}
+                </td>
+                <td style="width:10%; min-width:10rem;">
                     <span class="p-column-title">Telefono</span>
                     {{usuario.telefono}}
                 </td>
-                <td style="width:14%; min-width:10rem;">
+                <td style="width:20%; min-width:10rem;">
                     <span class="p-column-title">Tipo de usuario</span>
                     {{usuario.rol.titulo}}
                 </td>
-                <td style="width:14%; min-width: 10rem;"><span class="p-column-title">Estado</span>
+                <td style="width:10%; min-width: 10rem;"><span class="p-column-title">Estado</span>
                     <p-tag *ngIf="usuario.activo" severity="success" value="ACTIVO"></p-tag>
                     <p-tag *ngIf="!usuario.activo" severity="danger" value="INACTIVO"></p-tag>
                 </td>

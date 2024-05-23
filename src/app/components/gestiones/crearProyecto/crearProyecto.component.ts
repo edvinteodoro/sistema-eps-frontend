@@ -34,6 +34,8 @@ interface Campo {
 })
 
 export class CrearProyectoComponent implements OnInit {
+    EtapaUtils=EtapaUtils;
+
     //elementos de proyecto
     elementoTitulo: ElementoProyecto = {};
     elementoAnteproyecto: ElementoProyecto = {};
@@ -97,11 +99,14 @@ export class CrearProyectoComponent implements OnInit {
 
     departamentos!: Departamento[];
     departamentoSeleccionado!: Departamento;
+    departamentoProyectoSeleccionado!:Departamento;
     departamentoFiltrado!: Departamento[];
 
 
     municipios!: Municipio[];
+    municipiosProyecto!: Municipio[];
     municipioSeleccionado!: Municipio;
+    municipioProyectoSeleccionado!: Municipio;
     municipioFiltrado!: Municipio[];
 
     constructor(private confirmationService: ConfirmationService,
@@ -114,7 +119,7 @@ export class CrearProyectoComponent implements OnInit {
         this.tituloService.getTitulos().subscribe(titulos => this.titulos = titulos);
         this.usuarioService.getUsuarioCarreras().subscribe(carreras => this.carreras = carreras);
         this.departamentoService.getDepartamentos().subscribe(departamentos => this.departamentos = departamentos);
-        this.elementoService.getElementos(EtapaUtils.CREACION_PROYECTO).subscribe(elementos => {
+        this.elementoService.getElementos(EtapaUtils.ID_ETAPA_CREACION_PROYECTO).subscribe(elementos => {
             this.elementos = elementos;
             this.elementos.forEach(elemento => {
                 this.elementosProyecto.push({ elemento: elemento });
@@ -269,7 +274,7 @@ export class CrearProyectoComponent implements OnInit {
     }
 
     siguiente() {
-        if (this.validarCampos(this.institucion, []) && this.validarCampos(this.contraparte, [])) {
+        if (this.validarCampos(this.institucion, ['direccionProyecto','municipioProyecto','coordenadaProyecto']) && this.validarCampos(this.contraparte, [])) {
             this.proyecto.institucion = this.institucion;
             this.proyecto.contraparte = this.contraparte;
             this.crearProyecto = false;
@@ -331,6 +336,19 @@ export class CrearProyectoComponent implements OnInit {
         this.municipioFiltrado = filtered;
     }
 
+    filtrarMunicipioProyecto(event: AutoCompleteCompleteEvent) {
+        let filtered: Municipio[] = [];
+        let query = event.query;
+
+        for (let i = 0; i < (this.municipiosProyecto as Municipio[]).length; i++) {
+            let municipio = (this.municipiosProyecto as Municipio[])[i];
+            if (municipio.nombre.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                filtered.push(municipio);
+            }
+        }
+        this.municipioFiltrado = filtered;
+    }
+
     AgregarAsesorTecnico() {
         const nuevoAsesor: Usuario = {
             nombreCompleto: "",
@@ -351,7 +369,15 @@ export class CrearProyectoComponent implements OnInit {
         this.departamentoService.getMunicipios(this.departamentoSeleccionado.idDepartamento).subscribe(municipios => this.municipios = municipios);
     }
 
+    getMunicipiosProyecto() {
+        this.departamentoService.getMunicipios(this.departamentoProyectoSeleccionado.idDepartamento).subscribe(municipios => this.municipiosProyecto = municipios);
+    }
+
     seleccionarMunicipio() {
         this.institucion.municipio = this.municipioSeleccionado;
+    }
+
+    seleccionarMunicipioProyecto() {
+        this.institucion.municipioProyecto = this.municipioProyectoSeleccionado;
     }
 }

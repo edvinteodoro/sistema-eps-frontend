@@ -15,13 +15,6 @@
 			<label class="sub-title">Cargue los siguentes documentos para finalizar bitacora:</label>
 		</div>
 		<div class="field col-12 md:col-12 pb-0">
-			<label>Informe Final:</label>
-			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadInformeFinal($event)"
-				(onRemove)="onRemoveInformeFinal()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
-				[auto]="true">
-			</p-fileUpload>
-		</div>
-		<div class="field col-12 md:col-12 pb-0">
 			<label>Carta de finalizacion de asesor:</label>
 			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadCartaFinalizacion($event)"
 				(onRemove)="onRemoveCartaFinalizacion()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
@@ -40,7 +33,7 @@
 		<div class="field col-12 md:col-6 pb-0">
 			<p-button icon="pi pi-check" styleClass="p-button-outlined" label="Finalizar Bitacora"
 				(click)="finalizarBitacora()"
-				[disabled]="!informeFinal || !cartaFinalizacion || !finiquitoContraparte"></p-button>
+				[disabled]="!cartaFinalizacion || !finiquitoContraparte"></p-button>
 		</div>`
 	</div>
 </div>

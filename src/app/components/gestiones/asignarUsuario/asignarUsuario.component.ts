@@ -136,6 +136,10 @@ export class AsignarUsuarioComponent implements OnInit {
         }
     }
 
+    getCarrerasString(usuario: Usuario): string {
+        return usuario.carreras!.map(carrera => carrera.nombre).join(', ');
+    }
+
     buscar() {
         this.getUsuarios();
     }

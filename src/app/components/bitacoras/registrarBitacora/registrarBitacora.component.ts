@@ -14,6 +14,8 @@ import { ElementoUtils, EtapaUtils } from 'src/app/model/Utils';
 })
 
 export class RegistrarBitacoraComponent implements OnInit {
+    EtapaUtils = EtapaUtils;
+
     isLoading: boolean = false;
     validarCampos: boolean = false;
 
@@ -39,7 +41,7 @@ export class RegistrarBitacoraComponent implements OnInit {
             for (const proyecto of proyectos) {
                 this.proyectoService.getEtapaActiva(proyecto.idProyecto!).subscribe(etapaActiva => {
                     console.log('etapa: ', etapaActiva);
-                    if (etapaActiva.etapa.idEtapa! === EtapaUtils.BITACORA) {
+                    if (etapaActiva.etapa.idEtapa! === EtapaUtils.ID_ETAPA_BITACORA) {
                         this.proyectoService.getElementoProyecto(proyecto.idProyecto!, ElementoUtils.ID_ELEMENTO_TITULO)
                             .subscribe(elementoTitulo => {
                                 proyecto.elementoTitulo = elementoTitulo;

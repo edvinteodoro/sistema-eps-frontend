@@ -42,8 +42,10 @@
 		<div class="grid p-fluid mt-3">
 			<div class="field col-12 md:col-6 pb-0">
 				<label>Coordinador de EPS:</label>
-				<input pInputText id="coordinador" type="text" disabled="true" class="title"
+				<input *ngIf="coordinadorEps" pInputText type="text" disabled="true" class="title"
 					[(ngModel)]="coordinadorEps.nombreCompleto" />
+				<input *ngIf="!coordinadorEps" pInputText type="text" disabled="true" class="ng-invalid ng-dirty"
+					placeholder="No se encontro usuario Coordinador EPS" />
 			</div>
 		</div>
 	</app-phase>
@@ -51,10 +53,10 @@
 		<div class="grid p-fluid mt-3">
 			<div class="field col-12 md:col-6 pb-0">
 				<label>Coordinador de Carrera:</label>
-				<input *ngIf="coordinadorCarrera!=undefined" pInputText id="coordinador" type="text" disabled="true"
+				<input *ngIf="coordinadorCarrera" pInputText id="coordinador" type="text" disabled="true"
 					class="title" [(ngModel)]="coordinadorCarrera.nombreCompleto" />
-				<input *ngIf="coordinadorCarrera==undefined" pInputText id="coordinador" type="text" disabled="true"
-					class="title" placeholder="No se encontro usuario Coordinador Carrera" />
+					<input *ngIf="!coordinadorCarrera" pInputText type="text" disabled="true"
+					class="ng-invalid ng-dirty" placeholder="No se encontro usuario Coordinador Carrera" />
 			</div>
 			<div class="field col-12 md:col-6 pb-0">
 				<label>Supervisor:</label>
@@ -63,7 +65,9 @@
 			</div>
 			<div class="field col-12 md:col-6 pb-0">
 				<label>Asesor:</label>
-				<input pInputText disabled="true" class="title" type="text" [(ngModel)]="asesor.nombreCompleto" />
+				<input *ngIf="asesor" pInputText disabled="true" class="title" type="text" [(ngModel)]="asesor.nombreCompleto" />
+				<input *ngIf="!asesor" pInputText disabled="true" type="text" class="ng-invalid ng-dirty"
+					placeholder="No se encontro usuario asesor" />
 			</div>
 		</div>
 	</app-phase>
@@ -99,21 +103,21 @@
 			</div>
 			<div class="field col-12 md:col-6 pb-0">
 				<label>Fecha de acta:</label>
-				<input *ngIf="idEtapaActiva!=17" [(ngModel)]="acta.fechaEvaluacion" pInputText />
-				<p-calendar *ngIf="idEtapaActiva==17" dateFormat="dd-mm-yy" inputId="dateformat"
+				<input *ngIf="idEtapaActiva!=EtapaUtils.ID_ETAPA_ACTA_FINALIZACION" [(ngModel)]="acta.fechaEvaluacion" pInputText />
+				<p-calendar *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_ACTA_FINALIZACION" dateFormat="dd-mm-yy" inputId="dateformat"
 					[(ngModel)]="acta.fechaEvaluacionInput"></p-calendar>
 			</div>
 			<div class="field col-12 md:col-6 pb-0">
-				<label htmlFor="fecha">Hora de inicio de acta: </label>
+				<label htmlFor="fecha"><b>Hora de inicio de acta:</b>Utilize formato de 24 horas</label>
 				<input pInputText [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(acta.horaInicioEvaluacion)}"
-					[(ngModel)]="acta.horaInicioEvaluacion" />
+					[(ngModel)]="acta.horaInicioEvaluacion" placeholder="ej: 18:00"/>
 			</div>
 			<div class="field col-12 md:col-6 pb-0">
-				<label htmlFor="fecha">Hora de finalizacion de acta: </label>
+				<label htmlFor="fecha"><b>Hora de finalizacion de acta:</b>Utilize formato de 24 horas</label>
 				<input pInputText [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(acta.horaFinEvaluacion)}"
-					[(ngModel)]="acta.horaFinEvaluacion" />
+					[(ngModel)]="acta.horaFinEvaluacion" placeholder="ej: 18:30"/>
 			</div>
-			<div class="field col-12 md:col-12 pb-0">
+			<div *ngIf="idEtapaActiva!=EtapaUtils.ID_ETAPA_ACTA_FINALIZACION" class="field col-12 md:col-12 pb-0">
 				<label htmlFor="fecha">Comentario: </label>
 				<textarea [(ngModel)]="acta.comentario" rows="4"
 					placeholder="Indicar los cambios solicitados al estudiante" pInputTextarea></textarea>

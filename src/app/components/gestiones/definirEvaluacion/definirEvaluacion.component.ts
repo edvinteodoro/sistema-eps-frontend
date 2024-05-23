@@ -23,6 +23,8 @@ import { Convocatoria } from 'src/app/model/Convocatoria';
 })
 
 export class DefinirEvaluacionComponent implements OnInit {
+    EtapaUtils=EtapaUtils;
+
     idProyecto!: number;
     proyecto!: Proyecto;
 
@@ -98,8 +100,8 @@ export class DefinirEvaluacionComponent implements OnInit {
     getEtapaActiva() {
         this.proyectoService.getEtapaActiva(this.idProyecto).subscribe(etapaActiva => {
             this.etapaActiva = etapaActiva.etapa;
-            if (this.etapaActiva.idEtapa == EtapaUtils.CARGA_CONVOCATORIA
-                || this.etapaActiva.idEtapa == EtapaUtils.SUBIR_NOTA) {
+            if (this.etapaActiva.idEtapa == EtapaUtils.ID_ETAPA_CARGA_CONVOCATORIA_ANTEPROYECTO
+                || this.etapaActiva.idEtapa == EtapaUtils.ID_ETAPA_EVALUACION_ANTEPROYECTO) {
                 this.proyectoService.getConvocatoriaAnteproyecto(this.idProyecto).subscribe(convocatoria => {
                     this.convocatoriaGenerada = convocatoria;
                     this.mostrarFecha = true;
@@ -134,8 +136,8 @@ export class DefinirEvaluacionComponent implements OnInit {
     }
 
     aceptar() {
-        if (this.etapaActiva.idEtapa == EtapaUtils.DEFINIR_FECHA_EVALUACION
-        ||this.etapaActiva.idEtapa == EtapaUtils.CONVOCATORIA_EXAMEN_GENERAL) {
+        if (this.etapaActiva.idEtapa == EtapaUtils.ID_ETAPA_CONVOCATORIA_ANTEPROYECTO
+        ||this.etapaActiva.idEtapa == EtapaUtils.ID_ETAPA_CONVOCATORIA_EXAMEN_GENERAL) {
             this.definirEvaluacion();
         } else {
             console.log('put')
@@ -161,6 +163,7 @@ export class DefinirEvaluacionComponent implements OnInit {
                             }, 2000);
                         },
                         error: (error) => {
+                            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: 'No se puede crear la convocatoria' });
                             console.log(error);
                         }
                     });

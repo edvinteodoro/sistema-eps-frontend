@@ -15,7 +15,7 @@
 			<h5 class="titulo">Proyecto Eps</h5>
 		</div>
 		<p-menu #menu [popup]="true" [model]="opciones"></p-menu>
-		<span  class="block mt-2 p-input-icon-left">
+		<span class="block mt-2 p-input-icon-left">
 			<p-button icon="pi pi-ellipsis-v" (click)="menu.toggle($event)"
 				styleClass="p-button-rounded p-button-secondary p-button-text"></p-button>
 		</span>
@@ -65,11 +65,16 @@
 						(onClick)="guardarSemestreProyecto()"></p-button>
 				</div>
 			</div>
-			<div *ngIf="idEtapaActiva==7 || idEtapaActiva==13" class="field col-12 md:col-12 pb-0">
+			<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CARTA_ACEPTACION_CONTRAPARTE || 
+			idEtapaActiva==EtapaUtils.ID_ETAPA_HABILITACION_BITACORA ||
+			idEtapaActiva==EtapaUtils.ID_ETAPA_REDACCION_ARTICULO" class="field col-12 md:col-12 pb-0">
 				<div class="card grid p-fluid mt-3">
 					<div class="field col-12 md:col-6 pb-0">
-						<label *ngIf="idEtapaActiva==7">Resultado de anteproyecto: </label>
-						<label *ngIf="idEtapaActiva==13">Resultado de examen general: </label>
+						<label *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CARTA_ACEPTACION_CONTRAPARTE||
+						idEtapaActiva==EtapaUtils.ID_ETAPA_HABILITACION_BITACORA">Resultado
+							de anteproyecto: </label>
+						<label *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REDACCION_ARTICULO">Resultado de examen
+							general: </label>
 						<input pInputText class="text" [disabled]="true" [(ngModel)]="actaGenerada.resultado" />
 					</div>
 					<div class="field col-12 md:col-6 pb-0">
@@ -83,8 +88,10 @@
 					</div>
 				</div>
 			</div>
-			<div *ngIf="idEtapaActiva==5 || idEtapaActiva==6 || idEtapaActiva==11 || idEtapaActiva==12"
-				class="field col-12 md:col-12 pb-0">
+			<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CONVOCATORIA_ANTEPROYECTO ||
+			idEtapaActiva==EtapaUtils.ID_ETAPA_EVALUACION_ANTEPROYECTO ||
+			idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CONVOCATORIA_EXAMEN_GENERAL ||
+			idEtapaActiva==EtapaUtils.ID_ETAPA_EXAMEN_GENERAL" class="field col-12 md:col-12 pb-0">
 				<div class="card grid p-fluid mt-3">
 					<div class="field col-12 md:col-6 pb-0">
 						<label>Fecha evaluacion programada: </label>
@@ -101,24 +108,26 @@
 						<textarea class="text" [disabled]="true" [(ngModel)]="convocatoriaGenerada.comentario"
 							pInputTextarea></textarea>
 					</div>
-					<div *ngIf="isCoordinadorEps && (idEtapaActiva==5 || idEtapaActiva==6)"
-						class="field col-12 md:col-12 pb-0">
+					<div *ngIf="isCoordinadorEps && (idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CONVOCATORIA_ANTEPROYECTO || 
+					idEtapaActiva==EtapaUtils.ID_ETAPA_EVALUACION_ANTEPROYECTO)" class="field col-12 md:col-12 pb-0">
 						<label>Convocatoria Generada: </label>
 						<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="false"
 							[idElemento]="ElementoUtils.ID_ELEMENTO_CONVOCATORIA_ANTEPROYECTO"></app-file>
 					</div>
-					<div *ngIf="isCoordinadorEps && (idEtapaActiva==11 || idEtapaActiva==12)"
-						class="field col-12 md:col-12 pb-0">
+					<div *ngIf="isCoordinadorEps && (idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CONVOCATORIA_EXAMEN_GENERAL || 
+					idEtapaActiva==EtapaUtils.ID_ETAPA_EXAMEN_GENERAL)" class="field col-12 md:col-12 pb-0">
 						<label>Convocatoria Generada: </label>
 						<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="false"
 							[idElemento]="ElementoUtils.ID_ELEMENTO_CONVOCATORIA_EXAMEN_GENERAL"></app-file>
 					</div>
-					<div *ngIf="idEtapaActiva==6 && !isEstudiante" class="field col-12 md:col-12 pb-0">
+					<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_EVALUACION_ANTEPROYECTO && !isEstudiante"
+						class="field col-12 md:col-12 pb-0">
 						<label>Convocatoria Firmada:</label>
 						<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="isCoordinadorEps"
 							[idElemento]="ElementoUtils.ID_ELEMENTO_CONVOCATORIA_ANTEPROYECTO_FIRMADA"></app-file>
 					</div>
-					<div *ngIf="idEtapaActiva==12 && !isEstudiante" class="field col-12 md:col-12 pb-0">
+					<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_EXAMEN_GENERAL && !isEstudiante"
+						class="field col-12 md:col-12 pb-0">
 						<label>Convocatoria Firmada:</label>
 						<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="isCoordinadorEps"
 							[idElemento]="ElementoUtils.ID_ELEMENTO_CONVOCATORIA_EXAMEN_GENERAL_FIRMADA"></app-file>
@@ -129,52 +138,53 @@
 					</div>
 				</div>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>16" class="field col-12 md:col-12 pb-0">
+			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>EtapaUtils.ID_ETAPA_DICTAMEN_REVISION" class="field col-12 md:col-12 pb-0">
 				<label>Carta de revisor</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="isSupervisor && proyecto.activo!"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_CARTA_REVISION"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps) && idEtapaActiva>16"
+			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps) && idEtapaActiva>EtapaUtils.ID_ETAPA_DICTAMEN_REVISION"
 				class="field col-12 md:col-12 pb-0">
 				<label>Dictamen supervisor</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="isSupervisor && proyecto.activo!"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_DICTAMEN_SUPERVISOR"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps) && idEtapaActiva>15"
+			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps) && idEtapaActiva>EtapaUtils.ID_ETAPA_REVISION_LINGUISTICA"
 				class="field col-12 md:col-12 pb-0">
 				<label>Constancia de revision linguistica</label>
-				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion"
+				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion || (idEtapaActiva==EtapaUtils.ID_ETAPA_DICTAMEN_REVISION && isEstudiante)"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_CONSTANCIA_LINGUISTICA"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps) && idEtapaActiva>13"
+			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps) && idEtapaActiva>EtapaUtils.ID_ETAPA_REDACCION_ARTICULO"
 				class="field col-12 md:col-12 pb-0">
 				<label>Carta de traductor jurado</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_CARTA_TRADUCTOR_JURADO"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps) && idEtapaActiva>13"
+			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps) && idEtapaActiva>EtapaUtils.ID_ETAPA_REDACCION_ARTICULO"
 				class="field col-12 md:col-12 pb-0">
 				<label>Articulo cientifico</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_ARTICULO"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps) && idEtapaActiva>9"
+			<div *ngIf="(isEstudiante || isSupervisor || isAsesor ||isCoordinadorEps) && idEtapaActiva>EtapaUtils.ID_ETAPA_CARGA_INFORME_FINAL"
 				class="field col-12 md:col-12 pb-0">
 				<label>Informe final</label>
-				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion"
+				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion || (idEtapaActiva==EtapaUtils.ID_ETAPA_CONVOCATORIA_EXAMEN_GENERAL && isEstudiante)"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_INFORME_FINAL"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>9" class="field col-12 md:col-12 pb-0">
+			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>EtapaUtils.ID_ETAPA_BITACORA" class="field col-12 md:col-12 pb-0">
 				<label>Finiquito de contraparte</label>
-				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion"
+				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion || (idEtapaActiva==EtapaUtils.ID_ETAPA_APROBACION_BITACORA && isEstudiante)"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_FINIQUITO_CONTRAPARTE"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>9" class="field col-12 md:col-12 pb-0">
+			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>EtapaUtils.ID_ETAPA_BITACORA" class="field col-12 md:col-12 pb-0">
 				<label>Carta de finalizacion asesor</label>
-				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion"
+				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion || (idEtapaActiva==EtapaUtils.ID_ETAPA_APROBACION_BITACORA && isEstudiante)"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_CARTA_FINALIZACION"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>7" class="field col-12 md:col-12 pb-0">
+			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>EtapaUtils.ID_ETAPA_CARGA_CARTA_ACEPTACION_CONTRAPARTE" 
+				class="field col-12 md:col-12 pb-0">
 				<label>Carta de aceptacion contraparte</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_CARTA_ACEPTACION_CONTRAPARTE"></app-file>
@@ -184,18 +194,18 @@
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_ANTEPROYECTO"></app-file>
 			</div>
-			<div class="field col-12 md:col-12 pb-0">
+			<div *ngIf="isEstudiante || isSecretaria || isSupervisor" class="field col-12 md:col-12 pb-0">
 				<label>Constancia de inscripcion</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_INSCRIPCION"></app-file>
 			</div>
-			<div class="field col-12 md:col-12 pb-0">
+			<div *ngIf="isEstudiante || isSecretaria || isSupervisor" class="field col-12 md:col-12 pb-0">
 				<label>Constancia de propedeutico</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_PROPEDEUTICO"></app-file>
 			</div>
 			<div *ngIf="isEstudiante || isSecretaria || isSupervisor" class="field col-12 md:col-12 pb-0">
-				<label>Solicitud estudiante</label>
+				<label>Solicitud a supervisor</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_SOLICITUD_ESTUDIANTE"></app-file>
 			</div>
@@ -228,52 +238,74 @@
 		</div>
 		<div *ngIf="proyecto.activo" class="grid p-fluid mt-3">
 			<div class="field col-12 md:col-6 pb-0">
-				<p-button *ngIf="idEtapaActiva==2 && !proyectoEditable && isSecretaria" icon="pi pi-comment"
-					styleClass="p-button-outlined" (click)="showDialog()" label="Solicitar Cambios"></p-button>
-				<p-button *ngIf="idEtapaActiva==3 && !proyectoEditable && isSupervisor" icon="pi pi-comment"
-					styleClass="p-button-outlined" (click)="showDialog()" label="Solicitar Cambios"></p-button>
-				<p-button *ngIf="(idEtapaActiva==6||idEtapaActiva==12) && isSupervisor" icon="pi pi-calendar"
-					focus="true" styleClass="p-button-outlined" (click)="modificarEvaluacion()"
+				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REVISION_SECRETARIA && 
+				!proyectoEditable && isSecretaria" icon="pi pi-comment" styleClass="p-button-outlined" (click)="showDialog()"
+					label="Solicitar Cambios"></p-button>
+				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REVISION_SUPERVISOR && 
+				!proyectoEditable && isSupervisor" icon="pi pi-comment" styleClass="p-button-outlined" (click)="showDialog()"
+					label="Solicitar Cambios"></p-button>
+				<p-button *ngIf="(idEtapaActiva==EtapaUtils.ID_ETAPA_EVALUACION_ANTEPROYECTO || 
+				idEtapaActiva==EtapaUtils.ID_ETAPA_EXAMEN_GENERAL) && isSupervisor" icon="pi pi-calendar" focus="true"
+					styleClass="p-button-outlined" (click)="modificarEvaluacion()"
 					label="Modificar Convocatoria"></p-button>
+				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_APROBACION_BITACORA && isSupervisor"
+					icon="pi pi-check" focus="true" styleClass="p-button-outlined" (click)="rechazarBitacora()"
+					label="Rechazar Bitacora"></p-button>
 			</div>
 			<div class="field col-12 md:col-6 pb-0">
-				<p-button *ngIf="idEtapaActiva<=3 && proyectoEditable && isEstudiante" icon="pi pi-send"
-					styleClass="p-button-outlined" (click)="solicitarRevision()" label="Solicitar Revision"></p-button>
-				<p-button *ngIf="idEtapaActiva==2 && !proyectoEditable && isSecretaria" icon="pi pi-check"
-					styleClass="p-button-outlined" (click)="aprobarCambiosSecretaria()" label="Aprobar"></p-button>
-				<p-button *ngIf="idEtapaActiva==3 && !proyectoEditable && isSupervisor" icon="pi pi-check"
-					styleClass="p-button-outlined" (click)="aprobarCambiosSupervisor()" label="Aprobar"></p-button>
-				<p-button *ngIf="(idEtapaActiva==4 || idEtapaActiva==10) && isSupervisor" icon="pi pi-calendar"
-					focus="true" styleClass="p-button-outlined" (click)="definirEvaluacion()"
+				<p-button *ngIf="idEtapaActiva<=EtapaUtils.ID_ETAPA_REVISION_SUPERVISOR && 
+				proyectoEditable && isEstudiante" icon="pi pi-send" styleClass="p-button-outlined" (click)="solicitarRevision()"
+					label="Solicitar Revision"></p-button>
+				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REVISION_SECRETARIA && 
+				!proyectoEditable && isSecretaria" icon="pi pi-check" styleClass="p-button-outlined"
+					(click)="aprobarCambiosSecretaria()" label="Aprobar"></p-button>
+				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REVISION_SUPERVISOR && 
+				!proyectoEditable && isSupervisor" icon="pi pi-check" styleClass="p-button-outlined"
+					(click)="aprobarCambiosSupervisor()" label="Aprobar"></p-button>
+				<p-button *ngIf="(idEtapaActiva==EtapaUtils.ID_ETAPA_CONVOCATORIA_ANTEPROYECTO || 
+				idEtapaActiva==EtapaUtils.ID_ETAPA_CONVOCATORIA_EXAMEN_GENERAL) && isSupervisor" icon="pi pi-calendar" focus="true"
+					styleClass="p-button-outlined" (click)="definirEvaluacion()"
 					label="Generar Convocatoria"></p-button>
-				<p-button *ngIf="(idEtapaActiva==5||idEtapaActiva==11) && isSupervisor" icon="pi pi-calendar"
+				<p-button *ngIf="(idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CONVOCATORIA_ANTEPROYECTO || 
+				idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CONVOCATORIA_EXAMEN_GENERAL) && isSupervisor" icon="pi pi-calendar"
 					focus="true" styleClass="p-button-outlined" (click)="modificarEvaluacion()"
 					label="Modificar Convocatoria"></p-button>
-				<p-button *ngIf="(idEtapaActiva==5 || idEtapaActiva==11) && isCoordinadorEps" icon="pi pi-pencil"
+				<p-button *ngIf="(idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CONVOCATORIA_ANTEPROYECTO || 
+				idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CONVOCATORIA_EXAMEN_GENERAL) && isCoordinadorEps" icon="pi pi-pencil"
 					focus="true" styleClass="p-button-outlined" (click)="cargarDocumento()"
 					label="Cargar Convocatoria"></p-button>
-				<p-button *ngIf="(idEtapaActiva==6 || idEtapaActiva==12) && isSupervisor" icon="pi pi-pencil"
-					focus="true" styleClass="p-button-outlined" (click)="crearActaAnteproyecto()"
-					label="Crear Acta"></p-button>
-				<p-button *ngIf="idEtapaActiva==7 && isEstudiante" icon="pi pi-pencil" focus="true"
-					styleClass="p-button-outlined" (click)="cargarDocumento()"
+				<p-button *ngIf="(idEtapaActiva==EtapaUtils.ID_ETAPA_EVALUACION_ANTEPROYECTO || 
+				idEtapaActiva==EtapaUtils.ID_ETAPA_EXAMEN_GENERAL) && isSupervisor" icon="pi pi-pencil" focus="true"
+					styleClass="p-button-outlined" (click)="crearActaAnteproyecto()" label="Crear Acta"></p-button>
+				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CARTA_ACEPTACION_CONTRAPARTE && isEstudiante"
+					icon="pi pi-pencil" focus="true" styleClass="p-button-outlined" (click)="cargarDocumento()"
 					label="Cargar Carta de Aceptacion"></p-button>
-				<p-button *ngIf="idEtapaActiva==8 && isSupervisor" icon="pi pi-check" focus="true"
-					styleClass="p-button-outlined" (click)="habilitarBitacora()" label="Habilitar Bitacora"></p-button>
-				<p-button *ngIf="idEtapaActiva==9 && isEstudiante" icon="pi pi-check" focus="true"
-					styleClass="p-button-outlined" (click)="finalizarBitacora()" label="Finalizar Bitacora"></p-button>
-				<p-button *ngIf="idEtapaActiva==13 && isEstudiante" icon="pi pi-pencil" focus="true"
-					styleClass="p-button-outlined" (click)="cargarDocumento()" label="Cargar Articulo"></p-button>
-				<p-button *ngIf="idEtapaActiva==14 && isSupervisor" icon="pi pi-check" styleClass="p-button-outlined"
-					(click)="aprobarInformeFinalSupervisor()" label="Aprobar Informe Final"></p-button>
-				<p-button *ngIf="idEtapaActiva==15 && isEstudiante" icon="pi pi-pencil" focus="true"
-					styleClass="p-button-outlined" (click)="cargarDocumento()"
+				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_HABILITACION_BITACORA && isSupervisor"
+					icon="pi pi-check" focus="true" styleClass="p-button-outlined" (click)="habilitarBitacora()"
+					label="Habilitar Bitacora"></p-button>
+				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_BITACORA && isEstudiante" icon="pi pi-check"
+					focus="true" styleClass="p-button-outlined" (click)="finalizarBitacora()"
+					label="Finalizar Bitacora"></p-button>
+				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_APROBACION_BITACORA && isSupervisor"
+					icon="pi pi-check" focus="true" styleClass="p-button-outlined" (click)="aprobarBitacora()"
+					label="Aprobar Bitacora"></p-button>
+				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_INFORME_FINAL && isEstudiante"
+					icon="pi pi-pencil" focus="true" styleClass="p-button-outlined" (click)="cargarDocumento()"
+					label="Cargar Informe Final"></p-button>
+				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REDACCION_ARTICULO && isEstudiante"
+					icon="pi pi-pencil" focus="true" styleClass="p-button-outlined" (click)="cargarDocumento()"
+					label="Cargar Articulo"></p-button>
+				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REVISION_INFORME_FINAL && isSupervisor"
+					icon="pi pi-check" styleClass="p-button-outlined" (click)="aprobarInformeFinalSupervisor()"
+					label="Aprobar Informe Final"></p-button>
+				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REVISION_LINGUISTICA && isEstudiante"
+					icon="pi pi-pencil" focus="true" styleClass="p-button-outlined" (click)="cargarDocumento()"
 					label="Cargar Constancia Linguistica"></p-button>
-				<p-button *ngIf="idEtapaActiva==16 && isSupervisor" icon="pi pi-pencil" focus="true"
-					styleClass="p-button-outlined" (click)="cargarDocumento()"
-					label="Cargar Dictamen y Carta"></p-button>
-				<p-button *ngIf="idEtapaActiva==17 && isCoordinadorEps" icon="pi pi-pencil" focus="true"
-					styleClass="p-button-outlined" (click)="crearActaAnteproyecto()"
+				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_DICTAMEN_REVISION && isSupervisor"
+					icon="pi pi-pencil" focus="true" styleClass="p-button-outlined" (click)="cargarDocumento()"
+					label="Cargar Dictamen y Carta Revision"></p-button>
+				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_ACTA_FINALIZACION && isCoordinadorEps"
+					icon="pi pi-pencil" focus="true" styleClass="p-button-outlined" (click)="crearActaAnteproyecto()"
 					label="Crear Acta Finalizacion"></p-button>
 			</div>
 		</div>
@@ -284,31 +316,52 @@
 				<label class="negrita">Datos de institucion</label>
 			</div>
 			<div class="grid p-fluid mt-3">
-				<div class="field col-12 md:col-6 pb-0">
-					<label>Nombre</label>
+				<div class="field col-12 md:col-12 pb-0">
+					<label>Nombre de Institucion</label>
 					<input [(ngModel)]="proyecto.institucion!.nombre" pInputText class="text"
 						[disabled]="!editarInstitucion" />
 				</div>
 				<div class="field col-12 md:col-6 pb-0">
-					<label>Departamento</label>
+					<label><b>Departamento:</b> Ubicacion de la institucion</label>
 					<p-autoComplete [(ngModel)]="departamentoSeleccionado" [dropdown]="true" class="text"
 						[suggestions]="departamentoFiltrado" (completeMethod)="filtrarDepartamento($event)"
 						field="nombre" [disabled]="!editarInstitucion"
 						(onSelect)="cambiarDepartamento($event)"></p-autoComplete>
 				</div>
 				<div class="field col-12 md:col-6 pb-0">
-					<label>Municipio</label>
+					<label><b>Municipio:</b> Ubicacion de la institucion</label>
 					<p-autoComplete [(ngModel)]="proyecto.institucion!.municipio" [dropdown]="true" class="text"
 						[suggestions]="municipioFiltrado" (completeMethod)="filtrarMunicipio($event)" field="nombre"
 						[disabled]="!editarInstitucion"></p-autoComplete>
 				</div>
-				<div class="field col-12 md:col-6 pb-0">
-					<label>Direccion</label>
+				<div class="field col-12 md:col-12 pb-0">
+					<label><b>Direccion:</b> Dirreccion exacta de la institucion</label>
 					<input [(ngModel)]="proyecto.institucion!.direccion" pInputText class="text"
 						[disabled]="!editarInstitucion" />
 				</div>
 				<div class="field col-12 md:col-6 pb-0">
-					<label>Coordenadas</label>
+					<label><b>Departamento proyecto (opcional):</b> Ubicacion fisica donde se ejecutara el
+						proyecto</label>
+					<p-autoComplete [(ngModel)]="departamentoProyectoSeleccionado" [dropdown]="true" class="text"
+						[suggestions]="departamentoFiltrado" (completeMethod)="filtrarDepartamento($event)"
+						field="nombre" [disabled]="!editarInstitucion" (onSelect)="cambiarDepartamentoProyecto($event)"
+						[showClear]="true" (onClear)="clearMuncipioProyecto()"></p-autoComplete>
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label><b>Municipio proyecto (opcional):</b> Ubicacion fisica donde se ejecutara el proyecto</label>
+					<p-autoComplete [(ngModel)]="proyecto.institucion!.municipioProyecto" [dropdown]="true" class="text"
+						[suggestions]="municipioFiltrado" (completeMethod)="filtrarMunicipioProyecto($event)"
+						field="nombre" [disabled]="!editarInstitucion" [showClear]="true"
+						(onClear)="clearMuncipioProyecto()"></p-autoComplete>
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label><b>Direccion Proyecto (opcional):</b> Dirreccion exacta donde se ejecutara el
+						proyecto</label>
+					<input [(ngModel)]="proyecto.institucion!.direccionProyecto" pInputText class="text"
+						[disabled]="!editarInstitucion" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0">
+					<label><b>Coordenada proyecto (opcional): </b>Coordenadas de google maps (x,y)</label>
 					<input [(ngModel)]="proyecto.institucion!.coordenadaProyecto" pInputText class="text"
 						[disabled]="!editarInstitucion" />
 				</div>

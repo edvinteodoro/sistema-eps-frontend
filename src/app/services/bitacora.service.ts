@@ -17,7 +17,7 @@ export class BitacoraService {
     params = params.set('page', page.toString());
     params = params.set('size', size.toString());
     if (nombres != undefined) {
-      params = params.set('nombres', nombres);
+      params = params.set('nombre', nombres);
     }
     if (registro != undefined) {
       params = params.set('registroAcademico', registro);

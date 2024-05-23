@@ -32,20 +32,19 @@
 				</div>
 				<div class="field col-12 md:col-6 pb-0">
 					<label><b>Departamento proyecto (opcional):</b> Ubicacion fisica donde se ejecutara el proyecto</label>
-					<p-autoComplete [(ngModel)]="departamentoSeleccionado" [dropdown]="true"
+					<p-autoComplete [(ngModel)]="departamentoProyectoSeleccionado" [dropdown]="true"
 						[suggestions]="departamentoFiltrado" (completeMethod)="filtrarDepartamento($event)"
-						(onSelect)="getMunicipios()" field="nombre"></p-autoComplete>
+						(onSelect)="getMunicipiosProyecto()" field="nombre"></p-autoComplete>
 				</div>
 				<div class="field col-12 md:col-6 pb-0">
 					<label><b>Municipio proyecto (opcional):</b> Ubicacion fisica donde se ejecutara el proyecto</label>
-					<p-autoComplete [(ngModel)]="municipioSeleccionado" [dropdown]="true"
-						[suggestions]="municipioFiltrado" (completeMethod)="filtrarMunicipio($event)"
-						(onSelect)="seleccionarMunicipio()" field="nombre"></p-autoComplete>
+					<p-autoComplete [(ngModel)]="municipioProyectoSeleccionado" [dropdown]="true"
+						[suggestions]="municipioFiltrado" (completeMethod)="filtrarMunicipioProyecto($event)"
+						(onSelect)="seleccionarMunicipioProyecto()" field="nombre"></p-autoComplete>
 				</div>
 				<div class="field col-12 md:col-6 pb-0">
 					<label><b>Direccion Proyecto (opcional):</b> Dirreccion exacta donde se ejecutara el proyecto</label>
-					<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(institucion.direccion)}"
-						[(ngModel)]="institucion.direccion" pInputText type="text" />
+					<input [(ngModel)]="institucion.direccionProyecto" pInputText type="text" />
 				</div>
 				<div class="field col-12 md:col-6 pb-0">
 					<label><b>Coordenada proyecto (opcional): </b>Coordenadas de google maps (x,y)</label>

@@ -25,6 +25,7 @@ import { Convocatoria } from 'src/app/model/Convocatoria';
 })
 
 export class EvaluarProyectoComponent implements OnInit {
+    EtapaUtils=EtapaUtils;
     idProyecto!: number;
     idEtapaActiva!:number;
     proyecto!: Proyecto;
@@ -100,15 +101,15 @@ export class EvaluarProyectoComponent implements OnInit {
         this.proyectoService.getEtapaActiva(this.idProyecto).subscribe(etapaActiva => {
             this.etapaActiva = etapaActiva.etapa;
             this.idEtapaActiva=etapaActiva.etapa.idEtapa;
-            if (this.etapaActiva.idEtapa == EtapaUtils.CARGA_CONVOCATORIA
-                || this.etapaActiva.idEtapa == EtapaUtils.SUBIR_NOTA) {
+            if (this.etapaActiva.idEtapa == EtapaUtils.ID_ETAPA_CARGA_CONVOCATORIA_ANTEPROYECTO
+                || this.etapaActiva.idEtapa == EtapaUtils.ID_ETAPA_EVALUACION_ANTEPROYECTO) {
                 this.proyectoService.getConvocatoriaAnteproyecto(this.idProyecto).subscribe(convocatoria => {
                     this.convocatoriaGenerada = convocatoria;
                     this.acta.fechaEvaluacion = convocatoria.fechaEvaluacionFormat;
                     this.acta.horaInicioEvaluacion = convocatoria.horaEvaluacion;
                     this.acta.horaFinEvaluacion = convocatoria.horaEvaluacion;
                 });
-            }else if(this.etapaActiva.idEtapa == EtapaUtils.EXAMEN_GENERAL){
+            }else if(this.etapaActiva.idEtapa == EtapaUtils.ID_ETAPA_EXAMEN_GENERAL){
                 this.proyectoService.getConvocatoriaExamenGeneral(this.idProyecto).subscribe(convocatoria=>{
                     this.convocatoriaGenerada = convocatoria;
                     this.acta.fechaEvaluacion = convocatoria.fechaEvaluacionFormat;

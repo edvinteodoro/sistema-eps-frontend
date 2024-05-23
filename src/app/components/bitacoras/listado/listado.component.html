@@ -45,11 +45,11 @@
 					<i *ngIf="!bitacora.contieneInforme" class="pi pi-times"></i>
 				</td>
 				<td style="width:10%"><span class="p-column-title">Revision</span>
-					<span
+					<span title="supervisor"
 						[ngClass]="{'true-value': bitacora.revisionSupervisor, 'false-value': !bitacora.revisionSupervisor}">S</span>
-					<span
+					<span title="asesor"
 						[ngClass]="{'true-value': bitacora.revisionAsesor, 'false-value': !bitacora.revisionAsesor}">A</span>
-					<span
+					<span title="contraparte"
 						[ngClass]="{'true-value': bitacora.revisionContraparte, 'false-value': !bitacora.revisionContraparte}">C</span>
 				</td>
 				<td>

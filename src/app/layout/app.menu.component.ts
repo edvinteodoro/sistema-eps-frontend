@@ -32,11 +32,11 @@ export class AppMenuComponent implements OnInit {
             },*/
             {
                 label: 'Proyectos',
-                roles: [Role.Estudiante, Role.Asesor, Role.Secretaria, Role.Supervisor, Role.Coordinador, Role.CoordinadorEps],
+                roles: [Role.Estudiante, Role.Asesor, Role.Secretaria, Role.Supervisor, Role.Coordinador, Role.CoordinadorEps,Role.Contraparte],
                 items: [
                     {
                         label: 'Proyectos', icon: 'pi pi-fw pi-file', routerLink: ['/gestiones/listado'],
-                        roles: [Role.Asesor, Role.Estudiante, Role.Secretaria, Role.Supervisor, Role.Coordinador, Role.CoordinadorEps]
+                        roles: [Role.Asesor, Role.Estudiante, Role.Secretaria, Role.Supervisor, Role.Coordinador, Role.CoordinadorEps,Role.Contraparte]
                     },
                     {
                         label: 'Nuevo Proyecto', icon: 'pi pi-fw pi-plus-circle', routerLink: ['/gestiones/crear-proyecto'],
@@ -50,7 +50,7 @@ export class AppMenuComponent implements OnInit {
                 items: [
                     {
                         label: 'Bitacoras', icon: 'pi pi-fw pi-book', routerLink: ['/bitacoras/listado'],
-                        roles: [Role.Asesor, Role.Estudiante, Role.Supervisor, Role.Coordinador, Role.CoordinadorEps, Role.Coordinador]
+                        roles: [Role.Asesor, Role.Estudiante, Role.Supervisor, Role.Coordinador, Role.CoordinadorEps, Role.Coordinador,Role.Contraparte]
                     },
                     {
                         label: 'Registrar Bitacora', icon: 'pi pi-fw pi-plus-circle', routerLink: ['/bitacoras/registrar-bitacora'],
@@ -82,7 +82,7 @@ export class AppMenuComponent implements OnInit {
                     }
                 ]
             }, {
-                label: 'Extension EPS',
+                label: 'Prorrogas EPS',
                 roles: [Role.Estudiante, Role.Supervisor],
                 items: [
                     {

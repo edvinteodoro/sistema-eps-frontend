@@ -4,6 +4,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Proyecto } from 'src/app/model/Proyecto';
 import { ProyectoService } from 'src/app/services/proyecto.service';
 import { Router } from '@angular/router';
+import { EtapaUtils} from 'src/app/model/Utils';
 
 @Component({
     templateUrl: './cargarDocumento.component.html',
@@ -11,6 +12,7 @@ import { Router } from '@angular/router';
 })
 
 export class CargarDocumentoComponent implements OnInit {
+    EtapaUtils = EtapaUtils;
 
     idProyecto!:number;
     proyecto!:Proyecto;
@@ -61,7 +63,7 @@ export class CargarDocumentoComponent implements OnInit {
             acceptLabel: "Si",
             icon: 'pi pi-check-circle',
             accept: () => {
-                this.proyectoService.finalizarBitacora(this.idProyecto, this.informeFinal,this.cartaFinalizacion,this.finiquitoContraparte).subscribe(() => {
+                this.proyectoService.finalizarBitacora(this.idProyecto,this.cartaFinalizacion,this.finiquitoContraparte).subscribe(() => {
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Bitacora Finalizada', detail: 'Se ha finalizado la bitacora exitosamente.' });
                     setTimeout(() => {
                         this.router.navigate(['gestiones/proyecto']);
@@ -80,6 +82,23 @@ export class CargarDocumentoComponent implements OnInit {
             accept: () => {
                 this.proyectoService.cargarConvocatoria(this.idProyecto, this.convocatoriaFirmada).subscribe(() => {
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Convocatoria Cargada', detail: 'Se ha cargado la convocatoria exitosamente' });
+                    setTimeout(() => {
+                        this.router.navigate(['gestiones/proyecto']);
+                    }, 2000);
+                });
+            }
+        });
+    }
+
+    cargarInformeFinal(){
+        this.confirmationService.confirm({
+            key: 'confirm1',
+            message: '¿Estas seguro de cargar el informe final?',
+            acceptLabel: "Si",
+            icon: 'pi pi-check-circle',
+            accept: () => {
+                this.proyectoService.cargarInformeFinal(this.idProyecto, this.informeFinal).subscribe(() => {
+                    this.messageService.add({ key: 'tst', severity: 'success', summary: 'Informe Final Cargada', detail: 'Se ha cargado el informe final exitosamente' });
                     setTimeout(() => {
                         this.router.navigate(['gestiones/proyecto']);
                     }, 2000);

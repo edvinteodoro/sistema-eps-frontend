@@ -14,7 +14,6 @@ export class FinalizarBitacoraComponent implements OnInit {
 
     idProyecto!:number;
     proyecto!:Proyecto;
-    informeFinal!: any;
     cartaFinalizacion!: any;
     finiquitoContraparte!: any;
 
@@ -45,7 +44,7 @@ export class FinalizarBitacoraComponent implements OnInit {
             acceptLabel: "Si",
             icon: 'pi pi-check-circle',
             accept: () => {
-                this.proyectoService.finalizarBitacora(this.idProyecto, this.informeFinal,this.cartaFinalizacion,this.finiquitoContraparte).subscribe(() => {
+                this.proyectoService.finalizarBitacora(this.idProyecto,this.cartaFinalizacion,this.finiquitoContraparte).subscribe(() => {
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Bitacora Finalizada', detail: 'Se ha finalizado la bitacora exitosamente.' });
                     setTimeout(() => {
                         this.router.navigate(['gestiones/proyecto']);
@@ -53,14 +52,6 @@ export class FinalizarBitacoraComponent implements OnInit {
                 });
             }
         });
-    }
-
-    onUploadInformeFinal(event: any) {
-        this.informeFinal = event.currentFiles[0];
-    }
-
-    onRemoveInformeFinal() {
-        this.informeFinal = undefined;
     }
 
     onUploadCartaFinalizacion(event: any) {

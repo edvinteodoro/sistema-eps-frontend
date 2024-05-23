@@ -36,6 +36,7 @@ interface AutoCompleteCompleteEvent {
 
 export class ProyectoComponent implements OnInit {
     ElementoUtils = ElementoUtils;
+    EtapaUtils = EtapaUtils;
 
     idProyecto!: number;
     proyecto!: Proyecto;
@@ -51,9 +52,11 @@ export class ProyectoComponent implements OnInit {
     elementoTitulo: ElementoProyecto = {};
     departamentos!: Departamento[];
     departamentoSeleccionado!: Departamento;
+    departamentoProyectoSeleccionado?: Departamento;
     departamentoFiltrado!: Departamento[];
     municipios!: Municipio[];
     municipioSeleccionado!: Municipio;
+    municipiosProyecto!: Municipio[];
     municipioFiltrado!: Municipio[];
 
     tagMsg!: string;
@@ -75,15 +78,6 @@ export class ProyectoComponent implements OnInit {
     mostrarInformacionEstudiante: boolean = true;
     convocatoriaFirmada: any;
     convocatoriaUrl: any = '';
-    boton2: any = {
-        mostrar: false
-    }
-    boton1: any = {
-        mostrar: false
-    }
-    boton3: any = {
-        mostrar: false
-    }
 
     isSupervisor: boolean = false;
     isSecretaria: boolean = false;
@@ -177,7 +171,7 @@ export class ProyectoComponent implements OnInit {
             });
             this.proyectoService.getUsuarioAsesor(this.idProyecto).subscribe(asesor => {
                 if (asesor.idUsuario == this.idUsuario.toString()) {
-                    this.isContraparte = true;
+                    this.isAsesor = true;
                 }
             })
             this.proyectoService.getCoordinadorCarrera(this.idProyecto).subscribe(coordinadorC => {
@@ -231,6 +225,14 @@ export class ProyectoComponent implements OnInit {
                 this.departamentoService.getMunicipios(this.departamentoSeleccionado.idDepartamento)
                     .subscribe(municipios => this.municipios = municipios);
             });
+        if (this.proyecto.institucion?.municipioProyecto != undefined) {
+            this.departamentoService.getDepartamento(this.proyecto.institucion.municipioProyecto.idMunicipio)
+                .subscribe(departamento => {
+                    this.departamentoProyectoSeleccionado = departamento;
+                    this.departamentoService.getMunicipios(this.departamentoSeleccionado.idDepartamento)
+                        .subscribe(municipios => this.municipiosProyecto = municipios);
+                })
+        }
     }
     getEtapaActiva() {
         this.proyectoService.getEtapaActiva(this.idProyecto).subscribe(etapaProyectoActiva => {
@@ -247,12 +249,24 @@ export class ProyectoComponent implements OnInit {
     }
 
     getUsuariosAsignados() {
-        this.proyectoService.getPersonaAsesor(this.idProyecto).subscribe(asesor => {
-            this.proyecto.asesor = asesor;
-        });
-        this.proyectoService.getPersonaContraparte(this.idProyecto).subscribe(contraparte => {
-            this.proyecto.contraparte = contraparte;
-        });
+        if (this.idEtapaActiva > EtapaUtils.ID_ETAPA_REVISION_SUPERVISOR) {
+            this.proyectoService.getUsuarioAsesor(this.idProyecto).subscribe(asesor => {
+                this.proyecto.asesor = asesor;
+            });
+        } else {
+            this.proyectoService.getPersonaAsesor(this.idProyecto).subscribe(asesor => {
+                this.proyecto.asesor = asesor;
+            });
+        }
+        if (this.idEtapaActiva > EtapaUtils.ID_ETAPA_HABILITACION_BITACORA) {
+            this.proyectoService.getUsuarioContraparte(this.idProyecto).subscribe(contraparte => {
+                this.proyecto.contraparte = contraparte;
+            });
+        } else {
+            this.proyectoService.getPersonaContraparte(this.idProyecto).subscribe(contraparte => {
+                this.proyecto.contraparte = contraparte;
+            });
+        }
     }
 
 
@@ -260,54 +274,34 @@ export class ProyectoComponent implements OnInit {
         this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_TITULO).subscribe(elementoProyecto => {
             this.elementoTitulo = elementoProyecto;
         });
-        if (this.idEtapaActiva == 11 || this.idEtapaActiva == 12) {
+        if (this.idEtapaActiva == EtapaUtils.ID_ETAPA_CARGA_CONVOCATORIA_EXAMEN_GENERAL || this.idEtapaActiva == EtapaUtils.ID_ETAPA_EXAMEN_GENERAL) {
             this.proyectoService.getConvocatoriaExamenGeneral(this.idProyecto).subscribe(convocatoria => {
                 this.convocatoriaGenerada = convocatoria;
             });
         }
-        if (this.idEtapaActiva == 13){
-            this.proyectoService.getActaExamenGeneral(this.idProyecto).subscribe(acta=>{
-                this.actaGenerada=acta;
+        if (this.idEtapaActiva == EtapaUtils.ID_ETAPA_REDACCION_ARTICULO) {
+            this.proyectoService.getActaExamenGeneral(this.idProyecto).subscribe(acta => {
+                this.actaGenerada = acta;
             })
         }
     }
 
     opcionesEtapaProyecto() {
-        console.log('etapa: ', this.idEtapaActiva)
         switch (this.idEtapaActiva) {
-            case EtapaUtils.CREACION_PROYECTO:
-                this.etapaCreacion();
-                break;
-            case EtapaUtils.REVISION_SECRETARIA:
-                this.etapaRevisionSecretaria();
-                break;
-            case EtapaUtils.REVISION_SUPERVISOR:
-                this.etapaRevisionSupervisor();
-                break;
-            case EtapaUtils.DEFINIR_FECHA_EVALUACION:
-                this.etapaDefinirEvaluacion();
-                break;
-            case EtapaUtils.CARGA_CONVOCATORIA:
-                this.etapaCargarConvocatoria();
+            case EtapaUtils.ID_ETAPA_CARGA_CONVOCATORIA_ANTEPROYECTO:
                 this.getConvocatoria();
                 break;
-            case EtapaUtils.SUBIR_NOTA:
+            case EtapaUtils.ID_ETAPA_EVALUACION_ANTEPROYECTO:
                 this.getConvocatoria();
-                this.etapaIngresarNota();
                 break;
-            case EtapaUtils.CARGA_CARTA_ACEPTACION:
+            case EtapaUtils.ID_ETAPA_CARGA_CARTA_ACEPTACION_CONTRAPARTE:
                 this.getActa();
-                this.etapaHabilitacionBitacora();
                 break;
-            case EtapaUtils.HABILITAR_BITACORA:
+            case EtapaUtils.ID_ETAPA_HABILITACION_BITACORA:
                 this.getActa();
-                this.etapaHabilitacionBitacora();
                 break;
-            case EtapaUtils.BITACORA:
+            case EtapaUtils.ID_ETAPA_BITACORA:
                 this.etapaBitacora();
-                break;
-            case EtapaUtils.CARGA_CONVOCATORIA_EXAMEN_GENERAL:
-                this.etapaCargarConvocatoria();
                 break;
             default:
                 break;
@@ -318,60 +312,8 @@ export class ProyectoComponent implements OnInit {
         return this.authService.getUserRole();
     }
 
-    etapaCreacion() {
-        if (this.authService.getUserRole() == Role.Estudiante) {
-            if (this.modoEdicion) {
-                this.boton2 = {
-                    accion: this.solicitarRevision.bind(this),
-                    mostrar: this.modoEdicion,
-                    icono: 'pi pi-send',
-                    titulo: 'Solicitar Revision'
-                }
-            }
-
-        }
-    }
-
-
-    etapaRevisionSecretaria() {
-        if (this.authService.getUserRole() == Role.Secretaria) {
-
-        } else if (this.authService.getUserRole() == Role.Estudiante) {
-            this.boton2 = {
-                accion: this.solicitarRevision.bind(this),
-                mostrar: this.modoEdicion,
-                icono: 'pi pi-send',
-                titulo: 'Solicitar Revision'
-            }
-        }
-    }
-
-    etapaRevisionSupervisor() {
-        if (this.authService.getUserRole() == Role.Supervisor) {
-            this.boton1 = {
-                accion: this.showDialog.bind(this),
-                mostrar: !this.modoEdicion,
-                icono: 'pi pi-comment',
-                titulo: 'Solicitar Cambios'
-            }
-            this.boton2 = {
-                accion: this.aprobarCambiosSupervisor.bind(this),
-                mostrar: !this.modoEdicion,
-                icono: 'pi pi-chevron-right',
-                titulo: 'Aprobar'
-            }
-        } else if (this.authService.getUserRole() == Role.Estudiante) {
-            this.boton2 = {
-                accion: this.solicitarRevision.bind(this),
-                mostrar: this.modoEdicion,
-                icono: 'pi pi-send',
-                titulo: 'Solicitar Revision'
-            }
-        }
-    }
 
     getConvocatoria() {
-        console.log('get convocatoria');
         this.proyectoService.getConvocatoriaAnteproyecto(this.idProyecto).subscribe(convocatoria => {
             this.convocatoriaGenerada = convocatoria;
         });
@@ -383,55 +325,8 @@ export class ProyectoComponent implements OnInit {
         })
     }
 
-    etapaDefinirEvaluacion() {
-        if (this.authService.getUserRole() == Role.Supervisor) {
-            this.boton2 = {
-                accion: this.definirEvaluacion.bind(this),
-                mostrar: true,
-                icono: 'pi pi-pencil',
-                titulo: 'Generar Convocatoria'
-            }
-        }
-    }
-
-    etapaCargarConvocatoria() {
-        /*if (this.authService.getUserRole() == Role.CoordinadorEps) {
-            this.convocatoriaAnteproyectoFirmadaBloqueado = false;
-            this.elementoConvocatoriaAnteproyectoFirmada = {};
-        }
-        this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_CONVOCATORIA_ANTEPROYECTO).subscribe(elementoProyecto => {
-            this.elementoConvocatoriaAnteproyecto = elementoProyecto;
-        });*/
-    }
-
     modificarEvaluacion() {
         this.router.navigate(['gestiones/definir-evaluacion'], { state: { data: this.proyecto.idProyecto } });
-    }
-
-    etapaIngresarNota() {
-        if (this.authService.getUserRole() == Role.Supervisor) {
-            this.boton1 = {
-                accion: this.modificarEvaluacion.bind(this),
-                mostrar: true,
-                icono: 'pi pi-calendar-times',
-                titulo: 'Modificar Convocatoria'
-            }
-            this.boton2 = {
-                accion: this.crearActaAnteproyecto.bind(this),
-                mostrar: true,
-                icono: 'pi pi-pencil',
-                titulo: 'Crear Acta de Anteproyecto'
-            }
-        }
-    }
-
-    etapaHabilitacionBitacora() {
-        /*this.proyectoService.getElementoProyecto(this.idProyecto, ElementoUtils.ID_ELEMENTO_CARTA_ACEPTACION_CONTRAPARTE).subscribe(elementoProyecto => {
-            this.elementoCartaAceptacionContraparte = elementoProyecto;
-        }, (error) => {
-            this.cartaAceptacionBloqueado = false;
-            this.elementoCartaAceptacionContraparte = {};
-        });*/
     }
 
     etapaBitacora() {
@@ -464,6 +359,44 @@ export class ProyectoComponent implements OnInit {
         this.router.navigate(['bitacoras/finalizar-bitacora'], { state: { idProyecto: this.idProyecto } });
     }
 
+    aprobarBitacora() {
+        this.confirmationService.confirm({
+            key: 'confirm1',
+            message: '¿Estas seguro de aprobar la bitacora?',
+            acceptLabel: "Si",
+            icon: 'pi pi-check',
+            accept: () => {
+                this.proyectoService.aprobarBitacora(this.idProyecto).subscribe(() => {
+                    this.messageService.add({ key: 'tst', severity: 'success', summary: 'Bitacora Aprobada', detail: 'Se ha aprobado la bitacora del proyecto' });
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                }, (error) => {
+                    this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: 'Se produjo un error' });
+                });
+            }
+        });
+    }
+
+    rechazarBitacora() {
+        this.confirmationService.confirm({
+            key: 'confirm1',
+            message: '¿Estas seguro de rechazar la bitacora?',
+            acceptLabel: "Si",
+            icon: 'pi pi-check',
+            accept: () => {
+                this.proyectoService.rechazarBitacora(this.idProyecto).subscribe(() => {
+                    this.messageService.add({ key: 'tst', severity: 'success', summary: 'Bitacora Rechazada', detail: 'Se ha rechazado la bitacora del proyecto' });
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                }, (error) => {
+                    this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: 'Se produjo un error' });
+                });
+            }
+        });
+    }
+
     listaProyectos() {
         this.router.navigate(['gestiones/listado']);
     }
@@ -476,12 +409,13 @@ export class ProyectoComponent implements OnInit {
             icon: 'pi pi-check',
             accept: () => {
                 this.proyectoService.solicitarRevision(this.idProyecto).subscribe(proyecto => {
-                    this.modoEdicion = false;
-                    this.proyectoEditable = false;
-                    this.boton2.mostrar = false;
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Solicitud enviada', detail: 'Se ha solicitado la revision del proyecto' });
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
                 }, (error) => {
-                    this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: 'Se produjo un error al solicitar la revision' });
+                    console.log('error',error)
+                    this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: 'Se produjo un error al solicitar la revision: '+error.error });
                 });
             }
         });
@@ -573,7 +507,7 @@ export class ProyectoComponent implements OnInit {
     }
 
     comentar() {
-        if (this.text) {
+        if (this.text && this.text.trim() !== "") {
             this.proyectoService.comentar(this.idProyecto, { comentario: this.text }).subscribe(comentario => {
                 this.comentarios.unshift(comentario);
             });
@@ -729,9 +663,27 @@ export class ProyectoComponent implements OnInit {
         this.municipioFiltrado = filtered;
     }
 
+    filtrarMunicipioProyecto(event: AutoCompleteCompleteEvent) {
+        let filtered: Municipio[] = [];
+        let query = event.query;
+
+        for (let i = 0; i < (this.municipiosProyecto as Municipio[]).length; i++) {
+            let municipio = (this.municipiosProyecto as Municipio[])[i];
+            if (municipio.nombre.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+                filtered.push(municipio);
+            }
+        }
+        this.municipioFiltrado = filtered;
+    }
+
     cambiarDepartamento(departamento: Departamento) {
         this.departamentoService.getMunicipios(departamento.idDepartamento)
             .subscribe(municipios => this.municipios = municipios);
+    }
+
+    cambiarDepartamentoProyecto(departamento: Departamento) {
+        this.departamentoService.getMunicipios(departamento.idDepartamento)
+            .subscribe(municipios => this.municipiosProyecto = municipios);
     }
 
     cancelarEdicionInstitucion() {
@@ -962,17 +914,9 @@ export class ProyectoComponent implements OnInit {
     actualizarMenu() {
         this.opciones = [
             {
-                label: 'Cambiar Supervisor',
-                icon: 'pi pi-fw pi-users',
-                visible: this.isCoordinadorEps && this.idEtapaActiva > 2,
-                command: () => {
-                    this.cambiarSupervisor();
-                }
-            },
-            {
                 label: 'Cambiar Asesor',
                 icon: 'pi pi-fw pi-users',
-                visible: (this.isSupervisor || this.isCoordinadorEps) && this.idEtapaActiva > 3,
+                visible: (this.isSupervisor || this.isCoordinadorEps) && this.idEtapaActiva > EtapaUtils.ID_ETAPA_REVISION_SUPERVISOR,
                 command: () => {
                     this.cambiarAsesor();
                 }
@@ -980,7 +924,7 @@ export class ProyectoComponent implements OnInit {
             {
                 label: 'Cambiar Contraparte',
                 icon: 'pi pi-fw pi-users',
-                visible: (this.isSupervisor || this.isCoordinadorEps) && this.idEtapaActiva > 8,
+                visible: (this.isSupervisor || this.isCoordinadorEps) && this.idEtapaActiva > EtapaUtils.ID_ETAPA_HABILITACION_BITACORA,
                 command: () => {
                     this.cambiarContraparte();
                 }
@@ -994,5 +938,10 @@ export class ProyectoComponent implements OnInit {
                 }
             }
         ];
+    }
+
+    clearMuncipioProyecto() {
+        this.proyecto.institucion!.municipioProyecto = undefined;
+        this.departamentoProyectoSeleccionado = undefined;
     }
 }

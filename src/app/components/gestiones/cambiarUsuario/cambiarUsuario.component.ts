@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { ProyectoService } from 'src/app/services/proyecto.service';
 import { Usuario } from 'src/app/model/Usuario';
 import { UsuarioService } from 'src/app/services/usuario.service';
-import { ElementoUtils, Role } from 'src/app/model/Utils';
+import { ElementoUtils } from 'src/app/model/Utils';
 import { ElementoProyecto } from 'src/app/model/ElementoProyecto';
 
 @Component({
@@ -16,6 +16,7 @@ import { ElementoProyecto } from 'src/app/model/ElementoProyecto';
 
 export class CambiarUsuarioComponent implements OnInit {
     idProyecto!: number;
+    comentario: string = '';
     proyecto!: Proyecto;
     elementoTitulo!: ElementoProyecto;
     usuario: Usuario = {
@@ -66,21 +67,21 @@ export class CambiarUsuarioComponent implements OnInit {
         if (this.opcion === 1) {
             this.proyectoService.getPersonaAsesor(this.idProyecto).subscribe(asesor => {
                 this.usuario = asesor;
-                this.usuarioService.getUsuarios(0, 15,undefined, Role.ID_ASESOR).subscribe(response => {
+                this.usuarioService.getUsuarios(0, 15, undefined).subscribe(response => {
                     this.usuariosLista = response.content;
-                })
+                });
             });
         } else if (this.opcion === 2) {
             this.proyectoService.getSupervisor(this.idProyecto).subscribe(supervisor => {
                 this.usuario = supervisor;
-                this.usuarioService.getUsuarios(0, 15,undefined, Role.ID_SUPERVISOR).subscribe(response => {
+                this.usuarioService.getUsuarios(0, 15, undefined).subscribe(response => {
                     this.usuariosLista = response.content;
                 })
             });
         } else if (this.opcion === 3) {
             this.proyectoService.getUsuarioContraparte(this.idProyecto).subscribe(contraparte => {
                 this.usuario = contraparte;
-                this.usuarioService.getUsuarios(0, 15,undefined, Role.ID_CONTRAPARTE).subscribe(response => {
+                this.usuarioService.getUsuarios(0, 15, undefined).subscribe(response => {
                     this.usuariosLista = response.content;
                 })
             });
@@ -105,10 +106,8 @@ export class CambiarUsuarioComponent implements OnInit {
     }
 
     buscar() {
-        if (this.opcion === 1) {
-            this.usuarioService.getUsuarios(0, 10, {nombreCompleto:this.nombresFiltro, numeroColegiado:this.colegiadoFiltro},Role.ID_ASESOR)
-            .subscribe(response => this.usuariosLista = response.context);
-        }
+        this.usuarioService.getUsuarios(0, 10, { nombreCompleto: this.nombresFiltro, numeroColegiado: this.colegiadoFiltro })
+            .subscribe(response => this.usuariosLista = response.content);
     }
 
     aceptar() {
@@ -143,6 +142,9 @@ export class CambiarUsuarioComponent implements OnInit {
             icon: 'pi pi-check-circle',
             accept: () => {
                 this.proyectoService.actualizarAsesorProyecto(this.idProyecto, this.usuarioSeleccionado).subscribe(() => {
+                    if ((this.comentario != undefined && this.comentario.trim() !== "")) {
+                        this.proyectoService.comentar(this.idProyecto, { comentario: this.comentario }).subscribe(comentario => { });
+                    }
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Asesor asignado', detail: 'Se ha asignado asesor exitosamente.' });
                     setTimeout(() => {
                         this.router.navigate(['gestiones/proyecto']);
@@ -160,6 +162,9 @@ export class CambiarUsuarioComponent implements OnInit {
             icon: 'pi pi-check-circle',
             accept: () => {
                 this.proyectoService.actualizarContraparteProyecto(this.idProyecto, this.usuarioSeleccionado).subscribe(() => {
+                    if ((this.comentario != undefined && this.comentario.trim() !== "")) {
+                        this.proyectoService.comentar(this.idProyecto, { comentario: this.comentario }).subscribe(comentario => { });
+                    } 
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Responsable de contraparte asignado', detail: 'Se ha asignado responsable de contraparte exitosamente.' });
                     setTimeout(() => {
                         this.router.navigate(['gestiones/proyecto']);

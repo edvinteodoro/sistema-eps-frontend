@@ -79,6 +79,7 @@
 					<th>Colegiado</th>
 					<th>Dpi</th>
 					<th>Rol</th>
+					<th *ngIf="opcion==1">Carrera</th>
 					<th>Estado</th>
 				</tr>
 			</ng-template>
@@ -91,6 +92,7 @@
 					<td>{{usuarioLista.numeroColegiado}}</td>
 					<td>{{usuarioLista.dpi}}</td>
 					<td>{{usuarioLista.rol.titulo}}</td>
+					<td *ngIf="opcion==1">{{getCarrerasString(usuarioLista)}}</td>
 					<td style="width:14%; min-width: 10rem;"><span class="p-column-title">Estado</span>
 						<p-tag *ngIf="usuarioLista.activo" severity="success" value="ACTIVO"></p-tag>
 						<p-tag *ngIf="!usuarioLista.activo" severity="danger" value="INACTIVO"></p-tag>

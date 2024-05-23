@@ -41,9 +41,11 @@
 	<app-phase name="Coordinador de EPS" icon="pi pi-users">
 		<div class="grid p-fluid mt-3">
 			<div class="field col-12 md:col-12 pb-0">
-				<label>Coordinador de EPS:</label>
-				<input pInputText id="coordinador" type="text" disabled="true" class="title"
+				<label>Coordinador de EPS: </label>
+				<input *ngIf="coordinadorEps" pInputText type="text" disabled="true" class="title"
 					[(ngModel)]="coordinadorEps.nombreCompleto" />
+				<input *ngIf="!coordinadorEps" pInputText type="text" disabled="true" class="title"
+					class="ng-invalid ng-dirty" placeholder="No se encontro usuario Coordinador EPS" />
 			</div>
 		</div>
 	</app-phase>
@@ -51,19 +53,24 @@
 		<div class="grid p-fluid mt-3">
 			<div class="field col-12 md:col-12 pb-0">
 				<label>Supervisor:</label>
-				<input pInputText id="supervisor" type="text" disabled="true" class="title"
+				<input *ngIf="supervisor" pInputText id="supervisor" type="text" disabled="true" class="title"
 					[(ngModel)]="supervisor.nombreCompleto" />
+				<input *ngIf="!supervisor" pInputText type="text" disabled="true" class="ng-invalid ng-dirty"
+				 placeholder="No se encontro usuario Supervisor" />
 			</div>
 			<div class="field col-12 md:col-6 pb-0">
 				<label>Coordinador de Carrera:</label>
-				<input *ngIf="coordinadorCarrera!=undefined" pInputText id="coordinador" type="text" disabled="true"
-					class="title" [(ngModel)]="coordinadorCarrera.nombreCompleto" />
-				<input *ngIf="coordinadorCarrera==undefined" pInputText id="coordinador" type="text" disabled="true"
-					class="title" placeholder="No se encontro usuario Coordinador Carrera" />
+				<input *ngIf="coordinadorCarrera!=undefined" pInputText type="text" disabled="true" class="title"
+					[(ngModel)]="coordinadorCarrera.nombreCompleto" />
+				<input *ngIf="coordinadorCarrera==undefined" pInputText type="text" disabled="true"
+					class="ng-invalid ng-dirty" placeholder="No se encontro usuario Coordinador Carrera" />
 			</div>
 			<div class="field col-12 md:col-6 pb-0">
 				<label>Asesor:</label>
-				<input pInputText disabled="true" class="title" type="text" [(ngModel)]="asesor.nombreCompleto" />
+				<input *ngIf="asesor" pInputText disabled="true" class="title" type="text"
+					[(ngModel)]="asesor.nombreCompleto" />
+				<input *ngIf="!asesor" pInputText disabled="true" type="text" class="ng-invalid ng-dirty"
+					placeholder="No se encontro usuario asesor" />
 			</div>
 			<div *ngIf="mostrarRepresentante" class="field col-12 md:col-6 pb-0">
 				<label>Titulo representante:</label>
@@ -92,9 +99,9 @@
 						[(ngModel)]="convocatoriaGenerada.fechaEvaluacion" />
 				</div>
 				<div class="field col-12 md:col-6 pb-0">
-					<label>Hora:</label>
+					<label><b>Hora:</b> Utilize formato de 24 horas</label>
 					<input pInputText id="coordinador" type="text" class="title" disabled="true"
-						[(ngModel)]="convocatoriaGenerada.horaEvaluacion" />
+						[(ngModel)]="convocatoriaGenerada.horaEvaluacion" placeholder="ej: 18:00"/>
 				</div>
 				<div class="field col-12 md:col-12 pb-0">
 					<label htmlFor="salon">Salon: </label>
@@ -119,7 +126,8 @@
 			<div class="field col-12 md:col-12 pb-0">
 				<label htmlFor="salon">Ingrese nombre de salon de evaluacion: </label>
 				<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(convocatoria.salon)}" pInputText id="salon"
-					type="text" class="title" [(ngModel)]="convocatoria.salon" placeholder="ej: Salón TICs del Módulo G" />
+					type="text" class="title" [(ngModel)]="convocatoria.salon"
+					placeholder="ej: Salón TICs del Módulo G" />
 			</div>
 			<div *ngIf="mostrarFecha" class="field col-12 md:col-12 pb-0">
 				<label htmlFor="fecha">Explique el motivo del cambio: </label>
