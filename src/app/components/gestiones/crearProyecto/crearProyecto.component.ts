@@ -80,6 +80,7 @@ export class CrearProyectoComponent implements OnInit {
         correo: "",
         dpi: "",
         telefono: "",
+        puesto:"",
         titulo: undefined,
     }
 
@@ -356,6 +357,7 @@ export class CrearProyectoComponent implements OnInit {
             dpi: "",
             telefono: "",
             numeroColegiado: "",
+            tituloAsesor:""
             //titulo: undefined,
         };
         this.asesoresTecnicos.push(nuevoAsesor);

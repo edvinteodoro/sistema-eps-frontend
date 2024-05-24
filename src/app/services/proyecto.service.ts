@@ -252,15 +252,17 @@ export class ProyectoService {
     return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/cargar-convocatoria-anteproyecto', formData);
   }
 
-  cargarInformeFinal(idProyecto: number, informeFinal: any) {
+  cargarInformeFinal(idProyecto: number, cartaAsesor: any,informeFinal: any) {
     const formData = new FormData();
     formData.append('informeFinal', informeFinal);
+    formData.append('cartaAsesor', cartaAsesor);
     return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/cargar-informe-final', formData);
   }
 
-  cargarCartaAceptacionContraparte(idProyecto: number, carta: any) {
+  cargarCartaAceptacionContraparte(idProyecto: number, carta: any,oficioContraparte:any) {
     const formData = new FormData();
-    formData.append('file', carta);
+    formData.append('cartaAceptacion', carta);
+    formData.append('oficioContraparte', oficioContraparte);
     return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/cargar-carta-aceptacion-contraparte', formData);
   }
 
@@ -294,9 +296,8 @@ export class ProyectoService {
     return this.http.post<any>('http://localhost:8080/api/bitacoras/' + idBitacora + '/recursos', formData);
   }
 
-  finalizarBitacora(idProyecto: number, cartaFinalizacion: any, finiquitoContraparte: any) {
+  finalizarBitacora(idProyecto: number, finiquitoContraparte: any) {
     const formData = new FormData();
-    formData.append('cartaAsesor', cartaFinalizacion);
     formData.append('finiquitoContraparte', finiquitoContraparte);
     return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/finalizar-bitacora', formData);
   }
@@ -309,18 +310,19 @@ export class ProyectoService {
     return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/rechazar-bitacora', {});
   }
 
-  cargarArticulo(idProyecto: number, articulo: any, traduccionArticulo: any) {
+  cargarArticulo(idProyecto: number, articulo: any, traduccionArticulo: any,constanciaLinguistica: any) {
     const formData = new FormData();
     formData.append('articulo', articulo);
     formData.append('traduccionArticulo', traduccionArticulo);
+    formData.append('constanciaLinguistica', constanciaLinguistica);
     return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/cargar-articulo', formData);
   }
 
-  cargarConstanciaLinguistica(idProyecto: number, constanciaLinguistica: any) {
+  /*cargarConstanciaLinguistica(idProyecto: number, constanciaLinguistica: any) {
     const formData = new FormData();
     formData.append('constanciaLinguistica', constanciaLinguistica);
     return this.http.post<any>('http://localhost:8080/api/proyectos/' + idProyecto + '/cargar-constancia-linguistica', formData);
-  }
+  }*/
 
   cargarDictamenRevision(idProyecto: number, dictamenRevision: any, cartaRevision: any) {
     const formData = new FormData();

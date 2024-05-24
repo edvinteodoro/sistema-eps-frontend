@@ -144,7 +144,7 @@ export class ProyectoComponent implements OnInit {
             this.getAsesoresTecnicos();
             this.getEtapaActiva();
         }, (error) => {
-            //this.router.navigate(['notfound']);
+            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: error.error });
         }
         )
     }

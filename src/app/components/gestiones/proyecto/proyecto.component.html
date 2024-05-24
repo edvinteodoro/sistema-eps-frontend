@@ -149,7 +149,7 @@
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="isSupervisor && proyecto.activo!"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_DICTAMEN_SUPERVISOR"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps) && idEtapaActiva>EtapaUtils.ID_ETAPA_REVISION_LINGUISTICA"
+			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps) && idEtapaActiva>EtapaUtils.ID_ETAPA_REDACCION_ARTICULO"
 				class="field col-12 md:col-12 pb-0">
 				<label>Constancia de revision linguistica</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion || (idEtapaActiva==EtapaUtils.ID_ETAPA_DICTAMEN_REVISION && isEstudiante)"
@@ -173,21 +173,27 @@
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion || (idEtapaActiva==EtapaUtils.ID_ETAPA_CONVOCATORIA_EXAMEN_GENERAL && isEstudiante)"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_INFORME_FINAL"></app-file>
 			</div>
+			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>EtapaUtils.ID_ETAPA_CARGA_INFORME_FINAL" class="field col-12 md:col-12 pb-0">
+				<label>Carta de finalizacion asesor</label>
+				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion || (idEtapaActiva==EtapaUtils.ID_ETAPA_CONVOCATORIA_EXAMEN_GENERAL && isEstudiante)"
+					[idElemento]="ElementoUtils.ID_ELEMENTO_CARTA_FINALIZACION"></app-file>
+			</div>
 			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>EtapaUtils.ID_ETAPA_BITACORA" class="field col-12 md:col-12 pb-0">
 				<label>Finiquito de contraparte</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion || (idEtapaActiva==EtapaUtils.ID_ETAPA_APROBACION_BITACORA && isEstudiante)"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_FINIQUITO_CONTRAPARTE"></app-file>
-			</div>
-			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>EtapaUtils.ID_ETAPA_BITACORA" class="field col-12 md:col-12 pb-0">
-				<label>Carta de finalizacion asesor</label>
-				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion || (idEtapaActiva==EtapaUtils.ID_ETAPA_APROBACION_BITACORA && isEstudiante)"
-					[idElemento]="ElementoUtils.ID_ELEMENTO_CARTA_FINALIZACION"></app-file>
 			</div>
 			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>EtapaUtils.ID_ETAPA_CARGA_CARTA_ACEPTACION_CONTRAPARTE" 
 				class="field col-12 md:col-12 pb-0">
 				<label>Carta de aceptacion contraparte</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_CARTA_ACEPTACION_CONTRAPARTE"></app-file>
+			</div>
+			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>EtapaUtils.ID_ETAPA_CARGA_CARTA_ACEPTACION_CONTRAPARTE" 
+				class="field col-12 md:col-12 pb-0">
+				<label>Oficio a contraparte</label>
+				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion"
+					[idElemento]="ElementoUtils.ID_ELEMENTO_OFICIO_CONTRAPARTE_INSTITUCIONAL"></app-file>
 			</div>
 			<div class="field col-12 md:col-12 pb-0">
 				<label>Anteproyecto</label>
@@ -284,7 +290,7 @@
 					icon="pi pi-check" focus="true" styleClass="p-button-outlined" (click)="habilitarBitacora()"
 					label="Habilitar Bitacora"></p-button>
 				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_BITACORA && isEstudiante" icon="pi pi-check"
-					focus="true" styleClass="p-button-outlined" (click)="finalizarBitacora()"
+					focus="true" styleClass="p-button-outlined" (click)="cargarDocumento()"
 					label="Finalizar Bitacora"></p-button>
 				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_APROBACION_BITACORA && isSupervisor"
 					icon="pi pi-check" focus="true" styleClass="p-button-outlined" (click)="aprobarBitacora()"
@@ -298,9 +304,6 @@
 				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REVISION_INFORME_FINAL && isSupervisor"
 					icon="pi pi-check" styleClass="p-button-outlined" (click)="aprobarInformeFinalSupervisor()"
 					label="Aprobar Informe Final"></p-button>
-				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REVISION_LINGUISTICA && isEstudiante"
-					icon="pi pi-pencil" focus="true" styleClass="p-button-outlined" (click)="cargarDocumento()"
-					label="Cargar Constancia Linguistica"></p-button>
 				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_DICTAMEN_REVISION && isSupervisor"
 					icon="pi pi-pencil" focus="true" styleClass="p-button-outlined" (click)="cargarDocumento()"
 					label="Cargar Dictamen y Carta Revision"></p-button>
@@ -388,6 +391,11 @@
 				<div class="field col-12 md:col-6 pb-0">
 					<label>Nombre</label>
 					<input [(ngModel)]="proyecto.contraparte!.nombreCompleto" [disabled]="!editarContraparte" pInputText
+						class="text" />
+				</div>
+				<div class="field col-12 md:col-6 pb-0" *ngIf="this.idEtapaActiva <= EtapaUtils.ID_ETAPA_BITACORA">
+					<label>Puesto en la institucion</label>
+					<input [(ngModel)]="proyecto.contraparte!.puesto" [disabled]="!editarContraparte" pInputText
 						class="text" />
 				</div>
 				<div class="field col-12 md:col-6 pb-0">
@@ -498,9 +506,15 @@
 				<label class="negrita">Asesor tecnico</label>
 				<div class="grid p-fluid mt-3">
 					<div class="field col-12 md:col-6 pb-0">
-						<label htmlFor="nombres">Nombres</label>
+						<label>Nombres</label>
 						<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.asesor.nombreCompleto)}"
 							[disabled]="!asesorTecnico.edicion" [(ngModel)]="asesorTecnico.asesor.nombreCompleto"
+							pInputText class="text" />
+					</div>
+					<div class="field col-12 md:col-6 pb-0">
+						<label>Titulo</label>
+						<input [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(asesorTecnico.asesor.tituloAsesor)}"
+							[disabled]="!asesorTecnico.edicion" [(ngModel)]="asesorTecnico.asesor.tituloAsesor"
 							pInputText class="text" />
 					</div>
 					<div class="field col-12 md:col-6 pb-0">

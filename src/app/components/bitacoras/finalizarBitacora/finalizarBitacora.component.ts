@@ -36,7 +36,7 @@ export class FinalizarBitacoraComponent implements OnInit {
         }
     }
 
-    finalizarBitacora(){
+    finalizarBitacora(){/*
         console.log('finalizar')
         this.confirmationService.confirm({
             key: 'confirm1',
@@ -52,7 +52,7 @@ export class FinalizarBitacoraComponent implements OnInit {
                 });
             }
         });
-    }
+    */}
 
     onUploadCartaFinalizacion(event: any) {
         this.cartaFinalizacion = event.currentFiles[0];

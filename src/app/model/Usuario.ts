@@ -14,5 +14,7 @@ export interface Usuario{
     carreras?:Carrera[];
     titulo?:Titulo;
     registroAcademico?:String;
+    puesto?:String;
+    tituloAsesor?:String;
     numeroColegiado?:String;
 }

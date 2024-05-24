@@ -22,6 +22,7 @@ export class CargarDocumentoComponent implements OnInit {
     finiquitoContraparte!: any;
     convocatoriaFirmada!:any;
     cartaAceptacion!:any;
+    oficioContraparte!:any;
     articulo!:any;
     traduccionArticulo!:any;
     constanciaLinguistica!:any;
@@ -63,7 +64,7 @@ export class CargarDocumentoComponent implements OnInit {
             acceptLabel: "Si",
             icon: 'pi pi-check-circle',
             accept: () => {
-                this.proyectoService.finalizarBitacora(this.idProyecto,this.cartaFinalizacion,this.finiquitoContraparte).subscribe(() => {
+                this.proyectoService.finalizarBitacora(this.idProyecto,this.finiquitoContraparte).subscribe(() => {
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Bitacora Finalizada', detail: 'Se ha finalizado la bitacora exitosamente.' });
                     setTimeout(() => {
                         this.router.navigate(['gestiones/proyecto']);
@@ -97,7 +98,7 @@ export class CargarDocumentoComponent implements OnInit {
             acceptLabel: "Si",
             icon: 'pi pi-check-circle',
             accept: () => {
-                this.proyectoService.cargarInformeFinal(this.idProyecto, this.informeFinal).subscribe(() => {
+                this.proyectoService.cargarInformeFinal(this.idProyecto, this.cartaFinalizacion,this.informeFinal).subscribe(() => {
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Informe Final Cargada', detail: 'Se ha cargado el informe final exitosamente' });
                     setTimeout(() => {
                         this.router.navigate(['gestiones/proyecto']);
@@ -114,7 +115,7 @@ export class CargarDocumentoComponent implements OnInit {
             acceptLabel: "Si",
             icon: 'pi pi-check-circle',
             accept: () => {
-                this.proyectoService.cargarCartaAceptacionContraparte(this.idProyecto, this.cartaAceptacion).subscribe(() => {
+                this.proyectoService.cargarCartaAceptacionContraparte(this.idProyecto, this.cartaAceptacion,this.oficioContraparte).subscribe(() => {
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Carta de Aceptacion Cargada', detail: 'Se ha cargado la carta de aceptacion exitosamente' });
                     setTimeout(() => {
                         this.router.navigate(['gestiones/proyecto']);
@@ -131,7 +132,7 @@ export class CargarDocumentoComponent implements OnInit {
             acceptLabel: "Si",
             icon: 'pi pi-check-circle',
             accept: () => {
-                this.proyectoService.cargarArticulo(this.idProyecto, this.articulo,this.traduccionArticulo).subscribe(() => {
+                this.proyectoService.cargarArticulo(this.idProyecto, this.articulo,this.traduccionArticulo,this.constanciaLinguistica).subscribe(() => {
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Articulo Cargado', detail: 'Se ha cargado el articulo exitosamente' });
                     setTimeout(() => {
                         this.router.navigate(['gestiones/proyecto']);
@@ -141,7 +142,7 @@ export class CargarDocumentoComponent implements OnInit {
         });
     }
 
-    cargarConstanciaLinguistica(){
+    /*cargarConstanciaLinguistica(){
         this.confirmationService.confirm({
             key: 'confirm1',
             message: '¿Estas seguro de cargar la constancia de revision linguistica?',
@@ -156,7 +157,7 @@ export class CargarDocumentoComponent implements OnInit {
                 });
             }
         });
-    }
+    }*/
 
     cargarDictamenCartaRevision(){
         this.confirmationService.confirm({
@@ -190,6 +191,15 @@ export class CargarDocumentoComponent implements OnInit {
     onRemoveCartaAceptacion() {
         this.cartaAceptacion = undefined;
     }
+
+    onUploadOficioContraparte(event: any) {
+        this.oficioContraparte = event.currentFiles[0];
+    }
+
+    onRemoveOficioContraparte() {
+        this.oficioContraparte = undefined;
+    }
+
 
     onUploadInformeFinal(event: any) {
         this.informeFinal = event.currentFiles[0];

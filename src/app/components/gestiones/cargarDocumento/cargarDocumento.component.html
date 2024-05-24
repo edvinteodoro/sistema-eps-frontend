@@ -31,10 +31,10 @@
 				[auto]="true">
 			</p-fileUpload>
 		</div>
-		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_BITACORA" class="field col-12 md:col-12 pb-0">
-			<label>Carta de finalizacion de asesor:</label>
-			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadCartaFinalizacion($event)"
-				(onRemove)="onRemoveCartaFinalizacion()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CARTA_ACEPTACION_CONTRAPARTE" class="field col-12 md:col-12 pb-0">
+			<label><b>Oficio a Contraparte Institucional: </b>En caso de multiples documentos cargarlos en un unico documento pdf.</label>
+			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadOficioContraparte($event)"
+				(onRemove)="onRemoveOficioContraparte()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
 				[auto]="true">
 			</p-fileUpload>
 		</div>
@@ -52,6 +52,13 @@
 				[auto]="true">
 			</p-fileUpload>
 		</div>
+		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_INFORME_FINAL" class="field col-12 md:col-12 pb-0">
+			<label>Carta de finalizacion de asesor:</label>
+			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadCartaFinalizacion($event)"
+				(onRemove)="onRemoveCartaFinalizacion()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+				[auto]="true">
+			</p-fileUpload>
+		</div>
 		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REDACCION_ARTICULO" class="field col-12 md:col-12 pb-0">
 			<label>Cargar articulo cientifico: </label>
 			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadArticulo($event)"
@@ -65,7 +72,7 @@
 				[auto]="true">
 			</p-fileUpload>
 		</div>
-		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REVISION_LINGUISTICA" class="field col-12 md:col-12 pb-0">
+		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REDACCION_ARTICULO" class="field col-12 md:col-12 pb-0">
 			<label>Cargar Constancia de Revision Linguistica: </label>
 			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadRevisionLinguistica($event)"
 				(onRemove)="onRemoveRevisionLinguistica()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
@@ -91,12 +98,12 @@
 		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_BITACORA" class="field col-12 md:col-6 pb-0">
 			<p-button icon="pi pi-check" styleClass="p-button-outlined" label="Finalizar Bitacora"
 				(click)="finalizarBitacora()"
-				[disabled]="!cartaFinalizacion || !finiquitoContraparte"></p-button>
+				[disabled]="!finiquitoContraparte"></p-button>
 		</div>
 		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_INFORME_FINAL" class="field col-12 md:col-6 pb-0">
 			<p-button icon="pi pi-check" styleClass="p-button-outlined" label="Cargar Informe Final"
 				(click)="cargarInformeFinal()"
-				[disabled]="!informeFinal"></p-button>
+				[disabled]="!informeFinal || !cartaFinalizacion"></p-button>
 		</div>
 		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CONVOCATORIA_ANTEPROYECTO || 
 		idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CONVOCATORIA_EXAMEN_GENERAL" class="field col-12 md:col-6 pb-0">
@@ -105,15 +112,11 @@
 		</div>
 		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CARTA_ACEPTACION_CONTRAPARTE" class="field col-12 md:col-6 pb-0">
 			<p-button icon="pi pi-check" styleClass="p-button-outlined" label="Cargar Carta de Aceptacion"
-				(click)="cargarCartaAceptacion()" [disabled]="!cartaAceptacion"></p-button>
+				(click)="cargarCartaAceptacion()" [disabled]="!cartaAceptacion || !oficioContraparte"></p-button>
 		</div>
 		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REDACCION_ARTICULO" class="field col-12 md:col-6 pb-0">
 			<p-button icon="pi pi-check" styleClass="p-button-outlined" label="Cargar Articulo"
-				(click)="cargarArticulo()" [disabled]="!articulo || !traduccionArticulo"></p-button>
-		</div>
-		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REVISION_LINGUISTICA" class="field col-12 md:col-6 pb-0">
-			<p-button icon="pi pi-check" styleClass="p-button-outlined" label="Cargar Constancia Linguistica"
-				(click)="cargarConstanciaLinguistica()" [disabled]="!constanciaLinguistica"></p-button>
+				(click)="cargarArticulo()" [disabled]="!articulo || !traduccionArticulo || !constanciaLinguistica"></p-button>
 		</div>
 		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_DICTAMEN_REVISION" class="field col-12 md:col-6 pb-0">
 			<p-button icon="pi pi-check" styleClass="p-button-outlined" label="Cargar Documentos"

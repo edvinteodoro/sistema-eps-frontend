@@ -61,6 +61,8 @@ export class ListadoComponent implements OnInit {
                 })
             })
             this.totalRecords = response.totalElements;
+        },(error)=>{
+            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: error.error });
         })
     }
 
