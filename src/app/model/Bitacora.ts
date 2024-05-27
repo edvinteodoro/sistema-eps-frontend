@@ -6,10 +6,13 @@ export interface Bitacora {
     idBitacora?: Number;
     descripcion: String;
     avance: Number;
+    numeroFolio:number;
     idProyecto?:number;
     carrera?:Carrera;
-    fechaReporte: Date;
-    fechaReporteFormat?:Date;
+    fechaReporteInicio: Date;
+    fechaReporteInicioFormat?:Date;
+    fechaReporteFin: Date;
+    fechaReporteFinFormat?:Date;
     usuario?:Usuario;
     fecha?: Date;
     recursos?:Recurso[];

@@ -1,13 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Location, DatePipe } from '@angular/common';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Bitacora } from 'src/app/model/Bitacora';
 import { Proyecto } from 'src/app/model/Proyecto';
-import { Recurso } from 'src/app/model/Recurso';
 import { ProyectoService } from 'src/app/services/proyecto.service';
 import { Router } from '@angular/router';
-import { BitacoraService } from 'src/app/services/bitacora.service';
-import { DocumentosService } from 'src/app/services/documentos.service';
 import { ElementoProyecto } from 'src/app/model/ElementoProyecto';
 import { ElementoUtils } from 'src/app/model/Utils';
 import { Acta } from 'src/app/model/Acta';
@@ -76,17 +72,17 @@ export class ActaComponent implements OnInit {
             accept: () => {
                 if (this.acta.tipo == 'ANTEPROYECTO') {
                     this.proyectoService.generarActaAnteproyecto(this.acta.proyecto!.idProyecto!, this.acta).subscribe(acta => {
-                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios aprobados', detail: 'El acta se ha generado exitosamente' });
+                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Acta generada', detail: 'El acta se ha generado exitosamente' });
                         this.acta = acta;
                     })
                 } else if (this.acta.tipo == 'EXAMEN GENERAL') {
                     this.proyectoService.generarActaExamenGeneral(this.acta.proyecto!.idProyecto!, this.acta).subscribe(acta => {
-                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios aprobados', detail: 'El acta se ha generado exitosamente' });
+                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Acta generada', detail: 'El acta se ha generado exitosamente' });
                         this.acta = acta;
                     })
                 } else if (this.acta.tipo == 'FINALIZACION') {
                     this.proyectoService.generarActaAprobacion(this.acta.proyecto!.idProyecto!, this.acta).subscribe(acta => {
-                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios aprobados', detail: 'El acta se ha generado exitosamente' });
+                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Acta generada', detail: 'El acta se ha generado exitosamente' });
                         this.acta = acta;
                     })
                 }

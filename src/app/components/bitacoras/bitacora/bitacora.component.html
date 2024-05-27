@@ -46,20 +46,33 @@
 			</span>
 		</div>
 		<div class="grid p-fluid mt-3">
-			<div class="field col-12 md:col-12 pb-0">
-				<label>Actividades efectuadas</label>
-				<textarea class="text" rows="20" cols="30" [(ngModel)]="bitacora.descripcion"
-					[disabled]="!editarInformacion" pInputTextarea></textarea>
-			</div>
-			<div class="field col-12 md:col-6 pb-0">
-				<label>Fecha de informe</label>
-				<input [disabled]="!editarInformacion" [(ngModel)]="bitacora.fechaReporteFormat" pInputText
-					class="text" />
+			<div class="field col-2 md:col-6 pb-0">
+				<label>Numero de Folio</label>
+				<p-inputNumber [min]="1" [disabled]="!editarInformacion" [(ngModel)]="bitacora.numeroFolio"></p-inputNumber>
 			</div>
 			<div class="field col-12 md:col-6 pb-0">
 				<label>Porcentaje de avance en cronograma</label>
 				<p-inputNumber suffix="%" [min]="0" [max]="100" [disabled]="!editarInformacion"
 					[(ngModel)]="bitacora.avance" class="text"></p-inputNumber>
+			</div>
+			<div class="field col-5 md:col-6 pb-0">
+				<label>Desde</label>
+				<input [disabled]="!editarInformacion" [(ngModel)]="bitacora.fechaReporteInicioFormat" pInputText
+					class="text" />
+			</div>
+			<div class="field col-5 md:col-6 pb-0">
+				<label>Hasta</label>
+				<input [disabled]="!editarInformacion" [(ngModel)]="bitacora.fechaReporteFinFormat" pInputText
+					class="text" />
+			</div>
+			<div class="field col-12 md:col-12 pb-0">
+				<label>Actividades efectuadas</label>
+				<textarea class="text" rows="20" cols="30" [(ngModel)]="bitacora.descripcion"
+					[disabled]="!editarInformacion" pInputTextarea></textarea>
+			</div>
+			<div class="field col-12 md:col-12 pb-0">
+				<label>Fecha creacion de registro</label>
+				<input [disabled]="true" dateFormat="dd-mm-yy" [(ngModel)]="fechaRegistroText" class="text" pInputTextarea/>
 			</div>
 			<div class="field col-12 md:col-4 pb-0">
 				<p-checkbox [(ngModel)]="bitacora.revisionSupervisor" [binary]="true" [disabled]="true"

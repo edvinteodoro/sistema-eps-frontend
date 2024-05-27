@@ -30,7 +30,7 @@ export class BitacoraComponent implements OnInit {
     mostrarLinkDialog: boolean = false;
     linkNuevo: string = '';
     tituloProyecto!: ElementoProyecto;
-    fechaReporteText: string = '';
+    fechaRegistroText: string = '';
     comentarios: ComentarioBitacora[] = [];
     text: string = '';
     totalpages: number = 1;
@@ -51,7 +51,7 @@ export class BitacoraComponent implements OnInit {
         this.bitacoraService.getBitacora(this.idBitacora).subscribe(bitacora => {
             this.bitacora = bitacora;
             this.getUsuariosAsignados();
-            this.fechaReporteText = this.datePipe.transform(bitacora.fechaReporte, 'dd-MM-yyyy')!;
+            this.fechaRegistroText = this.datePipe.transform(bitacora.fecha, 'dd-MM-yyyy')!;
             this.bitacoraService.getRecursos(this.idBitacora).subscribe(recursos => {
                 this.recursos = recursos;
             })
@@ -214,6 +214,8 @@ export class BitacoraComponent implements OnInit {
                 this.bitacoraService.actualizarBitacora(this.idBitacora, this.bitacora).subscribe(bitacora => {
                     this.bitacora = bitacora;
                     this.editarInformacion = false;
+
+                },(error)=>{
 
                 })
             }

@@ -37,22 +37,33 @@
 		<div class="field col-12 md:col-12 pb-0">
 			<label class="sub-title">Datos de bitacora:</label>
 		</div>
-		<div class="field col-12 md:col-12 pb-0">
-			<label>Actividades efectuadas</label>
-			<textarea [(ngModel)]="bitacora.descripcion" class="text" rows="10" cols="30"
-				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(bitacora.descripcion)}" pInputTextarea></textarea>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Numero de Folio</label>
+			<p-inputNumber [min]="1" [(ngModel)]="bitacora.numeroFolio"></p-inputNumber>
 		</div>
 		<div class="field col-12 md:col-6 pb-0">
-			<label>Fecha de informe</label>
-			<p-calendar dateFormat="dd-mm-yy" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(bitacora.fechaReporte)}"
-				inputId="dateformat" [(ngModel)]="bitacora.fechaReporte" class="text"></p-calendar>
-		</div>
-		<div class="field col-12 md:col-6 pb-0">
-			<label>Porcentaje de avance en cronograma</label>
+			<label><b>Avances: </b>Porcentaje del proyecto ya realizado.</label>
 			<p-inputNumber suffix="%" [min]="0" [max]="100"
 				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(bitacora.avance)}" [(ngModel)]="bitacora.avance"
 				class="text"></p-inputNumber>
 		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Desde</label>
+			<p-calendar dateFormat="dd-mm-yy" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(bitacora.fechaReporteInicio)}"
+				inputId="dateformat" [(ngModel)]="bitacora.fechaReporteInicio" class="text"></p-calendar>
+		</div>
+		<div class="field col-12 md:col-6 pb-0">
+			<label>Hasta</label>
+			<p-calendar dateFormat="dd-mm-yy" [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(bitacora.fechaReporteFin)}"
+				inputId="dateformat" [(ngModel)]="bitacora.fechaReporteFin" class="text"></p-calendar>
+		</div>
+
+		<div class="field col-12 md:col-12 pb-0">
+			<label>Actividades efectuadas</label>
+			<textarea [(ngModel)]="bitacora.descripcion" class="text" rows="20" cols="30"
+				[ngClass]="{'ng-invalid ng-dirty': isFieldInvalid(bitacora.descripcion)}" pInputTextarea></textarea>
+		</div>
+		
 		<div class="field col-12 md:col-12 pb-0">
 			<label class="sub-title">Recursos:</label>
 			<p-divider></p-divider>
@@ -93,7 +104,7 @@
 				(onSelect)="cargarRecurso($event,fileUpload)"></p-fileUpload><br>
 			<p-button icon="pi pi-plus" styleClass="p-button-outlined p-button-secondary" label="Agregar links"
 				(onClick)="mostrarLinkDialog=true"></p-button>
-			
+
 		</div>
 		<div class="field col-12 md:col-12 pb-0">
 			<p-button label="Registrar Bitacora" styleClass="p-button-outlined"

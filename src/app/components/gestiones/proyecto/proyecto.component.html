@@ -68,7 +68,7 @@
 			<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CARTA_ACEPTACION_CONTRAPARTE || 
 			idEtapaActiva==EtapaUtils.ID_ETAPA_HABILITACION_BITACORA ||
 			idEtapaActiva==EtapaUtils.ID_ETAPA_REDACCION_ARTICULO" class="field col-12 md:col-12 pb-0">
-				<div class="card grid p-fluid mt-3">
+				<div class="card grid p-fluid mt-3" *ngIf="actaGenerada">
 					<div class="field col-12 md:col-6 pb-0">
 						<label *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CARTA_ACEPTACION_CONTRAPARTE||
 						idEtapaActiva==EtapaUtils.ID_ETAPA_HABILITACION_BITACORA">Resultado
@@ -92,7 +92,7 @@
 			idEtapaActiva==EtapaUtils.ID_ETAPA_EVALUACION_ANTEPROYECTO ||
 			idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CONVOCATORIA_EXAMEN_GENERAL ||
 			idEtapaActiva==EtapaUtils.ID_ETAPA_EXAMEN_GENERAL" class="field col-12 md:col-12 pb-0">
-				<div class="card grid p-fluid mt-3">
+				<div class="card grid p-fluid mt-3" *ngIf="convocatoriaGenerada">
 					<div class="field col-12 md:col-6 pb-0">
 						<label>Fecha evaluacion programada: </label>
 						<input pInputText class="text" [disabled]="true"

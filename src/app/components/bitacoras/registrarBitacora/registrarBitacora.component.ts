@@ -24,7 +24,9 @@ export class RegistrarBitacoraComponent implements OnInit {
     bitacora: Bitacora = {
         descripcion: '',
         avance: 0,
-        fechaReporte: new Date,
+        numeroFolio: 0,
+        fechaReporteInicio: new Date,
+        fechaReporteFin: new Date
     };
     recursos: Recurso[] = [];
     recursoInforme?: Recurso;
@@ -58,16 +60,16 @@ export class RegistrarBitacoraComponent implements OnInit {
 
     cargarInforme(event: any) {
         const selectedFile = event.currentFiles[0];
-        this.recursoInforme = { file: selectedFile, icono: "pi pi-book", tipoRecurso:"INFORME MENSUAL"};
+        this.recursoInforme = { file: selectedFile, icono: "pi pi-book", tipoRecurso: "INFORME MENSUAL" };
     }
 
     cargarRecurso(event: any, fileUpload: any) {
         const selectedFile = event.currentFiles[0];
         const fileType = selectedFile.type;
         if (fileType.startsWith('image/')) {
-            this.recursos.push({ file: selectedFile, icono: "pi pi-image", tipoRecurso:"IMAGEN" });
+            this.recursos.push({ file: selectedFile, icono: "pi pi-image", tipoRecurso: "IMAGEN" });
         } else {
-            this.recursos.push({ file: selectedFile, icono: "pi pi-file",tipoRecurso:"PDF" });
+            this.recursos.push({ file: selectedFile, icono: "pi pi-file", tipoRecurso: "PDF" });
         }
         fileUpload.clear();
     }
@@ -86,7 +88,7 @@ export class RegistrarBitacoraComponent implements OnInit {
 
     agregarLink() {
         if (this.linkNuevo !== '') {
-            this.recursos.push({ link: this.linkNuevo, icono: "pi pi-link",tipoRecurso:"LINK" })
+            this.recursos.push({ link: this.linkNuevo, icono: "pi pi-link", tipoRecurso: "LINK" })
         }
         this.linkNuevo = '';
         this.mostrarLinkDialog = false;
@@ -95,7 +97,8 @@ export class RegistrarBitacoraComponent implements OnInit {
     agregarBitacora() {
         this.validarCampos = true;
         if (!this.isFieldInvalid(this.bitacora.descripcion) &&
-            !this.isFieldInvalid(this.bitacora.fechaReporte) &&
+            !this.isFieldInvalid(this.bitacora.fechaReporteInicio) &&
+            !this.isFieldInvalid(this.bitacora.fechaReporteFin) &&
             !this.isFieldInvalid(this.bitacora.avance)) {
             this.confirmationService.confirm({
                 key: 'confirm1',

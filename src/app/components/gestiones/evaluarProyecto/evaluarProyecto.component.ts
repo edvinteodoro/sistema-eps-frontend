@@ -116,6 +116,10 @@ export class EvaluarProyectoComponent implements OnInit {
                     this.acta.horaInicioEvaluacion = convocatoria.horaEvaluacion;
                     this.acta.horaFinEvaluacion = convocatoria.horaEvaluacion;
                 })
+            }else if(this.idEtapaActiva == EtapaUtils.ID_ETAPA_ACTA_FINALIZACION){
+                this.proyectoService.getActaExamenGeneral(this.idProyecto).subscribe(acta=>{
+                    this.acta.nota=acta.nota;
+                })
             }
         });
     }

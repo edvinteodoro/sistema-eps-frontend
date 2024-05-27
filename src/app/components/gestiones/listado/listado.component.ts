@@ -37,6 +37,8 @@ export class ListadoComponent implements OnInit {
         if (rolUsuario == Role.Supervisor ||
             rolUsuario == Role.Estudiante ||
             rolUsuario == Role.Asesor ||
+            rolUsuario == Role.CoordinadorEps ||
+            rolUsuario == Role.Coordinador ||
             rolUsuario == Role.Contraparte) {
             this.mostrarOpcionBitacora = true;
         }

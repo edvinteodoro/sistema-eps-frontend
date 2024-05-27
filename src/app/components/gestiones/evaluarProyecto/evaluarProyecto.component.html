@@ -94,11 +94,11 @@
 		<div class="grid p-fluid mt-3">
 			<div class="field col-12 md:col-12 pb-0">
 				<label htmlFor="fecha">Resultado: </label>
-				<p-dropdown [options]="resuldados" [(ngModel)]="acta.resultado" [autofocus]="true"></p-dropdown>
+				<p-dropdown [disabled]="idEtapaActiva==EtapaUtils.ID_ETAPA_ACTA_FINALIZACION" [options]="resuldados" [(ngModel)]="acta.resultado" [autofocus]="true"></p-dropdown>
 			</div>
 			<div class="field col-12 md:col-6 pb-0">
 				<label htmlFor="fecha">Nota: </label>
-				<p-inputNumber [(ngModel)]="acta.nota" [showButtons]="true" inputId="minmax-buttons" [min]="0"
+				<p-inputNumber [disabled]="idEtapaActiva==EtapaUtils.ID_ETAPA_ACTA_FINALIZACION"  [(ngModel)]="acta.nota" [showButtons]="true" inputId="minmax-buttons" [min]="0"
 					[max]="100"></p-inputNumber>
 			</div>
 			<div class="field col-12 md:col-6 pb-0">
