@@ -1,0 +1,17 @@
+# Default server configuration
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        root /var/www/html/sistema-eps-frontend;
+
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name _;
+
+        location / {
+                # First attempt to serve request as file, then as directory,
+                # if not found, fall back to index.html
+                try_files $uri $uri/ /index.html;
+        }
+}
