@@ -2,12 +2,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Acta } from '../model/Acta';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActaService {
-
+  apiUrl = environment.apiUrl;
   constructor(private http: HttpClient) { }
 
   getActas(page: number, size: number,nombres?:string,registroAcademico?:string): Observable<any> {
@@ -20,10 +21,10 @@ export class ActaService {
     if (registroAcademico != undefined) {
       params = params.set('registroAcademico', registroAcademico);
     }
-    return this.http.get<any>('http://localhost:8080/api/actas', { params });
+    return this.http.get<any>(`${this.apiUrl}/actas`, { params });
   }
 
   getActa(idActa: number): Observable<Acta> {
-    return this.http.get<any>('http://localhost:8080/api/actas/' + idActa);
+    return this.http.get<any>(`${this.apiUrl}/actas/${idActa}`);
   }
 }

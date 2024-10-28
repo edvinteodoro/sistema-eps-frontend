@@ -2,21 +2,22 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Requisito } from '../model/Requisito';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class DocumentosService {
-
+  apiUrl = environment.apiUrl;
   constructor(private http: HttpClient) { }
 
   getRequisito(idElmentoProyecto:number):Observable<Requisito>{
-    return this.http.get<any>('http://localhost:8080/api/documentos/'+idElmentoProyecto+'/elemento');
+    return this.http.get<any>(`${this.apiUrl}/documentos/${idElmentoProyecto}/elemento`);
   }
 
   getDocumento(url:String):Observable<Requisito>{
-    return this.http.get<any>('http://localhost:8080/api/documentos/url?url='+url);
+    return this.http.get<any>(`${this.apiUrl}/documentos/url?url=${url}`);
   }
 
   getDocumentos(categoria?:String):Observable<Requisito[]>{
@@ -24,6 +25,6 @@ export class DocumentosService {
     if(categoria && categoria.trim()!==''){
       params = params.set('categoria', categoria.toString());   
     }
-    return this.http.get<any>('http://localhost:8080/api/documentos',{params});
+    return this.http.get<any>(`${this.apiUrl}/documentos`,{params});
   }
 }

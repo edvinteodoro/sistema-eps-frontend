@@ -5,6 +5,7 @@ import { ActivarUsuario } from '../model/ActivarUsuario';
 import { tap } from 'rxjs/operators';
 import jwt_decode from 'jwt-decode';
 import { StorageService } from './storage.service';
+import { environment } from 'src/environments/environment';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -14,13 +15,14 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class AuthService {
+  apiUrl = environment.apiUrl;
   private readonly JWT_TOKEN = 'jwt';
 
   constructor(private http: HttpClient,
     private storageService:StorageService) { }
 
   login(obj:any):Observable<any> {
-    return this.http.post('http://localhost:8080/api/auth/login',obj).pipe(
+    return this.http.post(`${this.apiUrl}/auth/login`,obj).pipe(
       tap((authResult:any)=>{
         this.storageService.saveUser(authResult);
       })
@@ -52,13 +54,13 @@ export class AuthService {
   }
 
   activarUsuario(activarUsuario:ActivarUsuario):Observable<any>{
-    return this.http.post('http://localhost:8080/api/auth/activar-cuenta',activarUsuario);
+    return this.http.post(`${this.apiUrl}/auth/activar-cuenta`,activarUsuario);
   }
 
   refreshToken() {
     const authToken = {refreshToken:this.storageService.getUser().refreshToken,
     };
-    return this.http.post('http://localhost:8080/api/auth/refresh-token',authToken,httpOptions).pipe(
+    return this.http.post(`${this.apiUrl}/auth/refresh-token`,authToken,httpOptions).pipe(
       tap((authResult: any) => {
         this.storageService.saveUser(authResult);
       })

@@ -67,10 +67,10 @@ export class FileComponent{
                 this.proyectoService.agregarElementoProyecto(this.idProyecto, this.idElemento, this.elementoProyecto!).subscribe(
                     elementoProyecto => {
                         this.elementoProyecto = elementoProyecto;
-                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios guardados', detail: 'Se cambiado el titulo exitosamente.' });
+                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios guardados', detail: 'Los cambios se han guardado exitosamente.' });
                         this.elementoBloqueado = true;
                     }, (error) => {
-                        this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo cambiar el titulo del proyecto' });
+                        this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo realizar los cambios.' });
                     }
                 )
             }

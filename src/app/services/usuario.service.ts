@@ -4,12 +4,13 @@ import { Usuario } from '../model/Usuario';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Carrera } from '../model/Carrera';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
-
+  apiUrl=environment.apiUrl;
   constructor(private http: HttpClient) { }
 
   getUsuarios(page: number, size: number, usuarioFilter?: Usuario, idRol?: number): Observable<any> {
@@ -33,35 +34,35 @@ export class UsuarioService {
     if (idRol) {
       params = params.set('idRol', idRol.toString());
     }
-    return this.http.get<any>('http://localhost:8080/api/usuarios', { params });
+    return this.http.get<any>(`${this.apiUrl}/usuarios`, { params });
   }
 
   crearUsuario(usuario: any): Observable<Usuario> {
-    return this.http.post<any>('http://localhost:8080/api/usuarios', usuario);
+    return this.http.post<any>(`${this.apiUrl}/usuarios`, usuario);
   }
 
   actualizarUsuario(idUsuario: String, usuario: any): Observable<Usuario> {
-    return this.http.put<any>('http://localhost:8080/api/usuarios/' + idUsuario, usuario);
+    return this.http.put<any>(`${this.apiUrl}/usuarios/${idUsuario}`, usuario);
   }
 
   getUsuario(idUsuario: string): Observable<Usuario> {
-    return this.http.get<any>('http://localhost:8080/api/usuarios/' + idUsuario);
+    return this.http.get<any>(`${this.apiUrl}/usuarios/${idUsuario}`);
   }
 
   getUsuarioCarreras(): Observable<Carrera[]> {
-    return this.http.get<any>('http://localhost:8080/api/usuarios/actual/carreras');
+    return this.http.get<any>(`${this.apiUrl}/usuarios/actual/carreras`);
   }
 
   getCoordinadorEps(): Observable<Usuario> {
-    return this.http.get<any>('http://localhost:8080/api/usuarios/coordinador-eps');
+    return this.http.get<any>(`${this.apiUrl}/usuarios/coordinador-eps`);
   }
 
   activarUsuario(idUsuario: String): Observable<Usuario> {
-    return this.http.post<any>('http://localhost:8080/api/usuarios/' + idUsuario + '/reset-password', {});
+    return this.http.post<any>(`${this.apiUrl}/usuarios/${idUsuario}/reset-password`, {});
   }
 
   desactivarUsuario(idUsuario: String): Observable<Usuario> {
-    return this.http.post<any>('http://localhost:8080/api/usuarios/' + idUsuario + '/desactivar', {});
+    return this.http.post<any>(`${this.apiUrl}/usuarios/${idUsuario}/desactivar`, {});
   }
   /*
     getUsuarios() {
