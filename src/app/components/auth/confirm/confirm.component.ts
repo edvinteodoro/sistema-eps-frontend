@@ -20,7 +20,6 @@ import { AuthService } from 'src/app/services/auth.service';
 export class ConfirmComponent {
     errorLabel: string = "";
     activarUsuario: ActivarUsuario = {
-        usuario: "",
         token: "",
         password1: "",
         password2: ""
@@ -39,6 +38,10 @@ export class ConfirmComponent {
     }
 
     onLogin() {
+        if(this.activarUsuario.password1=="" || this.activarUsuario.password2==""){
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ingrese toda la informacion solicitada.'});
+            return;    
+        }
         this.authService.activarUsuario(this.activarUsuario).subscribe({
             next: (response) => {
                 this.messageService.add({ severity: 'success', summary: 'Usuario Activado', detail: 'Usuario activado exitosamente!'});

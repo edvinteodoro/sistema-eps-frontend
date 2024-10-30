@@ -20,76 +20,76 @@
 		idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CONVOCATORIA_EXAMEN_GENERAL" class="field col-12 md:col-12 pb-0">
 			<label>Convocatoria Firmada:</label>
 			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadConvocatoriaFirmada($event)"
-				(onRemove)="onRemoveConvocatoriaFirmada()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+				(onRemove)="onRemoveConvocatoriaFirmada()" [multiple]="false" accept=".pdf" [maxFileSize]="5000000"
 				[auto]="true">
 			</p-fileUpload>
 		</div>
 		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CARTA_ACEPTACION_CONTRAPARTE" class="field col-12 md:col-12 pb-0">
 			<label>Carta Aceptacion Contraparte Institucional:</label>
 			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadCartaAceptacion($event)"
-				(onRemove)="onRemoveCartaAceptacion()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+				(onRemove)="onRemoveCartaAceptacion()" [multiple]="false" accept=".pdf" [maxFileSize]="5000000"
 				[auto]="true">
 			</p-fileUpload>
 		</div>
 		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_CARTA_ACEPTACION_CONTRAPARTE" class="field col-12 md:col-12 pb-0">
 			<label><b>Oficio a Contraparte Institucional: </b>En caso de multiples documentos cargarlos en un unico documento pdf.</label>
 			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadOficioContraparte($event)"
-				(onRemove)="onRemoveOficioContraparte()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+				(onRemove)="onRemoveOficioContraparte()" [multiple]="false" accept=".pdf" [maxFileSize]="5000000"
 				[auto]="true">
 			</p-fileUpload>
 		</div>
 		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_BITACORA" class="field col-12 md:col-12 pb-0">
 			<label>Finiquito de contraparte institucional: </label>
 			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadFiniquitoContraparte($event)"
-				(onRemove)="onRemoveFiniquitoContraparte()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+				(onRemove)="onRemoveFiniquitoContraparte()" [multiple]="false" accept=".pdf" [maxFileSize]="5000000"
 				[auto]="true">
 			</p-fileUpload>
 		</div>
 		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_INFORME_FINAL" class="field col-12 md:col-12 pb-0">
 			<label>Informe Final:</label>
 			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadInformeFinal($event)"
-				(onRemove)="onRemoveInformeFinal()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+				(onRemove)="onRemoveInformeFinal()" [multiple]="false" accept=".pdf" [maxFileSize]="15000000"
 				[auto]="true">
 			</p-fileUpload>
 		</div>
 		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_CARGA_INFORME_FINAL" class="field col-12 md:col-12 pb-0">
 			<label>Carta de finalizacion de asesor:</label>
 			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadCartaFinalizacion($event)"
-				(onRemove)="onRemoveCartaFinalizacion()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+				(onRemove)="onRemoveCartaFinalizacion()" [multiple]="false" accept=".pdf" [maxFileSize]="5000000"
 				[auto]="true">
 			</p-fileUpload>
 		</div>
 		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REDACCION_ARTICULO" class="field col-12 md:col-12 pb-0">
 			<label>Cargar articulo cientifico: </label>
 			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadArticulo($event)"
-				(onRemove)="onRemoveArticulo()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000" [auto]="true">
+				(onRemove)="onRemoveArticulo()" [multiple]="false" accept=".pdf" [maxFileSize]="5000000" [auto]="true">
 			</p-fileUpload>
 		</div>
 		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REDACCION_ARTICULO" class="field col-12 md:col-12 pb-0">
 			<label>Cargar carta de traductor jurado: </label>
 			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadTraduccionArticulo($event)"
-				(onRemove)="onRemoveTraduccionArticulo()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+				(onRemove)="onRemoveTraduccionArticulo()" [multiple]="false" accept=".pdf" [maxFileSize]="5000000"
 				[auto]="true">
 			</p-fileUpload>
 		</div>
 		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REDACCION_ARTICULO" class="field col-12 md:col-12 pb-0">
 			<label>Cargar Constancia de Revision Linguistica: </label>
 			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadRevisionLinguistica($event)"
-				(onRemove)="onRemoveRevisionLinguistica()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+				(onRemove)="onRemoveRevisionLinguistica()" [multiple]="false" accept=".pdf" [maxFileSize]="5000000"
 				[auto]="true">
 			</p-fileUpload>
 		</div>
 		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_DICTAMEN_REVISION" class="field col-12 md:col-12 pb-0">
 			<label>Cargar Dictamen de Supervisor: </label>
 			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadDictamenRevision($event)"
-				(onRemove)="onRemoveDictamenRevision()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+				(onRemove)="onRemoveDictamenRevision()" [multiple]="false" accept=".pdf" [maxFileSize]="5000000"
 				[auto]="true">
 			</p-fileUpload>
 		</div>
 		<div *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_DICTAMEN_REVISION" class="field col-12 md:col-12 pb-0">
 			<label>Cargar Carta de Revisor: </label>
 			<p-fileUpload chooseLabel="Seleccionar" (onSelect)="onUploadCartaRevision($event)"
-				(onRemove)="onRemoveCartaRevision()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+				(onRemove)="onRemoveCartaRevision()" [multiple]="false" accept=".pdf" [maxFileSize]="5000000"
 				[auto]="true">
 			</p-fileUpload>
 		</div>

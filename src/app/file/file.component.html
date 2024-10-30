@@ -4,7 +4,7 @@
     (onClick)="descargar(elementoProyecto)"></p-button>
   <p-fileUpload class="file-uploader" *ngIf="modoEdicion && !elementoBloqueado"
     (onSelect)="cargarElemento($event,elementoProyecto!)" chooseLabel="Cargar Documento" mode="basic"
-    [multiple]="false" accept=".pdf" [maxFileSize]="1000000">
+    [multiple]="false" accept=".pdf" [maxFileSize]="5000000">
   </p-fileUpload>
   <p-button icon="pi pi-pencil" *ngIf="modoEdicion && elementoBloqueado"
     styleClass="p-button-rounded p-button-text p-button-raised" (onClick)="modificarElemento()"></p-button>

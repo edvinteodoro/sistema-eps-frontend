@@ -9,6 +9,9 @@ server {
 
         server_name _;
 
+	# Set max file upload size
+        client_max_body_size 15M;
+
         location / {
                 # First attempt to serve request as file, then as directory,
                 # if not found, fall back to index.html
