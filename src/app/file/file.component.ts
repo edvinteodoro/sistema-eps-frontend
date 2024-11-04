@@ -15,6 +15,7 @@ export class FileComponent{
     @Input() idProyecto!:number;
     @Input() idElemento!:number;
     elementoBloqueado:boolean=true;
+    isSaveFileLoading:boolean=false;
 
     constructor(private proyectoService: ProyectoService,private messageService: MessageService,
         private descargasService: DescargasService,private confirmationService: ConfirmationService) {
@@ -32,12 +33,15 @@ export class FileComponent{
     }
 
     descargar(elementoProyecto: ElementoProyecto) {
+        this.isSaveFileLoading=true;
         this.descargasService.descargar(elementoProyecto.informacion!).subscribe(
             response => {
+                this.isSaveFileLoading = false;
                 window.open(response.link.toString(), '_blank');
-            },
-            error => console.log('Error getting documento:', error)
-        );
+            }, (error) => {
+                this.isSaveFileLoading=false;
+                this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo realizar la descarga.' });
+            });
     }
 
     modificarElemento(){
@@ -64,12 +68,15 @@ export class FileComponent{
             acceptLabel: "Si",
             icon: 'pi pi-check',
             accept: () => {
+                this.isSaveFileLoading=true;
                 this.proyectoService.agregarElementoProyecto(this.idProyecto, this.idElemento, this.elementoProyecto!).subscribe(
                     elementoProyecto => {
+                        this.isSaveFileLoading=false;
                         this.elementoProyecto = elementoProyecto;
                         this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios guardados', detail: 'Los cambios se han guardado exitosamente.' });
                         this.elementoBloqueado = true;
                     }, (error) => {
+                        this.isSaveFileLoading=false;
                         this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo realizar los cambios.' });
                     }
                 )

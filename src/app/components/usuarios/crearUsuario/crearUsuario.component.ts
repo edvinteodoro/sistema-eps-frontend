@@ -116,7 +116,6 @@ export class CrearUsuarioComponent implements OnInit {
 
     confirm() {
         this.crearUsuario = true;
-        console.log('campos: ', this.optionalFields);
         if (!this.validarCampos(this.usuario, this.optionalFields)) {
             this.messageService.add({ key: 'tst', severity: 'error', summary: 'Campos invalidos', detail: 'Ingrese informacion en los campos obligatorias' });
         } else {
@@ -167,7 +166,6 @@ export class CrearUsuarioComponent implements OnInit {
             if (obj.hasOwnProperty(key) && !excludeFields.includes(key)) {
                 const value = obj[key];
                 if (value === undefined || (typeof value === 'string' && value.trim() === '')) {
-                    console.log('campo', key);
                     return false;
                 }
             }

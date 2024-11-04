@@ -39,6 +39,7 @@ export class DefinirEvaluacionComponent implements OnInit {
     mostrarRepresentante: boolean = false;
     mostrarFecha: boolean = false;
     validar: boolean = false;
+    isLoadingBotton:boolean=false;
     justificacion: any = '';
     fecha!: Date;
     hora!: Date;
@@ -140,7 +141,6 @@ export class DefinirEvaluacionComponent implements OnInit {
         ||this.etapaActiva.idEtapa == EtapaUtils.ID_ETAPA_CONVOCATORIA_EXAMEN_GENERAL) {
             this.definirEvaluacion();
         } else {
-            console.log('put')
             this.modificarEvaluacion();
         }
     }
@@ -155,16 +155,18 @@ export class DefinirEvaluacionComponent implements OnInit {
                 acceptLabel: "Si",
                 icon: 'pi pi-check-circle',
                 accept: () => {
+                    this.isLoadingBotton=true;
                     this.proyectoService.crearConvocatoriaAnteproyecto(this.idProyecto, this.convocatoria).subscribe({
                         next: () => {
+                            this.isLoadingBotton=false;
                             this.messageService.add({ key: 'tst', severity: 'success', summary: 'Evaluacion Definida', detail: 'Se ha definido la fecha de evaluacion exitosamente' });
                             setTimeout(() => {
                                 this.regresar();
                             }, 2000);
                         },
                         error: (error) => {
+                            this.isLoadingBotton=false;
                             this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: 'No se puede crear la convocatoria' });
-                            console.log(error);
                         }
                     });
                 }
@@ -184,15 +186,18 @@ export class DefinirEvaluacionComponent implements OnInit {
                 acceptLabel: "Si",
                 icon: 'pi pi-check-circle',
                 accept: () => {
+                    this.isLoadingBotton=true;
                     this.proyectoService.actualizarConvocatoriaAnteproyecto(this.idProyecto, this.convocatoria).subscribe({
                         next: () => {
+                            this.isLoadingBotton=false;
                             this.messageService.add({ key: 'tst', severity: 'success', summary: 'Evaluacion Definida', detail: 'Se ha definido la fecha de evaluacion exitosamente' });
                             setTimeout(() => {
                                 this.regresar();
                             }, 2000);
                         },
                         error: (error) => {
-                            console.log(error);
+                            this.isLoadingBotton=false;
+                            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: 'No se puede definir la fecha de evaluacion.' });
                         }
                     });
                 }

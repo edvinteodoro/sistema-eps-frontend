@@ -15,7 +15,6 @@ export class StorageService {
   private readonly REFRESH_TOKEN = 'refresh-token';
 
   clean(): void {
-    console.log('clean');
     window.sessionStorage.clear();
   }
 
@@ -34,7 +33,6 @@ export class StorageService {
 
   public isLoggedIn(): boolean {
     const user = window.sessionStorage.getItem(USER_KEY);
-    console.log('user: ',user);
     if (user) {
       return true;
     }

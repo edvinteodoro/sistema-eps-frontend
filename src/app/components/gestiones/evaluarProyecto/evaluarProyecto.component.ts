@@ -43,6 +43,7 @@ export class EvaluarProyectoComponent implements OnInit {
     fecha!: Date;
     hora!: Date;
     fechaDefinida!: String;
+    isLoadingBotton:boolean=false;
     fechaEvaluacionDefinida!: Evaluacion;
     convocatoriaGenerada!: Convocatoria;
     resuldados: any = ['APROBADO', 'APROBADO CON CORRECCIONES', 'RECHAZADO'];
@@ -150,16 +151,18 @@ export class EvaluarProyectoComponent implements OnInit {
                 acceptLabel: "Si",
                 icon: 'pi pi-check-circle',
                 accept: () => {
-
+                    this.isLoadingBotton=true;
                     this.proyectoService.crearActa(this.idProyecto, this.acta).subscribe({
                         next: () => {
-                            this.messageService.add({ key: 'tst', severity: 'success', summary: 'Evaluacion Definida', detail: 'Se ha definido la fecha de evaluacion exitosamente' });
+                            this.isLoadingBotton=false;
+                            this.messageService.add({ key: 'tst', severity: 'success', summary: 'Evaluacion Definida', detail: 'Se ha generado acta exitosamente' });
                             setTimeout(() => {
                                 this.regresar();
                             }, 2000);
                         },
                         error: (error) => {
-                            console.log(error);
+                            this.isLoadingBotton=false;
+                            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: 'No se puede generar acta' });
                         }
                     });
                 }

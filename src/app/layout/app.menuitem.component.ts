@@ -93,7 +93,6 @@ export class AppMenuitemComponent implements OnInit, OnDestroy {
     }
 
     test(val:any):any{
-        console.log('valor: ',val);
         return true;
     }
 

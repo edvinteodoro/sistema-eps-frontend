@@ -20,6 +20,7 @@ export class LoginComponent {
 
     isLoggedIn = false;
     isLoginFailed = false;
+    isLoading = false;
     roles: string[] = [];
 
     errorLabel: string = "";
@@ -46,21 +47,25 @@ export class LoginComponent {
     }
 
     onLogin() {
+        this.isLoading = true;
         this.loginObj.username = this.user;
         this.loginObj.password = this.password;
         this.authService.login(this.loginObj).subscribe({
             next: data => {
+
                 this.storageService.saveUser(data);
                 this.isLoginFailed = false;
                 this.isLoggedIn = true;
                 this.roles = this.storageService.getUser().roles;
+                this.isLoading = false;
                 this.reloadPage();
             },
             error: err => {
-                console.log('error',err);
-                this.errorLabel = err.error;
-                if(err.status==0){
-                    this.errorLabel= "Error en el sistema, vuelva a intentar mas tarde.";
+                this.isLoading = false;
+                if (err.status == 0 || err.status == 502) {
+                    this.errorLabel = "Error en el sistema, vuelva a intentar mas tarde.";
+                }else{
+                    this.errorLabel = err.error;
                 }
                 this.isLoginFailed = true;
             }

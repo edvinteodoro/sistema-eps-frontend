@@ -44,7 +44,6 @@ export class BitacoraService {
     } else if (recurso.link != undefined) {
       formData.append('link', recurso.link);
     }
-    console.log('tipoRecurso', recurso.tipoRecurso)
     if (recurso.tipoRecurso) {
       formData.append('tipoRecurso', recurso.tipoRecurso);
     }

@@ -75,7 +75,6 @@ export class ProyectoService {
     if (registroAcademico && registroAcademico.trim() !== '') {
       params = params.set('registroAcademico', registroAcademico.toString());
     }
-    console.log('params: ', params)
     return this.http.get<any>(`${this.apiUrl}/proyectos`, { params });
   }
 
@@ -288,7 +287,6 @@ export class ProyectoService {
     } else if (recurso.link != undefined) {
       formData.append('link', recurso.link);
     }
-    console.log('tipoRecurso', recurso.tipoRecurso)
     if (recurso.tipoRecurso) {
       formData.append('tipoRecurso', recurso.tipoRecurso);
     }

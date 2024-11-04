@@ -80,9 +80,9 @@ export class ProrrogaComponent implements OnInit {
       requisito => {
         //this.link = requisito.link;
         window.open(requisito.link.toString(), '_blank');
-      },
-      error => console.log('Error getting documento:', error)
-    );
+      }, (error) => {
+        this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo realizar la descarga.' });
+    });
   }
 
   cancelarEdicionDias() {

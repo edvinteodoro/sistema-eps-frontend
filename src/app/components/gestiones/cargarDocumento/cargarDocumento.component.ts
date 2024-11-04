@@ -28,6 +28,7 @@ export class CargarDocumentoComponent implements OnInit {
     constanciaLinguistica!:any;
     dictamenRevision!:any;
     cartaRevision!:any;
+    isLoadingBotton:boolean=false;
 
     constructor(private proyectoService: ProyectoService,
         private router: Router, private confirmationService: ConfirmationService,
@@ -57,18 +58,22 @@ export class CargarDocumentoComponent implements OnInit {
     }
 
     finalizarBitacora(){
-        console.log('finalizar')
         this.confirmationService.confirm({
             key: 'confirm1',
             message: '¿Estas seguro de finalizar la bitacora?',
             acceptLabel: "Si",
             icon: 'pi pi-check-circle',
             accept: () => {
+                this.isLoadingBotton=true;
                 this.proyectoService.finalizarBitacora(this.idProyecto,this.finiquitoContraparte).subscribe(() => {
+                    this.isLoadingBotton=false;
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Bitacora Finalizada', detail: 'Se ha finalizado la bitacora exitosamente.' });
                     setTimeout(() => {
                         this.router.navigate(['gestiones/proyecto']);
                     }, 2000);
+                }, (error) => {
+                    this.isLoadingBotton=false;
+                    this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo finalizar la bitacora.' });
                 });
             }
         });
@@ -81,11 +86,16 @@ export class CargarDocumentoComponent implements OnInit {
             acceptLabel: "Si",
             icon: 'pi pi-check-circle',
             accept: () => {
+                this.isLoadingBotton=true;
                 this.proyectoService.cargarConvocatoria(this.idProyecto, this.convocatoriaFirmada).subscribe(() => {
+                    this.isLoadingBotton=false;
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Convocatoria Cargada', detail: 'Se ha cargado la convocatoria exitosamente' });
                     setTimeout(() => {
                         this.router.navigate(['gestiones/proyecto']);
                     }, 2000);
+                }, (error) => {
+                    this.isLoadingBotton=false;
+                    this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo cargar la convocatoria' });
                 });
             }
         });
@@ -98,11 +108,16 @@ export class CargarDocumentoComponent implements OnInit {
             acceptLabel: "Si",
             icon: 'pi pi-check-circle',
             accept: () => {
+                this.isLoadingBotton=true;
                 this.proyectoService.cargarInformeFinal(this.idProyecto, this.cartaFinalizacion,this.informeFinal).subscribe(() => {
+                    this.isLoadingBotton=false;
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Informe Final Cargada', detail: 'Se ha cargado el informe final exitosamente' });
                     setTimeout(() => {
                         this.router.navigate(['gestiones/proyecto']);
                     }, 2000);
+                }, (error) => {
+                    this.isLoadingBotton=false;
+                    this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo cargar el informe final.' });
                 });
             }
         });
@@ -115,11 +130,16 @@ export class CargarDocumentoComponent implements OnInit {
             acceptLabel: "Si",
             icon: 'pi pi-check-circle',
             accept: () => {
+                this.isLoadingBotton=true;
                 this.proyectoService.cargarCartaAceptacionContraparte(this.idProyecto, this.cartaAceptacion,this.oficioContraparte).subscribe(() => {
+                    this.isLoadingBotton=false;
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Carta de Aceptacion Cargada', detail: 'Se ha cargado la carta de aceptacion exitosamente' });
                     setTimeout(() => {
                         this.router.navigate(['gestiones/proyecto']);
                     }, 2000);
+                }, (error) => {
+                    this.isLoadingBotton=false;
+                    this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo cargar la carta de aceptacion.' });
                 });
             }
         });
@@ -132,11 +152,16 @@ export class CargarDocumentoComponent implements OnInit {
             acceptLabel: "Si",
             icon: 'pi pi-check-circle',
             accept: () => {
+                this.isLoadingBotton=true;
                 this.proyectoService.cargarArticulo(this.idProyecto, this.articulo,this.traduccionArticulo,this.constanciaLinguistica).subscribe(() => {
+                    this.isLoadingBotton=false;
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Articulo Cargado', detail: 'Se ha cargado el articulo exitosamente' });
                     setTimeout(() => {
                         this.router.navigate(['gestiones/proyecto']);
                     }, 2000);
+                }, (error) => {
+                    this.isLoadingBotton=false;
+                    this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo cargar el articulo' });
                 });
             }
         });
@@ -166,11 +191,16 @@ export class CargarDocumentoComponent implements OnInit {
             acceptLabel: "Si",
             icon: 'pi pi-check-circle',
             accept: () => {
+                this.isLoadingBotton=true;
                 this.proyectoService.cargarDictamenRevision(this.idProyecto, this.dictamenRevision,this.cartaRevision).subscribe(() => {
+                    this.isLoadingBotton=false;
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Dictamen y Carta de Revision Cargadas', detail: 'Se ha cargado el dictamen y carta de revision exitosamente.' });
                     setTimeout(() => {
                         this.router.navigate(['gestiones/proyecto']);
                     }, 2000);
+                }, (error) => {
+                    this.isLoadingBotton=false;
+                    this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo cargar dictamen y carta de revision.' });
                 });
             }
         });

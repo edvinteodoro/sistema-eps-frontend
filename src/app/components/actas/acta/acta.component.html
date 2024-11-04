@@ -62,8 +62,10 @@
 			<input [(ngModel)]="acta.horaFinEvaluacion" pInputText class="text" />
 		</div>
 		<div class="field col-12 md:col-6 pb-0">
-			<p-button *ngIf="!acta.actaGenerada" label="Generar Acta" (onClick)="generarActa()"></p-button>
-			<p-button *ngIf="acta.actaGenerada" label="Volver a generar Acta" (onClick)="generarActa()"></p-button>
+			<p-button *ngIf="!acta.actaGenerada" label="Generar Acta" 
+			[loading]="isLoadingBotton" (onClick)="generarActa()"></p-button>
+			<p-button *ngIf="acta.actaGenerada" label="Volver a generar Acta"
+			[loading]="isLoadingBotton" (onClick)="generarActa()"></p-button>
 		</div>
 
 		<div class="field col-12 md:col-6 pb-0">

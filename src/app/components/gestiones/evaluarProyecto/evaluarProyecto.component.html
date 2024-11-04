@@ -130,7 +130,8 @@
 				(click)="regresar()"></p-button>
 		</div>
 		<div class="field col-12 md:col-6">
-			<p-button icon="pi pi-check" styleClass="p-button-outlined" label="Aceptar" (click)="aceptar()"></p-button>
+			<p-button icon="pi pi-check" styleClass="p-button-outlined" label="Aceptar" 
+			[loading]="isLoadingBotton" (click)="aceptar()"></p-button>
 		</div>
 	</div>
 </div>

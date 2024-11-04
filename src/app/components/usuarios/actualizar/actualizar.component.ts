@@ -73,7 +73,7 @@ export class ActualizarComponent implements OnInit {
                 { label: 'Desactivar usuario', icon: 'pi pi-fw pi-times', command: this.desactivarUsuario.bind(this) }];
         } else {
             this.menuItems = [
-                { label: 'Activar Usuario', icon: 'pi pi-fw pi-check', command: this.activarUsuario.bind(this) }
+                { label: 'Reiniciar contraseña', icon: 'pi pi-fw pi-check', command: this.activarUsuario.bind(this) }
             ];
         }
     }
@@ -126,7 +126,7 @@ export class ActualizarComponent implements OnInit {
     activarUsuario() {
         this.confirmationService.confirm({
             key: 'confirm1',
-            message: '¿Estas seguro de activar el usuario?',
+            message: 'Se enviará un correo al usuario para poder activar la cuenta, ¿Estas seguro de continuar?',
             acceptLabel: "Si",
             icon: 'pi pi-check-circle',
             accept: () => {
@@ -211,7 +211,6 @@ export class ActualizarComponent implements OnInit {
                 acceptLabel: "Si",
                 icon: 'pi pi-check-circle',
                 accept: () => {
-                    console.log('usuario', this.usuario);
                     this.usuarioService.actualizarUsuario(this.usuario.idUsuario!, this.usuario).subscribe((res: any) => {
                         this.messageService.add({ key: 'tst', severity: 'success', summary: 'Usuario Actualizado', detail: 'Se han actualizado los datos del usuarios exitosamente.' });
                         this.bloqueado = true;
@@ -233,7 +232,6 @@ export class ActualizarComponent implements OnInit {
             if (obj.hasOwnProperty(key) && !excludeFields.includes(key)) {
                 const value = obj[key];
                 if (value === undefined || (typeof value === 'string' && value.trim() === '')) {
-                    console.log('campo', key);
                     return false;
                 }
             }

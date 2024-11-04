@@ -24,7 +24,7 @@
                     -->
                     </div>
                     
-                    <button pButton pRipple label="Iniciar Sesión" class="w-full p-3 text-xl" (click)="onLogin()"></button>
+                    <button pButton pRipple label="Iniciar Sesión" class="w-full p-3 text-xl" [loading]="isLoading"  (click)="onLogin()"></button>
                 </div>
             </div>
         </div>
