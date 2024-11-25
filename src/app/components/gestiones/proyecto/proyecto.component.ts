@@ -47,6 +47,8 @@ export class ProyectoComponent implements OnInit {
     totalpages: number = 1;
     currentPage: number = 0;
     loading: boolean = false;
+    isSolicitandoRevision: boolean = false;
+    isAprobando: boolean = false;
     titulos!: Titulo[];
     //elementos del proyecto
     elementoTitulo: ElementoProyecto = {};
@@ -127,7 +129,6 @@ export class ProyectoComponent implements OnInit {
 
     ngOnInit() {
         this.idUsuario = this.authService.getUserId();
-        this.rolUsuario = this.authService.getUserRole();
         this.loading = true;
         this.getIdProyecto();
         this.proyectoService.getProyectoPorId(this.idProyecto).subscribe(proyecto => {
@@ -144,7 +145,9 @@ export class ProyectoComponent implements OnInit {
             this.getAsesoresTecnicos();
             this.getEtapaActiva();
         }, (error) => {
-            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: error.error });
+            this.loading = false;
+            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', 
+                detail: "Hubo un error al intentar obtener los datos del proyecto, vuelva a intentar mas tarde.",life:10000 });
         }
         )
     }
@@ -239,7 +242,7 @@ export class ProyectoComponent implements OnInit {
             this.idEtapaActiva = etapaProyectoActiva.etapa.idEtapa;
             this.proyectoEditable = etapaProyectoActiva.editable;
             if (this.proyectoEditable) {
-                if (this.authService.getUserRole() == Role.Estudiante) {
+                if (this.isEstudiante) {
                     this.modoEdicion = true && this.proyecto.activo!;
                 }
             }
@@ -308,9 +311,9 @@ export class ProyectoComponent implements OnInit {
         }
     }
 
-    getUserRol(): string {
+    /*getUserRol(): string {
         return this.authService.getUserRole();
-    }
+    }*/
 
 
     getConvocatoria() {
@@ -330,7 +333,7 @@ export class ProyectoComponent implements OnInit {
     }
 
     etapaBitacora() {
-        if (this.authService.getUserRole() == Role.Estudiante) {
+        if (this.isEstudiante) {
             this.opciones.push({
                 label: 'Finalizar Bitacora',
                 icon: 'pi pi-fw pi-book',
@@ -408,17 +411,28 @@ export class ProyectoComponent implements OnInit {
             acceptLabel: "Si",
             icon: 'pi pi-check',
             accept: () => {
+                this.isSolicitandoRevision = true;
                 this.proyectoService.solicitarRevision(this.idProyecto).subscribe(proyecto => {
+                    this.modoEdicion = false;
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Solicitud enviada', detail: 'Se ha solicitado la revision del proyecto' });
                     setTimeout(() => {
-                        window.location.reload();
+                        this.actualizarEtapaActiva();
+                        this.isSolicitandoRevision = false;
                     }, 2000);
                 }, (error) => {
-                    console.log('error',error)
-                    this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: 'Se produjo un error al solicitar la revision: '+error.error });
+                    this.isSolicitandoRevision = false;
+                    this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: 'Se produjo un error al solicitar la revision: ' + error.error });
                 });
             }
         });
+    }
+
+    actualizarEtapaActiva() {
+        this.proyectoService.getEtapaActiva(this.idProyecto).subscribe(etapaProyectoActiva => {
+            this.idEtapaActiva = etapaProyectoActiva.etapa.idEtapa;
+            this.proyectoEditable = etapaProyectoActiva.editable;
+            this.proyecto.etapaActiva = etapaProyectoActiva.etapa;
+        })
     }
 
     cancelarCambios() {
@@ -434,7 +448,7 @@ export class ProyectoComponent implements OnInit {
     }
 
     mostraOpciones(): boolean {
-        if (this.authService.getUserRole() == Role.Secretaria) {
+        if (this.isSecretaria) {
             return true;
         }
         return false;
@@ -451,14 +465,15 @@ export class ProyectoComponent implements OnInit {
             acceptLabel: "Si",
             icon: 'pi pi-check',
             accept: () => {
+                this.isAprobando = true;
                 this.proyectoService.aprobacionSecretaria(this.idProyecto).subscribe(proyecto => {
                     this.proyectoEditable = true;
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Cambios aprobados', detail: 'Se han aprobado los cambios exitosamente' });
                     setTimeout(() => {
-                        this.router.navigate(['/gestiones/listado']);
+                        this.actualizarEtapaActiva();
                     }, 2000);
                 }, (error) => {
-                    console.log('error: ', error)
+                    this.isAprobando = false;
                     this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'Error: ' + error.error });
                 });
             }

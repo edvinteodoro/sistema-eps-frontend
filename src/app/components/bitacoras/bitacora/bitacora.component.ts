@@ -23,6 +23,7 @@ export class BitacoraComponent implements OnInit {
 
     idBitacora!: number;
     modoEdicion: boolean = false;
+    isLoading: boolean = false;
     editarInformacion: boolean = false;
     fecha: Date = new Date();
     bitacora!: Bitacora;
@@ -38,17 +39,19 @@ export class BitacoraComponent implements OnInit {
     idUsuario!: number;
     mostrarBotonRevision: boolean = false;
 
-    constructor(private location: Location, private proyectoService: ProyectoService,private messageService: MessageService,
+    constructor(private location: Location, private proyectoService: ProyectoService, private messageService: MessageService,
         private router: Router, private bitacoraService: BitacoraService,
         private descargasService: DescargasService, private datePipe: DatePipe,
         private confirmationService: ConfirmationService, private authService: AuthService) { }
 
     ngOnInit() {
+        this.isLoading = true;
         this.idUsuario = this.authService.getUserId();
         this.getIdBitacora();
         sessionStorage.setItem('idBitacora', JSON.stringify(this.idBitacora));
         this.getComentarios();
         this.bitacoraService.getBitacora(this.idBitacora).subscribe(bitacora => {
+            this.isLoading = false;
             this.bitacora = bitacora;
             this.getUsuariosAsignados();
             this.fechaRegistroText = this.datePipe.transform(bitacora.fecha, 'dd-MM-yyyy')!;
@@ -58,6 +61,9 @@ export class BitacoraComponent implements OnInit {
             this.proyectoService.getElementoProyecto(bitacora.idProyecto!, ElementoUtils.ID_ELEMENTO_TITULO).subscribe(elementoProyecto => {
                 this.tituloProyecto = elementoProyecto;
             });
+        }, (error) => {
+            this.isLoading = false;
+            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'Hubo un error al intentar obtener la bitacora.' });
         });
     }
 
@@ -74,7 +80,10 @@ export class BitacoraComponent implements OnInit {
 
     getUsuariosAsignados() {
         if (this.authService.hasRole(Role.Estudiante)) {
-            this.modoEdicion = true;
+            console.log("bitacora",this.bitacora)
+            if (!this.bitacora.revisionAsesor && !this.bitacora.revisionContraparte && !this.bitacora.revisionSupervisor) {
+                this.modoEdicion = true;
+            }
         } else {
             if (!this.bitacora.revisionSupervisor) {
                 this.proyectoService.getSupervisor(this.bitacora.idProyecto!).subscribe(supervisor => {
@@ -215,7 +224,7 @@ export class BitacoraComponent implements OnInit {
                     this.bitacora = bitacora;
                     this.editarInformacion = false;
 
-                },(error)=>{
+                }, (error) => {
 
                 })
             }

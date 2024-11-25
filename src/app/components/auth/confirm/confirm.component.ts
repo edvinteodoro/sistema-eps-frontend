@@ -18,6 +18,7 @@ import { AuthService } from 'src/app/services/auth.service';
     `]
 })
 export class ConfirmComponent {
+    isLoading: boolean = false;
     errorLabel: string = "";
     activarUsuario: ActivarUsuario = {
         token: "",
@@ -38,19 +39,20 @@ export class ConfirmComponent {
     }
 
     onLogin() {
-        if(this.activarUsuario.password1=="" || this.activarUsuario.password2==""){
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ingrese toda la informacion solicitada.'});
-            return;    
+        if (this.activarUsuario.password1 == "" || this.activarUsuario.password2 == "") {
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Ingrese toda la informacion solicitada.' });
+            return;
         }
+        this.isLoading = true;
         this.authService.activarUsuario(this.activarUsuario).subscribe({
             next: (response) => {
-                this.messageService.add({ severity: 'success', summary: 'Usuario Activado', detail: 'Usuario activado exitosamente!'});
+                this.messageService.add({ severity: 'success', summary: 'Usuario Activado', detail: 'Usuario activado exitosamente!' });
                 setTimeout(() => {
-                    this.router.navigate(['']);
+                    this.router.navigate(['/auth/login']);
                 }, 2000);
             },
             error: (error) => {
-                console.log('error: ',error)
+                this.isLoading = false;
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error: ' + error.error });
             }
         })

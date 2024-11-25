@@ -8,10 +8,10 @@
                 </div>
 
                 <div>
-                    <p-password required="required" id="password1" [(ngModel)]="activarUsuario.password1" [toggleMask]="true" [feedback]="true" placeholder="contraseña" 
+                    <p-password required="required" id="passwordC1" [(ngModel)]="activarUsuario.password1" [toggleMask]="true" [feedback]="true" placeholder="nueva contraseña" 
                     weakLabel="Debil" mediumLabel="Medio" strongLabel="Fuerte"styleClass="mb-5" inputStyleClass="w-full p-3 md:w-30rem"></p-password>
                     <br>
-                    <p-password required="required" id="password2" [(ngModel)]="activarUsuario.password2" placeholder="confirmar contraseña"
+                    <p-password required="required" id="passwordC2" [(ngModel)]="activarUsuario.password2" placeholder="confirmar contraseña"
                     [toggleMask]="true" [feedback]="false" styleClass="mb-5" inputStyleClass="w-full p-3 md:w-30rem"></p-password>
 
                     <div class="flex align-items-center justify-content-between mb-5 gap-5">
@@ -24,7 +24,7 @@
                     -->
                     </div>
                     
-                    <button pButton pRipple label="Iniciar Sesión" class="w-full p-3 text-xl" (click)="onLogin()"></button>
+                    <button pButton pRipple label="Activar Usuario" class="w-full p-3 text-xl" (click)="onLogin()" [loading]="isLoading"></button>
                 </div>
             </div>
         </div>

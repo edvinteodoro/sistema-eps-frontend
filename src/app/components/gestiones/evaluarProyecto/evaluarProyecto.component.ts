@@ -154,8 +154,7 @@ export class EvaluarProyectoComponent implements OnInit {
                     this.isLoadingBotton=true;
                     this.proyectoService.crearActa(this.idProyecto, this.acta).subscribe({
                         next: () => {
-                            this.isLoadingBotton=false;
-                            this.messageService.add({ key: 'tst', severity: 'success', summary: 'Evaluacion Definida', detail: 'Se ha generado acta exitosamente' });
+                            this.messageService.add({ key: 'tst', severity: 'success', summary: 'Acta generada', detail: 'Se ha generado acta exitosamente.' });
                             setTimeout(() => {
                                 this.regresar();
                             }, 2000);

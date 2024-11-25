@@ -18,7 +18,6 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TagModule } from 'primeng/tag';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 @NgModule({
@@ -40,8 +39,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
         InputNumberModule,
         DialogModule,
         CheckboxModule,
-        TagModule,
-        ProgressSpinnerModule
+        TagModule
     ],
     declarations: [ListadoComponent]
 })

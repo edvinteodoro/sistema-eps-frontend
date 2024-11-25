@@ -13,7 +13,7 @@ export class BitacoraService {
   apiUrl = environment.apiUrl;
   constructor(private http: HttpClient) { }
 
-  getBitacoras(page: number, size: number, nombres?: string, registro?: string): Observable<any> {
+  getBitacoras(page: number, size: number, nombres?: string, registro?: string,idProyecto?:number): Observable<any> {
     let params = new HttpParams();
     params = params.set('page', page.toString());
     params = params.set('size', size.toString());
@@ -22,6 +22,9 @@ export class BitacoraService {
     }
     if (registro != undefined) {
       params = params.set('registroAcademico', registro);
+    }
+    if (idProyecto != undefined) {
+      params = params.set('idProyecto', idProyecto);
     }
     return this.http.get<any>(`${this.apiUrl}/bitacoras`, { params });
   }

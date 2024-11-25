@@ -21,7 +21,9 @@ export class ActaComponent implements OnInit {
     acta!: Acta;
     proyecto!: Proyecto;
     tituloProyecto!: ElementoProyecto;
+    isLoading:boolean=false;
     isLoadingBotton: boolean = false;
+    isDownloading:boolean = false;
 
     constructor(private location: Location, private proyectoService: ProyectoService,
         private router: Router, private actaService: ActaService,
@@ -47,10 +49,14 @@ export class ActaComponent implements OnInit {
     }
 
     getActa() {
+        this.isLoading=true;
         this.actaService.getActa(this.idActa).subscribe(acta => {
             this.acta = acta;
             this.getTituloProyecto();
+            this.isLoading=false;
         }, (error) => {
+            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: 'Hubo un error al intentar obtener el acta.' });
+            this.isLoading=false;
         });
     }
 
@@ -108,31 +114,40 @@ export class ActaComponent implements OnInit {
 
     descargarActa() {
         if (this.acta.tipo == 'ANTEPROYECTO') {
+            this.isDownloading=true;
             this.proyectoService.getElementoProyecto(this.acta.proyecto!.idProyecto!, ElementoUtils.ID_ELEMENTO_ACTA_ANTEPROYECTO).subscribe(elementoProyecto => {
                 this.descargasService.descargar(elementoProyecto.informacion!).subscribe(
                     response => {
+                        this.isDownloading=false;
                         window.open(response.link.toString(), '_blank');
                     }, (error) => {
+                        this.isDownloading=false;
                         this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: 'No se pudo descargar el acta' });
                     }
                 );
             });
         } else if (this.acta.tipo == 'EXAMEN GENERAL') {
+            this.isDownloading=true;
             this.proyectoService.getElementoProyecto(this.acta.proyecto!.idProyecto!, ElementoUtils.ID_ELEMENTO_ACTA_EXAMEN_GENERAL).subscribe(elementoProyecto => {
                 this.descargasService.descargar(elementoProyecto.informacion!).subscribe(
                     response => {
+                        this.isDownloading=false;
                         window.open(response.link.toString(), '_blank');
                     }, (error) => {
+                        this.isDownloading=false;
                         this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: 'No se pudo descargar el acta' });
                     }
                 );
             });
         } else if (this.acta.tipo == 'FINALIZACION') {
+            this.isDownloading=true;
             this.proyectoService.getElementoProyecto(this.acta.proyecto!.idProyecto!, ElementoUtils.ID_ELEMENTO_ACTA_APROBACION).subscribe(elementoProyecto => {
                 this.descargasService.descargar(elementoProyecto.informacion!).subscribe(
                     response => {
+                        this.isDownloading=false;
                         window.open(response.link.toString(), '_blank');
                     }, (error) => {
+                        this.isDownloading=false;
                         this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: 'No se pudo descargar el acta' });           
                     }
                 );

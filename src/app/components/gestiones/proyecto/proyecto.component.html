@@ -1,11 +1,11 @@
+<p-toast key="tst"></p-toast>
 <div *ngIf="loading" class="card">
 	<div class="container">
 		<p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8" fill="var(--surface-ground)"
 			animationDuration=".5s"></p-progressSpinner>
 	</div>
 </div>
-<div *ngIf="!loading" class="card">
-	<p-toast key="tst"></p-toast>
+<div *ngIf="proyecto && !loading" class="card">
 	<div class="flex md:flex-row justify-content-between align-items-center">
 		<div class="flex md:flex-row">
 			<!--<span class="icon-atras block">
@@ -138,58 +138,58 @@
 					</div>
 				</div>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>EtapaUtils.ID_ETAPA_DICTAMEN_REVISION" class="field col-12 md:col-12 pb-0">
+			<div *ngIf="(isEstudiante || isSupervisor||isCoordinadorEps ||isSecretaria) && idEtapaActiva>EtapaUtils.ID_ETAPA_DICTAMEN_REVISION" class="field col-12 md:col-12 pb-0">
 				<label>Carta de revisor</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="isSupervisor && proyecto.activo!"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_CARTA_REVISION"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps) && idEtapaActiva>EtapaUtils.ID_ETAPA_DICTAMEN_REVISION"
+			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps|| isSecretaria) && idEtapaActiva>EtapaUtils.ID_ETAPA_DICTAMEN_REVISION"
 				class="field col-12 md:col-12 pb-0">
 				<label>Dictamen supervisor</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="isSupervisor && proyecto.activo!"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_DICTAMEN_SUPERVISOR"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps) && idEtapaActiva>EtapaUtils.ID_ETAPA_REDACCION_ARTICULO"
+			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps|| isSecretaria) && idEtapaActiva>EtapaUtils.ID_ETAPA_REDACCION_ARTICULO"
 				class="field col-12 md:col-12 pb-0">
 				<label>Constancia de revision linguistica</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion || (idEtapaActiva==EtapaUtils.ID_ETAPA_DICTAMEN_REVISION && isEstudiante)"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_CONSTANCIA_LINGUISTICA"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps) && idEtapaActiva>EtapaUtils.ID_ETAPA_REDACCION_ARTICULO"
+			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps|| isSecretaria) && idEtapaActiva>EtapaUtils.ID_ETAPA_REDACCION_ARTICULO"
 				class="field col-12 md:col-12 pb-0">
 				<label>Carta de traductor jurado</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_CARTA_TRADUCTOR_JURADO"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps) && idEtapaActiva>EtapaUtils.ID_ETAPA_REDACCION_ARTICULO"
+			<div *ngIf="(isEstudiante || isSupervisor || isCoordinadorEps|| isSecretaria) && idEtapaActiva>EtapaUtils.ID_ETAPA_REDACCION_ARTICULO"
 				class="field col-12 md:col-12 pb-0">
 				<label>Articulo cientifico</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_ARTICULO"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor || isAsesor ||isCoordinadorEps) && idEtapaActiva>EtapaUtils.ID_ETAPA_CARGA_INFORME_FINAL"
+			<div *ngIf="idEtapaActiva>EtapaUtils.ID_ETAPA_CARGA_INFORME_FINAL"
 				class="field col-12 md:col-12 pb-0">
 				<label>Informe final</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion || (idEtapaActiva==EtapaUtils.ID_ETAPA_CONVOCATORIA_EXAMEN_GENERAL && isEstudiante)"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_INFORME_FINAL"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>EtapaUtils.ID_ETAPA_CARGA_INFORME_FINAL" class="field col-12 md:col-12 pb-0">
+			<div *ngIf="(isEstudiante || isSupervisor|| isSecretaria||isCoordinadorEps) && idEtapaActiva>EtapaUtils.ID_ETAPA_CARGA_INFORME_FINAL" class="field col-12 md:col-12 pb-0">
 				<label>Carta de finalizacion asesor</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion || (idEtapaActiva==EtapaUtils.ID_ETAPA_CONVOCATORIA_EXAMEN_GENERAL && isEstudiante)"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_CARTA_FINALIZACION"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>EtapaUtils.ID_ETAPA_BITACORA" class="field col-12 md:col-12 pb-0">
+			<div *ngIf="(isEstudiante || isSupervisor|| isSecretaria||isCoordinadorEps) && idEtapaActiva>EtapaUtils.ID_ETAPA_BITACORA" class="field col-12 md:col-12 pb-0">
 				<label>Finiquito de contraparte</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion || (idEtapaActiva==EtapaUtils.ID_ETAPA_APROBACION_BITACORA && isEstudiante)"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_FINIQUITO_CONTRAPARTE"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>EtapaUtils.ID_ETAPA_CARGA_CARTA_ACEPTACION_CONTRAPARTE" 
+			<div *ngIf="(isEstudiante || isSupervisor|| isSecretaria) && idEtapaActiva>EtapaUtils.ID_ETAPA_CARGA_CARTA_ACEPTACION_CONTRAPARTE" 
 				class="field col-12 md:col-12 pb-0">
 				<label>Carta de aceptacion contraparte</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion"
 					[idElemento]="ElementoUtils.ID_ELEMENTO_CARTA_ACEPTACION_CONTRAPARTE"></app-file>
 			</div>
-			<div *ngIf="(isEstudiante || isSupervisor) && idEtapaActiva>EtapaUtils.ID_ETAPA_CARGA_CARTA_ACEPTACION_CONTRAPARTE" 
+			<div *ngIf="(isEstudiante || isSupervisor || isSecretaria) && idEtapaActiva>EtapaUtils.ID_ETAPA_CARGA_CARTA_ACEPTACION_CONTRAPARTE" 
 				class="field col-12 md:col-12 pb-0">
 				<label>Oficio a contraparte</label>
 				<app-file [idProyecto]="proyecto.idProyecto!" [modoEdicion]="modoEdicion"
@@ -261,13 +261,13 @@
 			<div class="field col-12 md:col-6 pb-0">
 				<p-button *ngIf="idEtapaActiva<=EtapaUtils.ID_ETAPA_REVISION_SUPERVISOR && 
 				proyectoEditable && isEstudiante" icon="pi pi-send" styleClass="p-button-outlined" (click)="solicitarRevision()"
-					label="Solicitar Revision"></p-button>
+					label="Solicitar Revision" [loading]="isSolicitandoRevision"></p-button>
 				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REVISION_SECRETARIA && 
 				!proyectoEditable && isSecretaria" icon="pi pi-check" styleClass="p-button-outlined"
-					(click)="aprobarCambiosSecretaria()" label="Aprobar"></p-button>
+					(click)="aprobarCambiosSecretaria()" label="Aprobar" [loading]="isAprobando"></p-button>
 				<p-button *ngIf="idEtapaActiva==EtapaUtils.ID_ETAPA_REVISION_SUPERVISOR && 
 				!proyectoEditable && isSupervisor" icon="pi pi-check" styleClass="p-button-outlined"
-					(click)="aprobarCambiosSupervisor()" label="Aprobar"></p-button>
+					(click)="aprobarCambiosSupervisor()" label="Aprobar" [loading]="isAprobando"></p-button>
 				<p-button *ngIf="(idEtapaActiva==EtapaUtils.ID_ETAPA_CONVOCATORIA_ANTEPROYECTO || 
 				idEtapaActiva==EtapaUtils.ID_ETAPA_CONVOCATORIA_EXAMEN_GENERAL) && isSupervisor" icon="pi pi-calendar" focus="true"
 					styleClass="p-button-outlined" (click)="definirEvaluacion()"

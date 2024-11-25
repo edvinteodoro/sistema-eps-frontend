@@ -1,11 +1,11 @@
-<div *ngIf="loading" class="card">
+<!--<div *ngIf="isLoading" class="card">
     <div class="container">
         <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8" fill="var(--surface-ground)"
             animationDuration=".5s"></p-progressSpinner>
     </div>
-</div>
-<div *ngIf="!loading" class="card">
-    <p-toast></p-toast>
+</div>-->
+<div class="card">
+    <p-toast key="tst"></p-toast>
     <h5 class="titulo">Usuarios</h5>
     <div class="grid p-fluid mt-3">
         <div class="field col-12 md:col-4 pb-0">
@@ -30,7 +30,8 @@
     [rows]="10" 
     [lazy]="true"
     (onLazyLoad)="loadUsuarios($event)"
-    [totalRecords]="totalRecords">
+    [totalRecords]="totalRecords"
+    [loading]="isLoading">
         <ng-template pTemplate="header">
             <tr>
                 <th pSortableColumn="nombres">Nombre</th>

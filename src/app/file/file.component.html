@@ -2,7 +2,7 @@
   <label *ngIf="!elementoProyecto && elementoBloqueado"> -- Sin elemento --</label>
   <p-button *ngIf="elementoProyecto && elementoBloqueado" label="Descargar documento" class="button"
   [loading]="isSaveFileLoading" (onClick)="descargar(elementoProyecto)"></p-button>
-  <p-fileUpload class="file-uploader" *ngIf="modoEdicion && !elementoBloqueado"
+  <p-fileUpload class="file-uploader" *ngIf="modoEdicion && !elementoBloqueado" [maxFileSize]="5000000"
     (onSelect)="cargarElemento($event,elementoProyecto!)" chooseLabel="Cargar Documento" mode="basic"
     [multiple]="false" accept=".pdf" [maxFileSize]="5000000">
   </p-fileUpload>

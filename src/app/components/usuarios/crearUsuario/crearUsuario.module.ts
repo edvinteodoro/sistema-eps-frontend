@@ -15,6 +15,7 @@ import { InputTextareaModule } from "primeng/inputtextarea";
 import { InputTextModule } from "primeng/inputtext";
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
+import { MessagesModule } from 'primeng/messages';
 
 @NgModule({
 	imports: [
@@ -32,7 +33,8 @@ import { ToastModule } from 'primeng/toast';
 		InputTextareaModule,
 		InputTextModule,
 		ConfirmDialogModule,
-		ToastModule
+		ToastModule,
+		MessagesModule
 	],
 	declarations: [CrearUsuarioComponent]
 })

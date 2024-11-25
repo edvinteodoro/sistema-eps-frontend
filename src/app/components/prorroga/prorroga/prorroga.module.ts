@@ -12,6 +12,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DividerModule } from 'primeng/divider';
 import {ConfirmDialogModule} from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { DialogModule } from 'primeng/dialog';
     InputNumberModule,
     DividerModule,
     ConfirmDialogModule,
-    DialogModule
+    DialogModule,
+    ProgressSpinnerModule
   ]
 })
 export class ProrrogaModule {

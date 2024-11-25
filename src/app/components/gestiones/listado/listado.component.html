@@ -14,7 +14,7 @@
         </div>
     </div>
     <p-table [value]="proyectos" [paginator]="true" [rows]="10" [lazy]="true" (onLazyLoad)="loadProyectos($event)"
-        [totalRecords]="totalRecords">
+        [totalRecords]="totalRecords" [loading]="loading">
 
         <ng-template pTemplate="header">
             <tr>
@@ -50,15 +50,15 @@
                     <div class="flex gap-2">
                         <div>
                             <p-button
-                                *ngIf="(proyecto.etapaActiva.rol && rolUsuario==proyecto.etapaActiva.rol.titulo) && proyecto.activo"
+                                *ngIf="proyecto.requiereAtencion"
                                 icon="pi pi-eye" styleClass="p-button-rounded p-button-danger p-button-outlined"
                                 title="Ver Proyecto" (click)="revisarProyecto(proyecto)"></p-button>
                             <p-button
-                                *ngIf="(!proyecto.etapaActiva.rol || rolUsuario!=proyecto.etapaActiva.rol.titulo) || !proyecto.activo"
+                                *ngIf="!proyecto.requiereAtencion"
                                 icon="pi pi-eye" styleClass="p-button-rounded p-button-secondary p-button-outlined"
                                 title="Ver Proyecto" (click)="revisarProyecto(proyecto)"></p-button>
                         </div>
-                        <div *ngIf="mostrarOpcionBitacora">
+                        <div *ngIf="!this.isSecretaria">
                             <p-button icon="pi pi-book"
                                 styleClass="p-button-rounded p-button-secondary p-button-outlined" title="Ver Bitacora"
                                 (click)="revisarBitacora(proyecto)"></p-button>

@@ -110,9 +110,9 @@
 		</div>
 		<div class="field col-12 md:col-6 pb-0">
 			<p-button *ngIf="opcion==1" icon="pi pi-check" styleClass="p-button-outlined" label="Asignar Asesor"
-				(click)="asignarAsesor()" [disabled]="usuarioSeleccionado==undefined"></p-button>
+				(click)="asignarAsesor()" [disabled]="usuarioSeleccionado==undefined" [loading]="isAsignando"></p-button>
 			<p-button *ngIf="opcion==2" icon="pi pi-check" styleClass="p-button-outlined" label="Asignar Contraparte"
-			(click)="asignarContraparte()" [disabled]="usuarioSeleccionado==undefined"></p-button>
+			(click)="asignarContraparte()" [disabled]="usuarioSeleccionado==undefined" [loading]="isAsignando"></p-button>
 		</div>
 	</div>
 </div>

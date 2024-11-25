@@ -25,6 +25,7 @@ export class AsignarUsuarioComponent implements OnInit {
     idPersona!: number;
     opcion!: Number;
     loading: boolean = true;
+    isAsignando: boolean = false;
     proyecto!: Proyecto;
     elementoTitulo!: ElementoProyecto;
     persona!: Usuario;
@@ -124,12 +125,12 @@ export class AsignarUsuarioComponent implements OnInit {
 
     getUsuarios() {
         if (this.opcion == 1) {
-            this.usuarioService.getUsuarios(0, 10, {nombreCompleto:this.nombresFiltro, numeroColegiado:this.colegiadoFiltro}).subscribe(response => {
+            this.usuarioService.getUsuarios(0, 10, { nombreCompleto: this.nombresFiltro, numeroColegiado: this.colegiadoFiltro }).subscribe(response => {
                 console.log('usuarios', response.content);
                 this.usuariosLista = response.content;
             })
         } else if (this.opcion == 2) {
-            this.usuarioService.getUsuarios(0, 10, {nombreCompleto:this.nombresFiltro, numeroColegiado:this.colegiadoFiltro,dpi:this.dpiFiltro}).subscribe(response => {
+            this.usuarioService.getUsuarios(0, 10, { nombreCompleto: this.nombresFiltro, numeroColegiado: this.colegiadoFiltro, dpi: this.dpiFiltro }).subscribe(response => {
                 console.log('usuarios', response.content);
                 this.usuariosLista = response.content;
             })
@@ -145,7 +146,7 @@ export class AsignarUsuarioComponent implements OnInit {
     }
 
     crearUsuario() {
-        this.router.navigate(['usuarios/crear-usuario'], { state: { idPersona: this.idPersona, tipo: this.opcion, carrera:this.proyecto.carrera} });
+        this.router.navigate(['usuarios/crear-usuario'], { state: { idPersona: this.idPersona, tipo: this.opcion, carrera: this.proyecto.carrera } });
     }
 
     asignarAsesor() {
@@ -155,11 +156,14 @@ export class AsignarUsuarioComponent implements OnInit {
             acceptLabel: "Si",
             icon: 'pi pi-check-circle',
             accept: () => {
+                this.isAsignando = true;
                 this.proyectoService.aprobacionSupervisor(this.idProyecto, this.usuarioSeleccionado).subscribe(() => {
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Asesor asignado', detail: 'Se ha asignado asesor exitosamente.' });
                     setTimeout(() => {
                         this.router.navigate(['gestiones/proyecto']);
                     }, 2000);
+                }, (error) => {
+                    this.isAsignando = false;
                 });
             }
         });
@@ -172,9 +176,11 @@ export class AsignarUsuarioComponent implements OnInit {
             acceptLabel: "Si",
             icon: 'pi pi-check-circle',
             accept: () => {
+                this.isAsignando = true;
                 this.proyectoService.habilitarBitacora(this.idProyecto, this.usuarioSeleccionado).subscribe(() => {
                     this.messageService.add({ key: 'tst', severity: 'success', summary: 'Contraparte institucional asignado', detail: 'Se ha asignado contraparte institucional exitosamente.' });
                     setTimeout(() => {
+                        this.isAsignando = false;
                         this.router.navigate(['gestiones/proyecto']);
                     }, 2000);
                 });

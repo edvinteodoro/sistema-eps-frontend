@@ -6,6 +6,7 @@ import { tap } from 'rxjs/operators';
 import jwt_decode from 'jwt-decode';
 import { StorageService } from './storage.service';
 import { environment } from 'src/environments/environment';
+import { Role } from '../model/Utils';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -19,32 +20,38 @@ export class AuthService {
   private readonly JWT_TOKEN = 'jwt';
 
   constructor(private http: HttpClient,
-    private storageService:StorageService) { }
+    private storageService: StorageService) { }
 
-  login(obj:any):Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/login`,obj).pipe(
-      tap((authResult:any)=>{
+  login(obj: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/login`, obj).pipe(
+      tap((authResult: any) => {
         this.storageService.saveUser(authResult);
       })
-    );   
+    );
   }
 
-  getUserRole(): string{
-    const token =this.storageService.getUser().accessToken;
-    if(token){
+  getUserRole(): string {
+    const token = this.storageService.getUser().accessToken;
+    if (token) {
       const decodedToken = jwt_decode<{ authorities: string[] }>(token);
-      const userRole = decodedToken.authorities[0];
+      const roles = decodedToken.authorities;
+      let userRole = decodedToken.authorities[0];
+      if (roles.length > 1) {
+        if (roles.includes(Role.Supervisor)) {
+          userRole = Role.Supervisor;
+        }
+      }
       return userRole;
     }
     return "No";
   }
 
-  getUserId():number{
-    const userId =this.storageService.getUser().idUsuario;
+  getUserId(): number {
+    const userId = this.storageService.getUser().idUsuario;
     return userId;
   }
 
-  hasRole(role:string):boolean{
+  hasRole(role: string): boolean {
     const token = this.storageService.getUser().accessToken;
     if (token) {
       const decodedToken = jwt_decode<{ authorities: string[] }>(token);
@@ -53,15 +60,18 @@ export class AuthService {
     return false;
   }
 
-  activarUsuario(activarUsuario:ActivarUsuario):Observable<any>{
-    return this.http.post(`${this.apiUrl}/auth/activar-cuenta`,activarUsuario);
+  activarUsuario(activarUsuario: ActivarUsuario): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/activar-cuenta`, activarUsuario);
   }
 
   refreshToken() {
-    const authToken = {refreshToken:this.storageService.getUser().refreshToken,
+    console.log('Refreshing token');
+    const authToken = {
+      refreshToken: this.storageService.getUser().refreshToken,
     };
-    return this.http.post(`${this.apiUrl}/auth/refresh-token`,authToken,httpOptions).pipe(
+    return this.http.post(`${this.apiUrl}/auth/refresh-token`, authToken, httpOptions).pipe(
       tap((authResult: any) => {
+        console.log('new token set')
         this.storageService.saveUser(authResult);
       })
     );

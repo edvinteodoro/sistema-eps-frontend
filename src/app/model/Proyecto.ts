@@ -18,4 +18,5 @@ export interface Proyecto {
     contraparte?:Usuario;
     institucion?:Institucion;
     elementoTitulo?:ElementoProyecto;
+    requiereAtencion?:boolean;
 }

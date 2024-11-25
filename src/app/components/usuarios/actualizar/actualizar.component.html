@@ -1,5 +1,11 @@
-<div class="card">
-	<p-toast key="tst"></p-toast>
+<p-toast key="tst"></p-toast>
+<div *ngIf="isLoading" class="card">
+    <div class="container">
+        <p-progressSpinner styleClass="w-4rem h-4rem" strokeWidth="8" fill="var(--surface-ground)"
+            animationDuration=".5s"></p-progressSpinner>
+    </div>
+</div>
+<div *ngIf="usuario && !isLoading" class="card">
 	<div class="flex md:flex-row justify-content-between align-items-center">
 		<div class="flex md:flex-row">
 			<span class="icon-atras block">
@@ -69,11 +75,11 @@
 	<div class="grid p-fluid mt-3">
 		<div class="field col-12 md:col-6">
 			<p-button *ngIf="!bloqueado" icon="pi pi-undo" styleClass="p-button-outlined" label="Cancelar"
-				(click)="cancelarEdicion()"></p-button>
+				(click)="cancelarEdicion()" [loading]="isCanceling"></p-button>
 		</div>
 		<div class="field col-12 md:col-6">
 			<p-button *ngIf="!bloqueado" icon="pi pi-save" styleClass="p-button-outlined" label="Guardar Cambios"
-				(click)="guardarUsuario()"></p-button>
+				(click)="guardarUsuario()" [loading]="isSaving"></p-button>
 		</div>
 		<div class="field col-12 md:col-12">
 			<p-button *ngIf="bloqueado" icon="pi pi-user-edit" styleClass="p-button-outlined" label="Editar usuario"

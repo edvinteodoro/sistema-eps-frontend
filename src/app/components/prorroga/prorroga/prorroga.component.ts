@@ -28,6 +28,7 @@ export class ProrrogaComponent implements OnInit {
 
   isSupervisor: boolean = false;
   isEstudiante: boolean = false;
+  isLoading: boolean = false;
 
   mostrarLinkDialog: boolean = false;
 
@@ -39,12 +40,17 @@ export class ProrrogaComponent implements OnInit {
   ngOnInit(): void {
     this.idUsuario = this.authService.getUserId();
     this.getIdProrroga();
+    this.isLoading = true;
     this.prorrogaService.getProrroga(this.idProrroga).subscribe(prorroga => {
       this.prorroga = prorroga;
       this.getRolUsuario();
+      this.isLoading = false;
       this.proyectoService.getElementoProyecto(prorroga.proyecto?.idProyecto!, ElementoUtils.ID_ELEMENTO_TITULO).subscribe(elementoProyecto => {
         this.prorroga.proyecto!.elementoTitulo = elementoProyecto;
       });
+    },(error)=>{
+      this.isLoading=false;
+      this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'Hubo un problema al intetar obtener la solicitud.' });
     })
   }
 
@@ -82,7 +88,7 @@ export class ProrrogaComponent implements OnInit {
         window.open(requisito.link.toString(), '_blank');
       }, (error) => {
         this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: 'No se pudo realizar la descarga.' });
-    });
+      });
   }
 
   cancelarEdicionDias() {
@@ -191,7 +197,7 @@ export class ProrrogaComponent implements OnInit {
         this.prorroga.aprobado = false;
         this.prorrogaService.responderProrroga(this.idProrroga, this.prorroga).subscribe(prorroga => {
           this.messageService.add({ key: 'tst', severity: 'success', summary: 'Listo!', detail: 'Se ha rechazado la solicitud de prorroga.' });
-          this.mostrarLinkDialog=false;
+          this.mostrarLinkDialog = false;
         }, (error) => {
           this.prorroga.aprobado = undefined;
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Error: ' + error });

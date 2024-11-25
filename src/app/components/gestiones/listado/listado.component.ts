@@ -17,6 +17,14 @@ export class ListadoComponent implements OnInit {
 
     totalRecords!: number;
     loading: boolean = false;
+    idUsuario!: number;
+    isSupervisor: boolean = false;
+    isSecretaria: boolean = false;
+    isEstudiante: boolean = false;
+    isAsesor: boolean = false;
+    isContraparte: boolean = false;
+    isCoordinadorEps: boolean = false;
+    isCoordinadorCarrera: boolean = false;
 
     rolUsuario: string = "";
 
@@ -27,20 +35,26 @@ export class ListadoComponent implements OnInit {
         private router: Router, private authService: AuthService) { }
 
     ngOnInit() {
+        this.idUsuario = this.authService.getUserId();
+        this.getUsuarioRol();
         this.rolUsuario = this.authService.getUserRole();
-        this.loading = true;
-        this.opcionBitacora();
     }
 
-    opcionBitacora() {
-        var rolUsuario = this.authService.getUserRole();
-        if (rolUsuario == Role.Supervisor ||
-            rolUsuario == Role.Estudiante ||
-            rolUsuario == Role.Asesor ||
-            rolUsuario == Role.CoordinadorEps ||
-            rolUsuario == Role.Coordinador ||
-            rolUsuario == Role.Contraparte) {
-            this.mostrarOpcionBitacora = true;
+    getUsuarioRol() {
+        if (this.authService.hasRole(Role.Estudiante)) {
+            this.isEstudiante = true;
+        } if (this.authService.hasRole(Role.Secretaria)) {
+            this.isSecretaria = true;
+        } if (this.authService.hasRole(Role.Supervisor)) {
+            this.isSupervisor = true;
+        } if (this.authService.hasRole(Role.Contraparte)) {
+            this.isContraparte = true;
+        } if (this.authService.hasRole(Role.Asesor)) {
+            this.isAsesor = true;
+        } if (this.authService.hasRole(Role.Coordinador)) {
+            this.isCoordinadorCarrera = true;
+        } if (this.authService.hasRole(Role.CoordinadorEps)) {
+            this.isCoordinadorEps = true;
         }
     }
 
@@ -49,22 +63,44 @@ export class ListadoComponent implements OnInit {
     }
 
     revisarBitacora(proyecto: Proyecto) {
-        this.router.navigate(['bitacoras/listado'], { state: { registroAcademico: proyecto.usuario!.registroAcademico } });
+        this.router.navigate(['bitacoras/listado'], {
+            state: {
+                registroAcademico: proyecto.usuario!.registroAcademico,
+                idProyecto: proyecto.idProyecto
+            }
+        });
     }
 
     loadProyectos(event: any) {
         this.proyectos = [];
         let page = event.first / 10;
+        this.loading = true;
         this.proyectoService.getProyectos(page, 10).subscribe(response => {
             this.proyectos = response.content;
             this.proyectos.forEach(proyecto => {
+                proyecto.requiereAtencion = false;
                 this.proyectoService.getElementoProyecto(proyecto.idProyecto!, ElementoUtils.ID_ELEMENTO_TITULO).subscribe(elementoProyecto => {
                     proyecto.elementoTitulo = elementoProyecto;
-                })
+                });
+                if (this.isSupervisor && this.isCoordinadorEps) {
+                    if (proyecto.etapaActiva!.rol && (proyecto.etapaActiva!.rol.titulo == Role.Supervisor)) {
+                        this.proyectoService.getSupervisor(proyecto.idProyecto!).subscribe(supervisor => {
+                            if (supervisor.idUsuario == this.idUsuario.toString()) {
+                                proyecto.requiereAtencion = true;
+                            }
+                        });
+                    } else if (proyecto.etapaActiva!.rol && (proyecto.etapaActiva!.rol.titulo == Role.CoordinadorEps)) {
+                        proyecto.requiereAtencion = true;
+                    }
+                } else if (proyecto.etapaActiva!.rol && proyecto.etapaActiva!.rol.titulo == this.rolUsuario) {
+                    proyecto.requiereAtencion = true;
+                }
             })
             this.totalRecords = response.totalElements;
-        },(error)=>{
-            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: error.error });
+            this.loading = false;
+        }, (error) => {
+            this.loading = false;
+            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: "Hubo un error al intentar obtener el listado de proyectos." });
         })
     }
 

@@ -16,6 +16,7 @@ import { InputTextModule } from "primeng/inputtext";
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { MenuModule } from 'primeng/menu';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
 	imports: [
@@ -34,7 +35,8 @@ import { MenuModule } from 'primeng/menu';
 		InputTextModule,
 		ConfirmDialogModule,
 		ToastModule,
-		MenuModule
+		MenuModule,
+		ProgressSpinnerModule
 	],
 	declarations: [ActualizarComponent]
 })

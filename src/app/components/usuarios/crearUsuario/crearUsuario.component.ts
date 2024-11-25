@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, Message, MessageService } from 'primeng/api';
 import { Carrera } from 'src/app/model/Carrera';
 import { Rol } from 'src/app/model/Rol';
 import { Titulo } from 'src/app/model/Titulo';
@@ -12,6 +12,7 @@ import { TituloService } from 'src/app/services/titulo.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { PersonaService } from 'src/app/services/persona.service';
 import { Role } from 'src/app/model/Utils';
+import { error } from 'console';
 
 interface Campo {
     class: string,
@@ -51,9 +52,9 @@ export class CrearUsuarioComponent implements OnInit {
 
     ngOnInit() {
         this.getPersonaData();
-        this.tituloService.getTitulos().subscribe(titulos => this.titulos = titulos);
-        this.rolService.getRoles().subscribe(roles => this.roles = roles);
-        this.carreraService.getCarreras().subscribe(carreras => this.carreras = carreras);
+        this.getTitulos();
+        this.getRoles();
+        this.getCarreras();
     }
 
     getPersonaData() {
@@ -66,6 +67,24 @@ export class CrearUsuarioComponent implements OnInit {
                 this.getPersonaRol();
             })
         }
+    }
+
+    getTitulos() {
+        this.tituloService.getTitulos().subscribe(titulos => { this.titulos = titulos }, (error) => {
+            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: "Hubo un error en el sistema, vuelva a intentar mas tarde.",life:20000 });
+        });
+    }
+
+    getRoles() {
+        this.rolService.getRoles().subscribe(roles => this.roles = roles, (error) => {
+            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: "Hubo un error en el sistema, vuelva a intentar mas tarde.",life:20000 });
+        });
+    }
+
+    getCarreras(){
+        this.carreraService.getCarreras().subscribe(carreras => this.carreras = carreras,(error)=>{
+            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: "Hubo un error en el sistema, vuelva a intentar mas tarde.",life:20000 });    
+        });
     }
 
     onChangeRol(event: any) {
@@ -117,7 +136,7 @@ export class CrearUsuarioComponent implements OnInit {
     confirm() {
         this.crearUsuario = true;
         if (!this.validarCampos(this.usuario, this.optionalFields)) {
-            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Campos invalidos', detail: 'Ingrese informacion en los campos obligatorias' });
+            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Campos invalidos', detail: 'Ingrese informacion en los campos obligatorias',life:20000 });
         } else {
             if (!this.usuario.titulo) {
                 this.usuario.titulo = this.titulos[0];
@@ -129,7 +148,7 @@ export class CrearUsuarioComponent implements OnInit {
                 icon: 'pi pi-check-circle',
                 accept: () => {
                     this.usuarioService.crearUsuario(this.usuario).subscribe((res: any) => {
-                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Usuario Creado', detail: 'Se ha creado el usuario exitosamente' });
+                        this.messageService.add({ key: 'tst', severity: 'success', summary: 'Usuario Creado', detail: 'Se ha creado el usuario exitosamente',life:20000 });
                         setTimeout(() => {
                             if (this.idPersona != undefined) {
                                 this.location.back();
@@ -137,10 +156,10 @@ export class CrearUsuarioComponent implements OnInit {
                             this.router.navigate(['/usuarios/listado']);
                         }, 2000);
                     }, (error) => {
-                        if (error.status == 401) {
-                            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: error.error });
+                        if (error.status == 0) {
+                            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: "Hubo un error en el sistema, vuelva a intentar mas tarde",life:20000 });
                         } else {
-                            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: error.error });
+                            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error Message', detail: error.error,life:20000 });
                         }
                     });
                 }
@@ -156,7 +175,16 @@ export class CrearUsuarioComponent implements OnInit {
             acceptLabel: "Si",
             icon: 'pi pi-times-circle',
             accept: () => {
-                //this.limpiarCampos();
+                this.usuario = {
+                    nombreCompleto: '',
+                    correo: '',
+                    dpi: '',
+                    telefono: '',
+                    rol: undefined,
+                    carreras: undefined,
+                    numeroColegiado: undefined,
+                    registroAcademico: undefined
+                };
             }
         });
     }

@@ -7,6 +7,7 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { TagModule } from 'primeng/tag';
     TableModule,
     ButtonModule,
     TagModule,
-    InputTextModule
+    InputTextModule,
+    ToastModule
   ]
 })
 export class ListadoModule { }

@@ -21,7 +21,6 @@ export class LoginComponent {
     isLoggedIn = false;
     isLoginFailed = false;
     isLoading = false;
-    roles: string[] = [];
 
     errorLabel: string = "";
 
@@ -35,35 +34,31 @@ export class LoginComponent {
 
     constructor(public layoutService: LayoutService, private authService: AuthService, private router: Router,
         private storageService: StorageService) {
+        this.goToProyecto();
+    }
+
+    goToProyecto(){
         if (this.storageService.isLoggedIn()) {
             this.isLoggedIn = true;
-            this.roles = this.storageService.getUser().roles;
             this.router.navigate(['/gestiones/listado']);
         }
     }
 
-    reloadPage(): void {
-        window.location.reload();
-    }
-
     onLogin() {
-        this.isLoading = true;
         this.loginObj.username = this.user;
         this.loginObj.password = this.password;
+        this.isLoading = true;
         this.authService.login(this.loginObj).subscribe({
             next: data => {
-
                 this.storageService.saveUser(data);
                 this.isLoginFailed = false;
                 this.isLoggedIn = true;
-                this.roles = this.storageService.getUser().roles;
-                this.isLoading = false;
-                this.reloadPage();
+                this.goToProyecto();
             },
             error: err => {
                 this.isLoading = false;
                 if (err.status == 0 || err.status == 502) {
-                    this.errorLabel = "Error en el sistema, vuelva a intentar mas tarde.";
+                    this.errorLabel = "Hubo un error en el sistema, vuelva a intentar mas tarde.";
                 }else{
                     this.errorLabel = err.error;
                 }

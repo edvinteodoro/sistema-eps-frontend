@@ -27,6 +27,7 @@ import { CommentModule } from 'src/app/comment/comment.module';
 import { TagModule } from 'primeng/tag';
 import { MenuModule } from 'primeng/menu';
 import { DatePipe } from '@angular/common';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 @NgModule({
@@ -56,7 +57,8 @@ import { DatePipe } from '@angular/common';
 		PhaseModule,
 		CommentModule,
 		TagModule,
-		MenuModule
+		MenuModule,
+		ProgressSpinnerModule
 	],
 	declarations: [ActaComponent],
 	providers: [DatePipe]

@@ -3,6 +3,7 @@ import { ConfirmationService } from 'primeng/api';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from "./service/app.layout.service";
 import { StorageService } from '../services/storage.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-topbar',
@@ -20,11 +21,11 @@ export class AppTopBarComponent {
     @ViewChild('topbarmenu') menu!: ElementRef;
 
     constructor(private confirmationService: ConfirmationService, public layoutService: LayoutService,
-        private storageService: StorageService) { }
+        private storageService: StorageService,private router: Router) { }
 
     logOut() {
         this.storageService.clean();
-        window.location.reload();
+        this.router.navigate(['auth/login']);
     }
 
     confirm() {

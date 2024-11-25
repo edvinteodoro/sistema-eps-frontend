@@ -18,6 +18,7 @@ export class RegistrarBitacoraComponent implements OnInit {
 
     isLoading: boolean = false;
     validarCampos: boolean = false;
+    isCreando: boolean = false;
 
     proyectos: Proyecto[] = [];
     habilitarBitacora: boolean = false;
@@ -106,6 +107,7 @@ export class RegistrarBitacoraComponent implements OnInit {
                 acceptLabel: "Si",
                 icon: 'pi pi-check-circle',
                 accept: () => {
+                    this.isCreando = true;
                     this.bitacora.recursos = this.recursos;
                     this.proyectoService.agregarBitacora(this.proyecto.idProyecto!, this.bitacora).subscribe(
                         (bitacora) => {
@@ -121,6 +123,7 @@ export class RegistrarBitacoraComponent implements OnInit {
                             }, 2000);
                         },
                         (error) => {
+                            this.isCreando = false;
                             this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: 'No se puedo crear el registro' });
                         }
                     );

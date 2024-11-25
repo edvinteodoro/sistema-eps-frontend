@@ -250,7 +250,7 @@
 				<label [ngClass]="{'p-error block': isFieldInvalid(elementoAnteproyecto.file)}"
 					htmlFor="anteproyecto">Cargar Anteproyecto</label>
 				<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadAnteproyecto($event)"
-					(onRemove)="onRemoveAnteproyecto()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+					(onRemove)="onRemoveAnteproyecto()" [multiple]="false" accept=".pdf" [maxFileSize]="10000000"
 					[auto]="true">
 				</p-fileUpload>
 			</div>
@@ -311,7 +311,7 @@
 			<div class="field col-12 md:col-12 pb-0">
 				<label><b>Otros documentos (Opcional):</b> En caso de multiples documentos, deben ser unidos en un solo documento pdf. </label>
 				<p-fileUpload chooseLabel="Seleccionar" name="demo[]" (onSelect)="onUploadOtros($event)"
-					(onRemove)="onRemoveOtros()" [multiple]="false" accept=".pdf" [maxFileSize]="1000000"
+					(onRemove)="onRemoveOtros()" [multiple]="false" accept=".pdf" [maxFileSize]="10000000"
 					[auto]="true">
 				</p-fileUpload>
 			</div>

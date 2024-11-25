@@ -23,7 +23,7 @@ export class ListadoComponent implements OnInit {
     usuariosSeleccionados: Usuario[] = [];
 
     totalRecords!: number;
-    loading: boolean = false;
+    isLoading: boolean = false;
     submitted: boolean = false;
     cols: any[] = [];
     statuses: any[] = [];
@@ -55,10 +55,14 @@ export class ListadoComponent implements OnInit {
     loadUsuarios(event: any) {
         this.usuarios = [];
         let page =  event.first/ 10;
+        this.isLoading=true;
         this.usuarioService.getUsuarios(page, 10,this.usuarioFilter).subscribe(response => {
             this.usuarios = response.content;
-            this.loading = false;
             this.totalRecords = response.totalElements;
+            this.isLoading = false;
+        },(error)=>{
+            this.isLoading=false;
+            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: "Hubo un error al intentar obtener el listado de usuarios." });
         })
     }
 }

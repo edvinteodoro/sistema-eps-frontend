@@ -65,7 +65,7 @@ export class CambiarUsuarioComponent implements OnInit {
 
     getUsuario() {
         if (this.opcion === 1) {
-            this.proyectoService.getPersonaAsesor(this.idProyecto).subscribe(asesor => {
+            this.proyectoService.getUsuarioAsesor(this.idProyecto).subscribe(asesor => {
                 this.usuario = asesor;
                 this.usuarioService.getUsuarios(0, 15, undefined).subscribe(response => {
                     this.usuariosLista = response.content;

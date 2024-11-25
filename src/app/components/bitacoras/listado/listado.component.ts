@@ -19,10 +19,11 @@ export class ListadoComponent implements OnInit {
     cols: any[] = [];
     proyectoActivo?: Proyecto;
     totalRecords!: number;
-    loading: boolean = false;
+    isLoading: boolean = false;
 
     nombreFilter: string = '';
     registroFilter: string = '';
+    idProyecto?:number;
 
     constructor(private bitacoraService: BitacoraService,
         private proyectoService: ProyectoService, private authService: AuthService,
@@ -35,14 +36,20 @@ export class ListadoComponent implements OnInit {
 
     getRegistroAcademico(){
         this.registroFilter = (this.location.getState() as { registroAcademico: string }).registroAcademico;
+        this.idProyecto = (this.location.getState() as { idProyecto: number }).idProyecto;
     }
 
     loadBitacoras(event: any) {
         this.bitacoras = [];
         let page = event.first / 10;
-        this.bitacoraService.getBitacoras(page, 10,this.nombreFilter,this.registroFilter).subscribe(response => {
+        this.isLoading=true;
+        this.bitacoraService.getBitacoras(page, 10,this.nombreFilter,this.registroFilter,this.idProyecto).subscribe(response => {
             this.bitacoras = response.content;
             this.totalRecords = response.totalElements;
+            this.isLoading=false;
+        },(error)=>{
+            this.isLoading=false;
+            this.messageService.add({ key: 'tst', severity: 'error', summary: 'Error', detail: "Hubo un error al intentar obtener lista de bitacoras"});
         })
     }
 
@@ -51,7 +58,7 @@ export class ListadoComponent implements OnInit {
     }
 
     buscar(){
-        this.bitacoraService.getBitacoras(0, 10, this.nombreFilter, this.registroFilter).subscribe(response => {
+        this.bitacoraService.getBitacoras(0, 10, this.nombreFilter, this.registroFilter,this.idProyecto).subscribe(response => {
             this.bitacoras = response.content;
             this.totalRecords = response.totalElements;
         });
